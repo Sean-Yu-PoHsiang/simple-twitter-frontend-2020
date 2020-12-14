@@ -2,53 +2,48 @@
   <div class="sign-in-wrapper">
     <div class="ac-logo">
       <Logo class="logo-image" />
-      <div class="sign-in-title">建立你的帳號</div>
+      <div class="title">建立你的帳號</div>
     </div>
     <form>
-      <div class="account-container">
+      <div class="input-container">
+        <div class="input-title">帳號</div>
         <label class="form-label"></label>
-        <input type="text" class="form-control" placeholder="帳號" />
+        <input type="text" class="form-control" />
       </div>
-      <div class="account-container">
+      <div class="input-container">
+        <div class="input-title">名稱</div>
         <label class="form-label"></label>
-        <input type="text" class="form-control" placeholder="名稱" />
+        <input type="text" class="form-control" />
       </div>
-      <div class="account-container">
-        <label for="exampleInputEmail1" class="form-label"></label>
+      <div class="input-container">
+        <div class="input-title">email</div>
+        <label for="inputEmail" class="form-label"></label>
         <input
           type="email"
           class="form-control"
-          id="exampleInputEmail1"
+          id="inputEmail"
           aria-describedby="emailHelp"
-          placeholder="帳號"
         />
         <div id="emailHelp" class="form-text"></div>
       </div>
-      <div class="password-container">
+      <div class="input-container">
+        <div class="input-title">密碼</div>
         <label
           for="password"
           class="form-label"
           aria-placeholder="密碼"
         ></label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          placeholder="密碼"
-        />
+        <input type="password" class="form-control" id="password" />
       </div>
-      <div class="password-confirm-container">
+      <div class="input-container">
+        <div class="input-title">密碼確認</div>
+
         <label
           for="password-confirm"
           class="form-label"
           aria-placeholder="密碼確認"
         ></label>
-        <input
-          type="password"
-          class="form-control"
-          id="password-confirm"
-          placeholder="密碼確認"
-        />
+        <input type="password" class="form-control" id="password-confirm" />
       </div>
 
       <button type="submit" class="btn btn-primary btn-submit" id="btn-submit">
@@ -85,7 +80,7 @@ export default {
   margin: 65px 0 35px 0;
 }
 
-.sign-in-title {
+.title {
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: bold;
@@ -94,27 +89,33 @@ export default {
   color: #1c1c1c;
 }
 
+.input-container {
+  position: relative;
+}
+
 input {
+  text-align: start;
+  vertical-align: bottom;
   position: relative;
   height: 50px;
   border-style: none;
   background: #f5f8fa;
   border-radius: 4px;
   border-bottom: 2px solid #657786;
+  padding-top: 30px;
 }
-/* 要用偽元素做底線？ */
-
-/* placeholder樣式 */
-::placeholder {
+.input-title {
+  position: absolute;
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: 500;
-  font-size: 10px;
+  font-size: 15px;
   line-height: 15px;
   color: #657786;
-  position: absolute;
-  left: 10px;
-  top: 2px;
+  top: 28px;
+  left: 12px;
+  z-index: 2;
+  /* bottom: -30px; */
 }
 
 .btn-submit {
