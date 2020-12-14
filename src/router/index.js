@@ -11,6 +11,11 @@ const routes = [
     redirect: '/home'
   },
   {
+    path: '/admin/signin',
+    name: 'admin-sign-in',
+    component: () => import('../views/AdminSignIn.vue')
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound,
