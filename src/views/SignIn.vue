@@ -2,7 +2,7 @@
   <div class="sign-in-wrapper">
     <form>
       <div class="ac-logo">
-        <img :src="AcLogo" alt="" />
+        <Logo class="logo-image" />
         <div class="sign-in-title">登入 Alphitter</div>
       </div>
       <div class="account-container">
@@ -43,12 +43,11 @@
 </template>
 
 <script>
-import AcLogo from "./../assets/acLogo.png";
+import Logo from "./../components/Logo";
+
 export default {
-  data() {
-    return {
-      AcLogo,
-    };
+  components: {
+    Logo,
   },
 };
 </script>
@@ -63,7 +62,7 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.ac-logo img {
+.logo-image {
   margin: 65px 0 35px 0;
 }
 
