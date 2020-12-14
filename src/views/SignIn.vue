@@ -2,21 +2,23 @@
   <div class="sign-in-wrapper">
     <div class="ac-logo">
       <Logo class="logo-image" />
-      <div class="sign-in-title">登入 Alphitter</div>
+      <div class="title">登入 Alphitter</div>
     </div>
     <form>
-      <div class="account-container">
+      <div class="input-container">
+        <div class="input-title">帳號</div>
         <label for="exampleInputEmail1" class="form-label"></label>
         <input
           type="email"
           class="form-control"
           id="exampleInputEmail1"
           aria-describedby="emailHelp"
-          placeholder="帳號"
         />
         <div id="emailHelp" class="form-text"></div>
       </div>
-      <div class="password-container">
+      <div class="input-container">
+        <div class="input-title">帳號</div>
+
         <label
           for="exampleInputPassword1"
           class="form-label"
@@ -26,7 +28,6 @@
           type="password"
           class="form-control"
           id="exampleInputPassword1"
-          placeholder="密碼"
         />
       </div>
 
@@ -66,7 +67,7 @@ export default {
   margin: 65px 0 35px 0;
 }
 
-.sign-in-title {
+.title {
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: bold;
@@ -74,15 +75,34 @@ export default {
   line-height: 33px;
   color: #1c1c1c;
 }
+.input-container {
+  position: relative;
+}
 
 input {
+  text-align: start;
+  vertical-align: bottom;
   position: relative;
+  height: 50px;
   border-style: none;
   background: #f5f8fa;
   border-radius: 4px;
-  border-bottom: 1px solid #657786;
+  border-bottom: 2px solid #657786;
+  padding-top: 30px;
 }
-/* 要用偽元素做底線？ */
+.input-title {
+  position: absolute;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #657786;
+  top: 28px;
+  left: 12px;
+  z-index: 2;
+  /* bottom: -30px; */
+}
 
 .btn-submit {
   background: #ff6600;
