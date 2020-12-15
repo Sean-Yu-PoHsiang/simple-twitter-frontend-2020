@@ -5,6 +5,7 @@ import SignIn from './../views/SignIn.vue'
 import SignUp from './../views/SignUp.vue'
 import UserSetting from './../views/UserSetting.vue'
 import Home from './../views/Home.vue'
+import Tweet from './../views/Tweet.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,12 @@ const routes = [
     path: '/home',
     name: 'home',
     component: Home
+  },
+  {
+    //:user/tweet/: id'
+    path: '/user/tweet/id',
+    name: 'tweet',
+    component: Tweet
   },
   {
     path: '/user/setting',
