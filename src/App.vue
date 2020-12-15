@@ -15,3 +15,9 @@ export default {
 
 }
 </script>
+
+<style>
+.active .svg-fill {
+  fill: #ff6600;
+}
+</style>

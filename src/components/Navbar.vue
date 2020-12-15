@@ -1,15 +1,18 @@
 <template>
   <nav class="d-flex flex-column">
     <Logo class="mt-3 mb-5" />
-    <router-link to="/" class="nav-btn d-flex fonSize18 align-items-center">
+    <router-link to="/home" class="nav-btn d-flex fonSize18 align-items-center">
       <IconHome class="mr-3" />
       首頁
     </router-link>
-    <router-link to="/" class="nav-btn d-flex fonSize18 align-items-center">
+    <router-link to="/user" class="nav-btn d-flex fonSize18 align-items-center">
       <IconUserProfile class="mr-3" />
       個人資料
     </router-link>
-    <router-link to="/" class="nav-btn d-flex fonSize18 align-items-center">
+    <router-link
+      to="/user/setting"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
       <IconSetting class="mr-3" />
       設定
     </router-link>
@@ -80,14 +83,14 @@ export default {
   },
   data() {
     return {
-      isModalShowed: true,
+      isModalShowed: false,
     }
   },
   mixins: [emptyImageFilter],
 }
 </script>
 
-<style scoped>
+<style scoped leng="scss">
 nav {
   height: 100vh;
 }
@@ -96,6 +99,9 @@ nav {
   color: #1c1c1c;
   font-weight: 700;
   margin-bottom: 34px;
+}
+.active {
+  color: #ff6600;
 }
 img {
   width: 50px;
@@ -108,7 +114,6 @@ hr {
   margin: 0;
 }
 .nav-btn:hover {
-  color: #1c1c1c;
   text-decoration: none;
 }
 .fonSize18 {
