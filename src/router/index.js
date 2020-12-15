@@ -11,6 +11,11 @@ const routes = [
     redirect: '/home'
   },
   {
+    path: '/user',
+    name: 'user',
+    component: () => import('../views/User.vue')
+  },
+  {
     path: '/admin/signin',
     name: 'admin-sign-in',
     component: () => import('../views/AdminSignIn.vue')
