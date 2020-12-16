@@ -4,8 +4,11 @@ import NotFound from '../views/NotFound.vue'
 import SignIn from './../views/SignIn.vue'
 import SignUp from './../views/SignUp.vue'
 import UserSetting from './../views/UserSetting.vue'
+import UserFollows from './../views/UserFollows.vue'
+import UserFollowings from './../views/UserFollowings.vue'
 import Home from './../views/Home.vue'
 import Tweet from './../views/Tweet.vue'
+
 
 Vue.use(VueRouter)
 
@@ -40,6 +43,18 @@ const routes = [
     path: '/user/setting',
     name: 'user-setting',
     component: UserSetting
+  },
+  {
+    //:user/follows
+    path: '/user/follows',
+    name: 'user-follows',
+    component: UserFollows
+  },
+  {
+    //:user/follows
+    path: '/user/followings',
+    name: 'user-followings',
+    component: UserFollowings
   },
   {
     path: '/user',

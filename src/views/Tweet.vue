@@ -18,7 +18,6 @@
 <script>
 import TweetReplies from "./../components/TweetReplies";
 import UserTweet from "./../components/UserTweet.vue";
-
 import TopFollowersUser from "./../components/TopFollowersUser.vue";
 
 export default {

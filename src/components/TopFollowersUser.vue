@@ -46,7 +46,11 @@
             <div class="at-user">@pizzahut</div>
           </div>
         </div>
-        <button type="submit" id="follow-btn" class="btn btn-primary">
+        <button
+          type="submit"
+          id="follow-btn"
+          class="btn btn-primary follow-btn"
+        >
           跟隨
         </button>
       </div>
@@ -106,7 +110,7 @@
   line-height: 15px;
   color: #657786;
 }
-#follow-btn {
+.follow-btn {
   margin-right: 15px;
   background: transparent;
   width: 62px;
