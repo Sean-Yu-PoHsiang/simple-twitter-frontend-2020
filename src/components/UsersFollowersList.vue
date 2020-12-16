@@ -1,5 +1,5 @@
 <template>
-  <div class="follows-list">
+  <div class="user-follows-list">
     <div class="user">
       <img
         class="user-avator"
@@ -95,6 +95,11 @@ export default {
 </script>
 
 <style scoped>
+/* 最外層div */
+.user-follows-list {
+  width: 600px;
+}
+
 .user {
   display: flex;
   border-bottom: 1px solid #e6ecf0;
@@ -121,6 +126,7 @@ export default {
   line-height: 15px;
   color: #1c1c1c;
 }
+
 .user-at {
   font-family: Noto Sans TC;
   font-style: normal;

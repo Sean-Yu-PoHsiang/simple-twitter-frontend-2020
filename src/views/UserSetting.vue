@@ -1,84 +1,103 @@
 <template>
-  <div class="user-setting-wrapper">
-    <div class="title">帳戶設定</div>
+  <div class="setting-page">
+    <div class="left-container">
+      <Navbar />
+    </div>
+    <div class="user-setting-wrapper">
+      <div class="title">帳戶設定</div>
 
-    <form>
-      <div class="input-container">
-        <div class="input-title">帳號</div>
-        <label class="form-label"></label>
-        <input type="text" class="form-control" />
-      </div>
-      <div class="input-container">
-        <div class="input-title">名稱</div>
-        <label class="form-label"></label>
-        <input type="text" class="form-control" />
-      </div>
-      <div class="input-container">
-        <div class="input-title">email</div>
-        <label for="inputEmail" class="form-label"></label>
-        <input
-          type="email"
-          class="form-control"
-          id="inputEmail"
-          aria-describedby="emailHelp"
-        />
-        <div id="emailHelp" class="form-text"></div>
-      </div>
-      <div class="input-container">
-        <div class="input-title">密碼</div>
-        <label
-          for="password"
-          class="form-label"
-          aria-placeholder="密碼"
-        ></label>
-        <input type="password" class="form-control" id="password" />
-      </div>
-      <div class="input-container">
-        <div class="input-title">密碼確認</div>
-        <label
-          for="password-confirm"
-          class="form-label"
-          aria-placeholder="密碼確認"
-        ></label>
-        <input type="password" class="form-control" id="password-confirm" />
-      </div>
-      <div class="flex-end">
-        <button
-          type="submit"
-          class="btn btn-primary btn-submit"
-          id="btn-submit"
-        >
-          儲存
-        </button>
-      </div>
-    </form>
+      <form class="input-forms">
+        <div class="input-container">
+          <div class="input-title">帳號</div>
+          <label class="form-label"></label>
+          <input type="text" class="form-control" />
+        </div>
+        <div class="input-container">
+          <div class="input-title">名稱</div>
+          <label class="form-label"></label>
+          <input type="text" class="form-control" />
+        </div>
+        <div class="input-container">
+          <div class="input-title">email</div>
+          <label for="inputEmail" class="form-label"></label>
+          <input
+            type="email"
+            class="form-control"
+            id="inputEmail"
+            aria-describedby="emailHelp"
+          />
+          <div id="emailHelp" class="form-text"></div>
+        </div>
+        <div class="input-container">
+          <div class="input-title">密碼</div>
+          <label
+            for="password"
+            class="form-label"
+            aria-placeholder="密碼"
+          ></label>
+          <input type="password" class="form-control" id="password" />
+        </div>
+        <div class="input-container">
+          <div class="input-title">密碼確認</div>
+          <label
+            for="password-confirm"
+            class="form-label"
+            aria-placeholder="密碼確認"
+          ></label>
+          <input type="password" class="form-control" id="password-confirm" />
+        </div>
+        <div class="flex-end">
+          <button type="submit" class="btn btn btn-submit" id="btn-submit">
+            儲存
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
+import Navbar from "./../components/Navbar.vue";
+
 export default {
-  components: {},
+  components: {
+    Navbar,
+  },
 };
 </script>
 
 <style scoped>
+/* 版面調整 */
+.setting-page {
+  display: flex;
+}
+
+.left-container {
+  margin: 0 60px;
+}
+
+/* 表單區 */
 .user-setting-wrapper {
-  /* border: 1px solid #e6ecf0; */
-  width: 640px;
-  margin: 0 auto;
+  width: 100%;
+  border-left: 1px solid #e6ecf0;
 }
 
 .title {
-  /* border: 1px solid #e6ecf0; */
-  padding: 15px 0;
+  padding: 15px;
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: bold;
   font-size: 19px;
   line-height: 28px;
   color: #1c1c1c;
+  border-bottom: 1px solid #e6ecf0;
 }
 
+.input-forms {
+  width: 640px;
+  padding: 0 15px;
+}
+/* 表單本身 */
 .input-container {
   position: relative;
 }
@@ -106,17 +125,29 @@ input {
   top: 28px;
   left: 12px;
   z-index: 2;
-  /* bottom: -30px; */
 }
-
+/* 按鈕 */
 .btn-submit {
   background: #ff6600;
   border-radius: 50px;
   width: 122px;
   margin-top: 30px;
+  border: 1px solid transparent;
+  outline: none;
+  color: #ffffff;
 }
+
 .flex-end {
   display: flex;
   justify-content: flex-end;
+}
+
+.active {
+  background: #ff6600;
+  border-radius: 50px;
+  width: 122px;
+  margin-top: 30px;
+  border: 1px solid transparent;
+  outline: none;
 }
 </style>

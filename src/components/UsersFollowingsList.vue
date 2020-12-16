@@ -1,5 +1,5 @@
 <template>
-  <div class="follows-list">
+  <div class="following-list">
     <div class="user">
       <img
         class="user-avator"
@@ -88,13 +88,10 @@
 </template>
 
 
-<script>
-export default {
-  components: {},
-};
-</script>
-
 <style scoped>
+.following-list {
+  width: 600px;
+}
 .user {
   display: flex;
   border-bottom: 1px solid #e6ecf0;

@@ -1,7 +1,7 @@
 <template>
   <div class="user-follows">
     <div class="left-container">
-      <AdminNav />
+      <Navbar />
     </div>
     <div class="main-container">
       <div class="control-area">
@@ -27,16 +27,16 @@
 
 
 <script>
-import AdminNav from "./../components/AdminNav";
+import Navbar from "./../components/Navbar.vue";
 import NavTabs from "./../components/NavTabs";
 import TopFollowersUser from "./../components/TopFollowersUser.vue";
 import ArrowIcon from "./../components/ArrowIcon.vue";
-// UserFollowsList 載入跟隨者清單
+// UserFollowsList 載入跟隨使用者的清單
 import UsersFollowersList from "./../components/UsersFollowersList.vue";
 
 export default {
   components: {
-    AdminNav,
+    Navbar,
     NavTabs,
     TopFollowersUser,
     ArrowIcon,
@@ -50,6 +50,11 @@ export default {
 .user-follows {
   display: flex;
 }
+/* Navbar */
+.left-container {
+  margin: 0 65px 0 50px;
+}
+
 /* 中間區塊排版 */
 .main-container {
   display: flex;
