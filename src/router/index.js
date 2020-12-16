@@ -42,6 +42,26 @@ const routes = [
     component: UserSetting
   },
   {
+    path: '/user',
+    name: 'user',
+    component: () => import('../views/User.vue')
+  },
+  {
+    path: '/admin/signin',
+    name: 'admin-sign-in',
+    component: () => import('../views/AdminSignIn.vue')
+  },
+  {
+    path: '/admin/tweets',
+    name: 'admin-tweets',
+    component: () => import('../views/AdminTweets.vue')
+  },
+  {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: () => import('../views/AdminUsers.vue')
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound,

@@ -11,7 +11,13 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default {
-  name: 'simple-twitter',
+  name: 'App',
 
 }
 </script>
+
+<style>
+.active .svg-fill {
+  fill: #ff6600;
+}
+</style>
