@@ -140,7 +140,7 @@ export default {
 
 <style scoped>
 .all-users-newest-tweets {
-  width: 600px;
+  /* width: 600px; */
   border: 1px solid #e6ecf0;
   border-right: 1px solid #e6ecf0;
   height: 1000px;

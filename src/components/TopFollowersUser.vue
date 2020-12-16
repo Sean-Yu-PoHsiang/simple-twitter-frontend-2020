@@ -57,10 +57,12 @@
 
 <style scoped>
 .top-followers {
-  margin: 15px 30px;
+  /* margin: 15px 30px; */
+  margin-top: 15px;
   background: #f5f8fa;
   border-radius: 14px;
-  width: 350px;
+  width: 300px;
+  /* max-width: 300px; */
 }
 
 .title {
