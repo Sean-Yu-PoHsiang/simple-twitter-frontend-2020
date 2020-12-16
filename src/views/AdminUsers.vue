@@ -160,7 +160,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .panel-right {
   height: 100vh;
 }

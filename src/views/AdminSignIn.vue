@@ -53,7 +53,7 @@ export default {
 }
 </script>
 
-<style scoped leng="scss">
+<style scoped>
 .container {
   max-width: 540px;
 }
