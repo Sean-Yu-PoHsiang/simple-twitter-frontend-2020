@@ -47,7 +47,7 @@
           <input type="password" class="form-control" id="password-confirm" />
         </div>
         <div class="flex-end">
-          <button type="submit" class="btn btn btn-submit" id="btn-submit">
+          <button type="submit" class="btn btn-submit" id="btn-submit">
             儲存
           </button>
         </div>

@@ -46,9 +46,7 @@
         <input type="password" class="form-control" id="password-confirm" />
       </div>
 
-      <button type="submit" class="btn btn-primary btn-submit" id="btn-submit">
-        登入
-      </button>
+      <button type="submit" class="btn btn-submit" id="btn-submit">登入</button>
     </form>
     <div class="pages-link">
       <router-link class="link" to=""> 取消 </router-link>
@@ -115,14 +113,20 @@ input {
   top: 28px;
   left: 12px;
   z-index: 2;
-  /* bottom: -30px; */
 }
 
+/* 按鈕寬度class不行改，但id可以 */
+#btn-submit {
+  width: 100%;
+}
 .btn-submit {
   background: #ff6600;
   border-radius: 50px;
-  width: 100%;
+  width: 122px;
   margin-top: 30px;
+  border: 1px solid transparent;
+  outline: none;
+  color: #ffffff;
 }
 .pages-link {
   display: flex;

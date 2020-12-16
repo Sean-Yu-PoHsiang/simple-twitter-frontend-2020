@@ -30,11 +30,11 @@
           id="exampleInputPassword1"
         />
       </div>
-
-      <button type="submit" class="btn btn-primary btn-submit" id="btn-submit">
-        登入
-      </button>
     </form>
+    <button type="submit" class="btn btn btn-submit" id="btn-submit">
+      登入
+    </button>
+
     <div class="pages-link">
       <router-link class="link" to=""> 註冊 Alphitter </router-link>
       <span>·</span>
@@ -104,11 +104,18 @@ input {
   /* bottom: -30px; */
 }
 
+/* 按鈕寬度class不行改，但id可以 */
+#btn-submit {
+  width: 100%;
+}
 .btn-submit {
   background: #ff6600;
   border-radius: 50px;
-  width: 100%;
+  width: 122px;
   margin-top: 30px;
+  border: 1px solid transparent;
+  outline: none;
+  color: #ffffff;
 }
 .pages-link {
   display: flex;

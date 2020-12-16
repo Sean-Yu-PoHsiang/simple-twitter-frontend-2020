@@ -14,7 +14,7 @@
             <div class="at-user">@pizzahut</div>
           </div>
         </div>
-        <button type="submit" id="follow-btn" class="btn btn-primary">
+        <button type="submit" id="follow-btn" class="btn follow-btn">
           跟隨
         </button>
       </div>
@@ -30,7 +30,7 @@
             <div class="at-user">@pizzahut</div>
           </div>
         </div>
-        <button type="submit" id="follow-btn" class="btn btn-primary">
+        <button type="submit" id="follow-btn" class="btn follow-btn">
           跟隨
         </button>
       </div>
@@ -46,11 +46,7 @@
             <div class="at-user">@pizzahut</div>
           </div>
         </div>
-        <button
-          type="submit"
-          id="follow-btn"
-          class="btn btn-primary follow-btn"
-        >
+        <button type="submit" id="follow-btn" class="btn follow-btn">
           跟隨
         </button>
       </div>
