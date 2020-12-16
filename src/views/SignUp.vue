@@ -49,7 +49,7 @@
       <button type="submit" class="btn btn-submit" id="btn-submit">登入</button>
     </form>
     <div class="pages-link">
-      <router-link class="link" to=""> 取消 </router-link>
+      <router-link class="link" to="/signin"> 取消 </router-link>
     </div>
   </div>
 </template>
@@ -118,6 +118,7 @@ input {
 /* 按鈕寬度class不行改，但id可以 */
 #btn-submit {
   width: 100%;
+  height: 50px;
 }
 .btn-submit {
   background: #ff6600;

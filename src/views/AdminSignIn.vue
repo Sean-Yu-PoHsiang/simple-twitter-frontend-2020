@@ -36,7 +36,7 @@
       </button>
     </form>
     <div class="d-flex justify-content-end w-100">
-      <router-link class="fonSize18 link-underline" to="/">
+      <router-link class="fonSize18 link-underline" to="/signin">
         前台登入
       </router-link>
     </div>
@@ -44,13 +44,13 @@
 </template>
 
 <script>
-import Logo from './../components/Logo'
+import Logo from "./../components/Logo";
 
 export default {
   components: {
-    Logo
-  }
-}
+    Logo,
+  },
+};
 </script>
 
 <style scoped leng="scss">

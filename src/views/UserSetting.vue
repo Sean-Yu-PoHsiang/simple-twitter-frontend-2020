@@ -127,7 +127,9 @@ input {
   z-index: 2;
 }
 /* 按鈕 */
+
 .btn-submit {
+  height: 50px;
   background: #ff6600;
   border-radius: 50px;
   width: 122px;

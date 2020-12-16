@@ -36,9 +36,9 @@
     </button>
 
     <div class="pages-link">
-      <router-link class="link" to=""> 註冊 Alphitter </router-link>
+      <router-link class="link" to="/signup"> 註冊 Alphitter </router-link>
       <span>·</span>
-      <router-link class="link" to=""> 後台登入 </router-link>
+      <router-link class="link" to="/admin/signin"> 後台登入 </router-link>
     </div>
   </div>
 </template>
@@ -107,6 +107,7 @@ input {
 /* 按鈕寬度class不行改，但id可以 */
 #btn-submit {
   width: 100%;
+  height: 50px;
 }
 .btn-submit {
   background: #ff6600;
