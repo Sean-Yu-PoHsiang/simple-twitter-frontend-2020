@@ -71,7 +71,7 @@ export default {
 
 <style scoped>
 .main-user-container {
-  width: 600px;
+  /* width: 600px; */
   border: 1px solid #e6ecf0;
 }
 

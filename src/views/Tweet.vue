@@ -1,19 +1,21 @@
 <template>
-  <div class="tweet-page">
-    <!-- left component -->
-    <div class="left-container">
-      <Navbar />
-    </div>
-    <div class="main-container">
-      <UserTweet />
-      <!-- all users newest tweet  -->
-      <TweetReplies />
-    </div>
-    <div class="right-container">
-      <TopFollowersUser />
-    </div>
+  <div class="container tweet-page">
+    <div class="row">
+      <!-- left component -->
+      <div class="col-auto left-container">
+        <Navbar />
+      </div>
+      <div class="col main-container">
+        <UserTweet />
+        <!-- all users newest tweet  -->
+        <TweetReplies />
+      </div>
+      <div class="col-auto right-container">
+        <TopFollowersUser />
+      </div>
 
-    <!-- right component -->
+      <!-- right component -->
+    </div>
   </div>
 </template>
 
@@ -35,9 +37,6 @@ export default {
 
 
 <style scoped>
-.left-container {
-  margin: 0 65px 0 50px;
-}
 .tweet-page {
   display: flex;
   flex-direction: row;

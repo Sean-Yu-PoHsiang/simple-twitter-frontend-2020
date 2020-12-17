@@ -1,5 +1,5 @@
 <template>
-  <div class="main-user-container">
+  <div class="container">
     <div class="title">首頁</div>
     <div class="user-area">
       <div class="avator-and-tweet">
@@ -8,7 +8,7 @@
           src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
           alt=""
         />
-        <form class="tweet-container">
+        <form class="new-tweet">
           <label for="tweet-textarea" class="form-label"></label>
           <textarea
             class="form-control"
@@ -31,8 +31,9 @@
 
 
 <style scoped>
-.main-user-container {
-  width: 600px;
+.container {
+  padding: 0;
+  /* width: 600px; */
   border: 1px solid #e6ecf0;
   border-bottom: 10px solid #e6ecf0;
 }
@@ -65,9 +66,12 @@
   position: absolute;
   z-index: -2;
 }
+/* tweet input */
+.new-tweet {
+  width: 100%;
+}
 textarea {
   border: none;
-  width: 445px;
   height: 120px;
   resize: none;
   overflow-y: scroll;
@@ -84,6 +88,7 @@ textarea {
 }
 
 .flex-end {
+  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -98,7 +103,6 @@ textarea {
   top: 123px;
   background: #ff6600;
   border-radius: 100px;
-  margin-bottom: 10px;
-  margin-right: 5px;
+  margin: 10px;
 }
 </style>>

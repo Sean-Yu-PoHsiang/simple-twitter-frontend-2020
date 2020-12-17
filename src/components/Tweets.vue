@@ -214,7 +214,7 @@ export default {
   display: flex;
   align-content: center;
   height: 30px;
-  width: auto;
+  /* width: auto; */
   padding-right: 50px;
 }
 

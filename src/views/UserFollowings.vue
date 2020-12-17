@@ -1,26 +1,28 @@
 <template>
-  <div class="user-follows">
-    <div class="col-auto left-container">
-      <Navbar />
-    </div>
-    <div class="col main-container">
-      <div class="control-area">
-        <div class="previous-page">
-          <div class="arrow-icon">
-            <ArrowIcon />
-          </div>
-          <div class="user-detail">
-            <div class="user-name">John Doe</div>
-            <div class="tweet-count">25 推文</div>
-          </div>
-        </div>
-        <NavTabs />
+  <div class="container user-follows">
+    <div class="row">
+      <div class="col-auto left-container">
+        <Navbar />
       </div>
-      <UsersFollowingsList />
-    </div>
+      <div class="col main-container">
+        <div class="control-area">
+          <div class="previous-page">
+            <div class="arrow-icon">
+              <ArrowIcon />
+            </div>
+            <div class="user-detail">
+              <div class="user-name">John Doe</div>
+              <div class="tweet-count">25 推文</div>
+            </div>
+          </div>
+          <NavTabs />
+        </div>
+        <UsersFollowingsList />
+      </div>
 
-    <div class="col-auto right-container">
-      <TopFollowersUser />
+      <div class="col-auto right-container">
+        <TopFollowersUser />
+      </div>
     </div>
   </div>
 </template>
@@ -47,11 +49,6 @@ export default {
 
 
 <style scoped>
-/* 最外層整個網頁大方向排版 */
-.user-follows {
-  display: flex;
-}
-
 /* 中間區塊排版 */
 .main-container {
   display: flex;
@@ -60,7 +57,7 @@ export default {
   border: 1px solid #e6ecf0;
   border-bottom: transparent;
 }
-.col {
+.main-container {
   padding: 0;
 }
 

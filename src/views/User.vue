@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import Navbar from './../components/Navbar'
-import TopFollowersUser from './../components/TopFollowersUser'
-import UserProfile from './../components/UserProfile'
+import Navbar from "./../components/Navbar";
+import TopFollowersUser from "./../components/TopFollowersUser";
+import UserProfile from "./../components/UserProfile";
 import Tweets from "./../components/Tweets.vue";
 
 export default {
@@ -37,9 +37,9 @@ export default {
     Navbar,
     TopFollowersUser,
     UserProfile,
-    Tweets
-  }
-}
+    Tweets,
+  },
+};
 </script>
 
 <style scoped>

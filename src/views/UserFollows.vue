@@ -1,26 +1,28 @@
 <template>
-  <div class="user-follows">
-    <div class="col-auto left-container">
-      <Navbar />
-    </div>
-    <div class="col main-container">
-      <div class="control-area">
-        <div class="previous-page">
-          <div class="arrow-icon">
-            <ArrowIcon />
-          </div>
-          <div class="user-detail">
-            <div class="user-name">John Doe</div>
-            <div class="tweet-count">25 推文</div>
-          </div>
-        </div>
-        <NavTabs />
+  <div class="container user-follows">
+    <div class="row">
+      <div class="col-auto left-container">
+        <Navbar />
       </div>
-      <UsersFollowersList />
-    </div>
+      <div class="col main-container">
+        <div class="control-area">
+          <div class="previous-page">
+            <div class="arrow-icon">
+              <ArrowIcon />
+            </div>
+            <div class="user-detail">
+              <div class="user-name">John Doe</div>
+              <div class="tweet-count">25 推文</div>
+            </div>
+          </div>
+          <NavTabs />
+        </div>
+        <UsersFollowersList />
+      </div>
 
-    <div class="col-auto right-container">
-      <TopFollowersUser />
+      <div class="col-auto right-container">
+        <TopFollowersUser />
+      </div>
     </div>
   </div>
 </template>

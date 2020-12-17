@@ -1,57 +1,58 @@
 <template>
-  <div class="setting-page">
-    <div class="col-auto left-container">
-      <Navbar />
-    </div>
-    <div class="col user-setting-wrapper">
-      <div class="title">帳戶設定</div>
-
-      <form class="input-forms">
-        <div class="input-container">
-          <div class="input-title">帳號</div>
-          <label class="form-label"></label>
-          <input type="text" class="form-control" />
-        </div>
-        <div class="input-container">
-          <div class="input-title">名稱</div>
-          <label class="form-label"></label>
-          <input type="text" class="form-control" />
-        </div>
-        <div class="input-container">
-          <div class="input-title">email</div>
-          <label for="inputEmail" class="form-label"></label>
-          <input
-            type="email"
-            class="form-control"
-            id="inputEmail"
-            aria-describedby="emailHelp"
-          />
-          <div id="emailHelp" class="form-text"></div>
-        </div>
-        <div class="input-container">
-          <div class="input-title">密碼</div>
-          <label
-            for="password"
-            class="form-label"
-            aria-placeholder="密碼"
-          ></label>
-          <input type="password" class="form-control" id="password" />
-        </div>
-        <div class="input-container">
-          <div class="input-title">密碼確認</div>
-          <label
-            for="password-confirm"
-            class="form-label"
-            aria-placeholder="密碼確認"
-          ></label>
-          <input type="password" class="form-control" id="password-confirm" />
-        </div>
+  <div class="container setting-page">
+    <div class="row">
+      <div class="col-auto left-container">
+        <Navbar />
+      </div>
+      <div class="col user-setting-wrapper">
+        <div class="title">帳戶設定</div>
+        <form class="input-forms">
+          <div class="input-container">
+            <div class="input-title">帳號</div>
+            <label class="form-label"></label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="input-container">
+            <div class="input-title">名稱</div>
+            <label class="form-label"></label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="input-container">
+            <div class="input-title">email</div>
+            <label for="inputEmail" class="form-label"></label>
+            <input
+              type="email"
+              class="form-control"
+              id="inputEmail"
+              aria-describedby="emailHelp"
+            />
+            <div id="emailHelp" class="form-text"></div>
+          </div>
+          <div class="input-container">
+            <div class="input-title">密碼</div>
+            <label
+              for="password"
+              class="form-label"
+              aria-placeholder="密碼"
+            ></label>
+            <input type="password" class="form-control" id="password" />
+          </div>
+          <div class="input-container">
+            <div class="input-title">密碼確認</div>
+            <label
+              for="password-confirm"
+              class="form-label"
+              aria-placeholder="密碼確認"
+            ></label>
+            <input type="password" class="form-control" id="password-confirm" />
+          </div>
+        </form>
         <div class="flex-end">
           <button type="submit" class="btn btn-submit" id="btn-submit">
             儲存
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -69,6 +70,7 @@ export default {
 <style scoped>
 /* 版面調整 */
 .setting-page {
+  width: 100%;
   display: flex;
 }
 

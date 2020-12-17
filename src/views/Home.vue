@@ -1,21 +1,21 @@
 <template>
-  <div class="home-page">
-    <!-- left component -->
-    <div class="col-auto left-container">
-      <Navbar />
+  <div class="container home-page">
+    <div class="row">
+      <!-- left component -->
+      <div class="col-auto left-container">
+        <Navbar />
+      </div>
+      <div class="col main-container">
+        <!-- user upload newest tweet  -->
+        <NewTweet />
+        <!-- all users newest tweet  -->
+        <Tweets />
+      </div>
+      <div class="col-auto right-container">
+        <!-- right component -->
+        <TopFollowersUser />
+      </div>
     </div>
-
-    <div class="col main-container">
-      <!-- user upload newest tweet  -->
-      <NewTweet />
-      <!-- all users newest tweet  -->
-      <Tweets />
-    </div>
-    <div class="col-auto right-container">
-      <TopFollowersUser />
-    </div>
-
-    <!-- right component -->
   </div>
 </template>
 
