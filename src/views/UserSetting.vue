@@ -1,9 +1,9 @@
 <template>
   <div class="setting-page">
-    <div class="left-container">
+    <div class="col-auto left-container">
       <Navbar />
     </div>
-    <div class="user-setting-wrapper">
+    <div class="col user-setting-wrapper">
       <div class="title">帳戶設定</div>
 
       <form class="input-forms">
@@ -72,14 +72,14 @@ export default {
   display: flex;
 }
 
-.left-container {
-  margin: 0 60px;
-}
-
 /* 表單區 */
 .user-setting-wrapper {
   width: 100%;
   border-left: 1px solid #e6ecf0;
+}
+
+.col {
+  padding: 0;
 }
 
 .title {
@@ -94,7 +94,8 @@ export default {
 }
 
 .input-forms {
-  width: 640px;
+  width: 100%;
+  max-width: 640px;
   padding: 0 15px;
 }
 /* 表單本身 */

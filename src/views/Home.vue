@@ -1,17 +1,17 @@
 <template>
   <div class="home-page">
     <!-- left component -->
-    <div class="left-container">
+    <div class="col-auto left-container">
       <Navbar />
     </div>
 
-    <div class="main-container">
+    <div class="col main-container">
       <!-- user upload newest tweet  -->
       <NewTweet />
       <!-- all users newest tweet  -->
       <Tweets />
     </div>
-    <div class="right-container">
+    <div class="col-auto right-container">
       <TopFollowersUser />
     </div>
 
@@ -39,9 +39,5 @@ export default {
 .home-page {
   display: flex;
   flex-direction: row;
-}
-
-.left-container {
-  margin: 0 65px 0 50px;
 }
 </style>

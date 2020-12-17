@@ -14,11 +14,7 @@
             <div class="user-at">@apple</div>
           </div>
 
-          <button
-            type="submit"
-            id="follow-btn"
-            class="btn btn-primary follow-btn active"
-          >
+          <button type="submit" id="follow-btn" class="btn follow-btn active">
             正在跟隨
           </button>
         </div>
@@ -42,11 +38,7 @@
             <div class="user-at">@apple</div>
           </div>
 
-          <button
-            type="submit"
-            id="follow-btn"
-            class="btn btn-primary follow-btn active"
-          >
+          <button type="submit" id="follow-btn" class="btn follow-btn active">
             正在跟隨
           </button>
         </div>
@@ -70,12 +62,8 @@
             <div class="user-at">@apple</div>
           </div>
 
-          <button
-            type="submit"
-            id="follow-btn"
-            class="btn btn-primary follow-btn active"
-          >
-            正在跟隨
+          <button type="submit" id="follow-btn" class="btn follow-btn">
+            跟隨
           </button>
         </div>
         <div class="user-description">
@@ -90,7 +78,8 @@
 
 <style scoped>
 .following-list {
-  width: 600px;
+  min-width: 300px;
+  /* width: 600px; */
 }
 .user {
   display: flex;
@@ -131,7 +120,6 @@
   width: 62px;
   margin-right: 15px;
   background: transparent;
-  width: 62px;
   height: 30px;
   outline: none;
   border: 1px solid #ff6600;
@@ -145,6 +133,7 @@
 }
 
 .active {
+  content: "正在跟隨";
   color: #ffffff;
   background: #ff6600;
   width: 92px;

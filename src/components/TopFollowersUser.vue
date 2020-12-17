@@ -2,7 +2,7 @@
   <div class="top-followers">
     <div class="title">跟隨誰</div>
     <div class="user-list">
-      <div class="user-container">
+      <div class="user">
         <div class="user-info">
           <img
             class="user-avator"
@@ -18,7 +18,7 @@
           跟隨
         </button>
       </div>
-      <div class="user-container">
+      <div class="user">
         <div class="user-info">
           <img
             class="user-avator"
@@ -34,7 +34,7 @@
           跟隨
         </button>
       </div>
-      <div class="user-container">
+      <div class="user">
         <div class="user-info">
           <img
             class="user-avator"
@@ -57,10 +57,10 @@
 
 <style scoped>
 .top-followers {
-  margin: 15px 30px;
   background: #f5f8fa;
   border-radius: 14px;
   width: 350px;
+  margin-top: 15px;
 }
 
 .title {
@@ -79,13 +79,13 @@
   margin: 10px;
   margin-left: 15px;
 }
-.user-container,
+.user,
 .user-info {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.user-container {
+.user {
   justify-content: space-between;
   border-top: 1px solid #e6ecf0;
 }

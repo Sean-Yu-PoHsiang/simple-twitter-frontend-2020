@@ -97,7 +97,8 @@ export default {
 <style scoped>
 /* 最外層div */
 .user-follows-list {
-  width: 600px;
+  min-width: 300px;
+  /* width: 600px; */
 }
 
 .user {
@@ -105,7 +106,7 @@ export default {
   border-bottom: 1px solid #e6ecf0;
 }
 .user-detail {
-  margin: 10px;
+  padding: 10px;
 }
 .user-and-follow-btn {
   display: flex;
@@ -159,6 +160,6 @@ export default {
 }
 
 .user-description {
-  margin-right: 15px;
+  padding-right: 15px;
 }
 </style>

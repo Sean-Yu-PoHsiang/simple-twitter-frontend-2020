@@ -1,9 +1,9 @@
 <template>
   <div class="user-follows">
-    <div class="left-container">
+    <div class="col-auto left-container">
       <Navbar />
     </div>
-    <div class="main-container">
+    <div class="col main-container">
       <div class="control-area">
         <div class="previous-page">
           <div class="arrow-icon">
@@ -19,7 +19,7 @@
       <UsersFollowersList />
     </div>
 
-    <div class="right-container">
+    <div class="col-auto right-container">
       <TopFollowersUser />
     </div>
   </div>
@@ -49,10 +49,6 @@ export default {
 /* 最外層整個網頁大方向排版 */
 .user-follows {
   display: flex;
-}
-/* Navbar */
-.left-container {
-  margin: 0 65px 0 50px;
 }
 
 /* 中間區塊排版 */
@@ -98,6 +94,10 @@ export default {
   line-height: 19px;
   color: #657786;
   margin: 0;
+  padding: 0;
+}
+
+.col {
   padding: 0;
 }
 
