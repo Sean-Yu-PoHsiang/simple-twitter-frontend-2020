@@ -25,4 +25,7 @@ a:hover {
   color: black;
   text-decoration: none;
 }
+button:focus {
+  outline: none;
+}
 </style>
