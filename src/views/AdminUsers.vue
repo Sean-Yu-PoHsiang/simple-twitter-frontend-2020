@@ -151,7 +151,6 @@
 import AdminNav from './../components/AdminNav'
 import { emptyImageFilter } from '../utils/mixins'
 
-
 export default {
   components: {
     AdminNav
@@ -160,7 +159,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .panel-right {
   height: 100vh;
 }

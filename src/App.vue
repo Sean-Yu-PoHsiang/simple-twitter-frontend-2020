@@ -20,4 +20,9 @@ export default {
 .active .svg-fill {
   fill: #ff6600;
 }
+a,
+a:hover {
+  color: black;
+  text-decoration: none;
+}
 </style>
