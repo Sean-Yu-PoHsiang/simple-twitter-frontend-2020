@@ -4,14 +4,18 @@
       <Logo class="logo-image" />
       <div class="title">登入 Alphitter</div>
     </div>
-    <form>
+    <form method="post" @submit.prevent.stop="handleSubmit">
       <div class="input-container">
         <div class="input-title">帳號</div>
-        <label for="exampleInputEmail1" class="form-label"></label>
+        <label for="Email" class="form-label"></label>
         <input
+          id="Email"
+          v-model="email"
+          name="email"
           type="email"
           class="form-control"
-          id="exampleInputEmail1"
+          required
+          autofocus
           aria-describedby="emailHelp"
         />
         <div id="emailHelp" class="form-text"></div>
@@ -20,20 +24,23 @@
         <div class="input-title">帳號</div>
 
         <label
-          for="exampleInputPassword1"
+          for="password"
           class="form-label"
           aria-placeholder="密碼"
         ></label>
         <input
+          id="password"
+          v-model="password"
+          name="password"
           type="password"
           class="form-control"
-          id="exampleInputPassword1"
+          required
         />
       </div>
+      <button type="submit" class="btn btn btn-submit" id="btn-submit">
+        登入
+      </button>
     </form>
-    <button type="submit" class="btn btn btn-submit" id="btn-submit">
-      登入
-    </button>
 
     <div class="pages-link">
       <router-link class="link" to="/signup"> 註冊 Alphitter </router-link>
@@ -44,11 +51,29 @@
 </template>
 
 <script>
-import Logo from "./../components/Logo";
+import Logo from "./../components/Logo.vue";
 
 export default {
   components: {
     Logo,
+  },
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    // eslint-disable-next-line
+    handleSubmit(e) {
+      const data = JSON.stringify({
+        email: this.email,
+        password: this.password,
+      });
+
+      // TODO: 向後端驗證使用者登入資訊是否合法
+      console.log("data", data);
+    },
   },
 };
 </script>
