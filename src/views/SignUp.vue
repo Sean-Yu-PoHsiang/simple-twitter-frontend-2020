@@ -2,21 +2,21 @@
   <div class="sign-in-wrapper">
     <div class="ac-logo">
       <Logo class="logo-image" />
-      <div class="title">建立你的帳號</div>
+      <div class="page-title">建立你的帳號</div>
     </div>
     <form method="post" @submit.prevent.stop="handleSubmit">
-      <div class="input-account">
-        <div class="input-title">帳號</div>
+      <div class="input-container">
+        <div class="input-account title">帳號</div>
         <label class="form-label"></label>
         <input v-model="account" type="text" class="form-control" />
       </div>
-      <div class="input-name">
-        <div class="input-title">名稱</div>
+      <div class="input-container">
+        <div class="input-name title">名稱</div>
         <label class="form-label"></label>
         <input v-model="name" type="text" class="form-control" />
       </div>
-      <div class="input-email">
-        <div class="input-title">email</div>
+      <div class="input-container">
+        <div class="input-email title">email</div>
         <label for="inputEmail" class="form-label"></label>
         <input
           v-model="email"
@@ -27,8 +27,8 @@
         />
         <div id="emailHelp" class="form-text"></div>
       </div>
-      <div class="input-password">
-        <div class="input-title">密碼</div>
+      <div class="input-container">
+        <div class="input-password title">密碼</div>
         <label
           for="password"
           class="form-label"
@@ -41,8 +41,8 @@
           id="password"
         />
       </div>
-      <div class="input-password-check">
-        <div class="input-title">密碼確認</div>
+      <div class="input-container">
+        <div class="input-password-check title">密碼確認</div>
 
         <label
           for="password-check"
@@ -85,8 +85,11 @@ export default {
     // eslint-disable-next-line
     handleSubmit(e) {
       const data = JSON.stringify({
+        account: this.account,
+        name: this.name,
         email: this.email,
         password: this.password,
+        checkPassword: this.checkPassword,
       });
 
       // TODO: 向後端驗證使用者登入資訊是否合法
@@ -110,7 +113,7 @@ export default {
   margin: 65px 0 35px 0;
 }
 
-.title {
+.page-title {
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: bold;
@@ -119,11 +122,7 @@ export default {
   color: #1c1c1c;
 }
 
-.input-account,
-.input-name,
-.input-email,
-.input-password,
-.input-password-check {
+.input-container {
   position: relative;
 }
 
@@ -138,7 +137,7 @@ input {
   border-bottom: 2px solid #657786;
   padding-top: 30px;
 }
-.input-title {
+.title {
   position: absolute;
   font-family: Noto Sans TC;
   font-style: normal;
