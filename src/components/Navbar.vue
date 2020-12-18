@@ -5,12 +5,15 @@
       <IconHome class="mr-3" />
       首頁
     </router-link>
-    <router-link to="/user" class="nav-btn d-flex fonSize18 align-items-center">
+    <router-link
+      :to="{ name: 'user', params: { user: userName } }"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
       <IconUserProfile class="mr-3" />
       個人資料
     </router-link>
     <router-link
-      to="/user/setting"
+      to="/setting"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <IconSetting class="mr-3" />
@@ -100,7 +103,7 @@ export default {
   },
   data() {
     return {
-
+      userName: 'sean'
     }
   },
   mixins: [emptyImageFilter],

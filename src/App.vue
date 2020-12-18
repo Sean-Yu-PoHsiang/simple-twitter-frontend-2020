@@ -28,4 +28,20 @@ a:hover {
 button:focus {
   outline: none;
 }
+
+@media (min-width: 576px) {
+}
+
+@media (min-width: 768px) {
+}
+
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1300px;
+  }
+}
 </style>
