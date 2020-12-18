@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
-const baseURL = 'https://simple-twitter-backend-2020.herokuapp.com/api/'
+const baseURL = 'http://merry-simple-twitter.herokuapp.com/api/'
 
 export const apiHelper = axios.create({
   baseURL

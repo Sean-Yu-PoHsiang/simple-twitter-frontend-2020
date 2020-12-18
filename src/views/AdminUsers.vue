@@ -10,28 +10,37 @@
           <div
             class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-2"
           >
-            <div class="col my-3">
+            <div v-for="user in users" :key="user.id" class="col my-3">
               <div class="user-card d-flex flex-column justify-content-between">
                 <img
                   class="user-cover"
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Classic_view_of_a_cloudfree_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada_%284110933448%29.jpg/240px-Classic_view_of_a_cloudfree_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada_%284110933448%29.jpg"
+                  :src="user.cover | emptyCover"
                   alt="no pic"
                 />
                 <img
                   class="user-avatar"
-                  :src="picture | emptyImage"
+                  :src="user.avatar | emptyImage"
                   alt="no pic"
                 />
                 <div class="user-content d-flex flex-column pb-3">
-                  <span class="user-name">John Doe</span>
-                  <span class="user-acount">&#64;heyjohn</span>
-                  <div>
-                    <span class="user-like">1.5&#75;</span>
-                    <span class="user-like ml-2">20&#75;</span>
+                  <span class="user-name">{{ user.name }}</span>
+                  <span class="user-acount">&#64;{{ user.account }}</span>
+                  <div
+                    class="d-flex justify-content-center align-items-center mt-2"
+                  >
+                    <IconReplyLg />
+                    <!-- K with &#75; -->
+                    <span class="user-like">{{ user.tweetsCount }}</span>
+                    <IconLike class="ml-2" />
+                    <span class="user-like">{{ user.likesCount }}</span>
                   </div>
-                  <div>
-                    <span class="user-follow following">34個</span>
-                    <span class="user-follow follower ml-2">59位</span>
+                  <div class="mt-2">
+                    <span class="user-follow following"
+                      >{{ user.followingsCount }}個</span
+                    >
+                    <span class="user-follow follower ml-2"
+                      >{{ user.followersCount }}位</span
+                    >
                   </div>
                 </div>
               </div>
@@ -45,17 +54,51 @@
 
 <script>
 import AdminNav from './../components/AdminNav'
+import IconReplyLg from './../components/IconReplyLg'
+import IconLike from './../components/IconLike'
 import { emptyImageFilter } from '../utils/mixins'
+import { emptyCoverFilter } from '../utils/mixins'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
+
 
 export default {
   components: {
-    AdminNav
+    AdminNav,
+    IconReplyLg,
+    IconLike
   },
-  mixins: [emptyImageFilter],
+  data() {
+    return {
+      users: []
+    }
+  },
+  created() {
+    this.fetchUsers()
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const { data } = await adminAPI.getAllUsers()
+        this.users = data
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得使用者，請稍後再試'
+        })
+      }
+    }
+  },
+  mixins: [emptyImageFilter, emptyCoverFilter],
 }
 </script>
 
 <style scoped>
+/* .user-content {
+  margin-top: 50px;
+} */
 .panel-right {
   height: 100vh;
 }
@@ -91,7 +134,7 @@ export default {
   background: #f6f7f8;
   border-radius: 10px;
   width: 100%;
-  height: 300px;
+  height: 320px;
   text-align: center;
 }
 .panel-right {

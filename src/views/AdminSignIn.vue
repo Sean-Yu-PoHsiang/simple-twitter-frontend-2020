@@ -74,7 +74,7 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        this.isProcessing = false
+        // this.isProcessing = true
 
         if (!this.email || !this.password) {
           Toast.fire({
@@ -84,27 +84,32 @@ export default {
           return
         }
 
-        // const response = await authorizationAPI.AdminSignIn({
-        //   email: this.email,
-        //   password: this.password
-        // })
+        this.isProcessing = true
 
-        if (this.email !== dummyUser.email || this.password !== dummyUser.password) {
-          throw new Error("bad!")
-        }
+        const response = await authorizationAPI.AdminSignIn({
+          email: this.email,
+          password: this.password
+        })
 
-        this.isProcessing = false
+        // console.log(response)
 
-        // const { data } = response
-
-        // if (data.status !== 'success') {
-        //   throw new Error(data.message)
+        // if (this.email !== dummyUser.email || this.password !== dummyUser.password) {
+        //   throw new Error("bad!")
         // }
 
-        // localStorage.setItem('token', data.token)
+        const { data } = response
+        // console.log(data)
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        localStorage.setItem('token', data.token)
+        this.isProcessing = false
         this.$router.push('/admin/tweets')
 
       } catch (error) {
+        console.log(error)
         this.password = ''
         this.isProcessing = false
 

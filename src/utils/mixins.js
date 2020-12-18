@@ -14,3 +14,10 @@ export const emptyImageFilter = {
     }
   }
 }
+export const emptyCoverFilter = {
+  filters: {
+    emptyCover(src) {
+      return src || 'https://i.imgur.com/K6Azg87.png'
+    }
+  }
+}
