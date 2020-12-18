@@ -8,31 +8,36 @@
       <Logo class="align-self-center m-4" />
       <h1 class="align-self-center fonSize23 mb-4">後台登入</h1>
       <div class="form-item">
-        <label for="exampleInputEmail1" class="form-label w-100 fonSize15"
-          >帳號</label
-        >
+        <label for="InputAcount" class="form-label w-100 fonSize15">帳號</label>
         <input
+          v-model="email"
           type="email"
           class="form-control"
-          id="exampleInputEmail1"
+          id="InputAcount"
           aria-describedby="emailHelp"
+          required
+          autofocus
         />
       </div>
       <div class="form-item">
-        <label for="exampleInputPassword1" class="form-label w-100 fonSize15"
+        <label for="InputPassword" class="form-label w-100 fonSize15"
           >密碼</label
         >
         <input
+          v-model="password"
           type="password"
           class="form-control"
-          id="exampleInputPassword1"
+          id="InputPassword"
+          required
         />
       </div>
       <button
         type="submit"
         class="btn btn-primary align-self-center w-100 fonSize15 signin-btn mb-5 fonSize18"
+        @click="handleSubmit"
+        :disabled="isProcessing"
       >
-        登入
+        {{ isProcessing ? "登入中..." : "登入" }}
       </button>
     </form>
     <div class="d-flex justify-content-end w-100">
@@ -44,12 +49,72 @@
 </template>
 
 <script>
-import Logo from "./../components/Logo";
+import Logo from "./../components/Logo"
+//eslint-disable-next-line
+import authorizationAPI from './../apis/authorization'
+import { Toast } from './../utils/helpers'
+
+//eslint-disable-next-line
+const dummyUser = {
+  email: 'root@example.com',
+  password: '12345678'
+}
 
 export default {
   components: {
     Logo,
   },
+  data() {
+    return {
+      email: '',
+      password: '',
+      isProcessing: false
+    }
+  },
+  methods: {
+    async handleSubmit() {
+      try {
+        this.isProcessing = false
+
+        if (!this.email || !this.password) {
+          Toast.fire({
+            icon: 'warning',
+            title: '請填入 email 和 password'
+          })
+          return
+        }
+
+        // const response = await authorizationAPI.AdminSignIn({
+        //   email: this.email,
+        //   password: this.password
+        // })
+
+        if (this.email !== dummyUser.email || this.password !== dummyUser.password) {
+          throw new Error("bad!")
+        }
+
+        this.isProcessing = false
+
+        // const { data } = response
+
+        // if (data.status !== 'success') {
+        //   throw new Error(data.message)
+        // }
+
+        // localStorage.setItem('token', data.token)
+        this.$router.push('/admin/tweets')
+
+      } catch (error) {
+        this.password = ''
+        this.isProcessing = false
+
+        Toast.fire({
+          icon: 'warning',
+          title: '請確認您輸入了正確的帳號密碼'
+        })
+      }
+    }
+  }
 };
 </script>
 

@@ -5,7 +5,7 @@ import SignIn from './../views/SignIn.vue'
 import SignUp from './../views/SignUp.vue'
 import UserSetting from './../views/UserSetting.vue'
 import UserFollows from './../views/UserFollows.vue'
-import UserFollowings from './../views/UserFollowings.vue'
+// import UserFollowings from './../views/UserFollowings.vue'
 import Home from './../views/Home.vue'
 import Tweet from './../views/Tweet.vue'
 
@@ -40,25 +40,35 @@ const routes = [
     component: Tweet
   },
   {
-    path: '/user/setting',
+    path: '/setting',
     name: 'user-setting',
     component: UserSetting
   },
   {
     //:user/follows
-    path: '/user/follows',
-    name: 'user-follows',
+    path: '/:user/followers',
+    name: 'user-followers',
     component: UserFollows
   },
   {
     //:user/follows
-    path: '/user/followings',
+    path: '/:user/followings',
     name: 'user-followings',
-    component: UserFollowings
+    component: UserFollows
   },
   {
-    path: '/user',
+    path: '/:user',
     name: 'user',
+    component: () => import('../views/User.vue')
+  },
+  {
+    path: '/:user/with_replies',
+    name: 'user-with-replies',
+    component: () => import('../views/User.vue')
+  },
+  {
+    path: '/:user/likes',
+    name: 'user-likes',
     component: () => import('../views/User.vue')
   },
   {

@@ -5,12 +5,15 @@
       <IconHome class="mr-3" />
       首頁
     </router-link>
-    <router-link to="/user" class="nav-btn d-flex fonSize18 align-items-center">
+    <router-link
+      :to="{ name: 'user', params: { user: userName } }"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
       <IconUserProfile class="mr-3" />
       個人資料
     </router-link>
     <router-link
-      to="/user/setting"
+      to="/setting"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <IconSetting class="mr-3" />
@@ -36,36 +39,6 @@
 
     <!-- Modal -->
     <div
-      v-if="isModalShowed"
-      class="new-tweet-card-pack"
-      @click="isModalShowed = false"
-    >
-      <div class="new-tweet-card" @click.stop>
-        <div class="p-3">
-          <div class="btn-cancel pointer" @click="isModalShowed = false"></div>
-        </div>
-        <hr />
-        <div class="d-flex p-3">
-          <img :src="avatar | emptyImage" alt="no photo" />
-          <form class="d-flex flex-column w-100" @submit.stop.prevent>
-            <textarea
-              class="form-textarea w-100"
-              name="text"
-              id="newTweet"
-              rows="6"
-              placeholder="有什麼新鮮事？"
-              autofocus
-            ></textarea>
-            <button type="submit" class="btn-tweet-submit align-self-end">
-              推文
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal -->
-    <div
       class="modal fade"
       id="exampleModal"
       tabindex="-1"
@@ -75,26 +48,36 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
             <button
               type="button"
               class="close"
               data-dismiss="modal"
               aria-label="Close"
             >
-              <span aria-hidden="true">&times;</span>
+              <div class="btn-cancel pointer"></div>
             </button>
           </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+          <div class="modal-body">
+            <div class="d-flex">
+              <img :src="avatar | emptyImage" alt="no photo" />
+              <form class="d-flex flex-column w-100" @submit.stop.prevent>
+                <textarea
+                  class="form-textarea w-100"
+                  name="text"
+                  id="newTweet"
+                  rows="6"
+                  placeholder="有什麼新鮮事？"
+                  autofocus
+                ></textarea>
+                <button
+                  type="submit"
+                  class="btn-tweet-submit align-self-end"
+                  data-dismiss="modal"
+                >
+                  推文
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -120,14 +103,33 @@ export default {
   },
   data() {
     return {
-      isModalShowed: false,
+      userName: 'sean'
     }
   },
   mixins: [emptyImageFilter],
 }
 </script>
 
-<style scoped leng="scss">
+<style scoped>
+.modal-dialog {
+  max-width: 600px;
+}
+.modal-content {
+  border-radius: 14px;
+  border: 0;
+}
+.modal-header {
+  height: 54px;
+}
+.close {
+  color: #ff6600;
+  opacity: 1;
+  margin: -1rem -1rem -1rem -1rem;
+  font-size: 30px;
+}
+.modal-footer {
+  border: 0;
+}
 nav {
   height: 100vh;
 }
