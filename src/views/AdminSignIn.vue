@@ -35,8 +35,9 @@
         type="submit"
         class="btn btn-primary align-self-center w-100 fonSize15 signin-btn mb-5 fonSize18"
         @click="handleSubmit"
+        :disabled="isProcessing"
       >
-        登入
+        {{ isProcessing ? "登入中..." : "登入" }}
       </button>
     </form>
     <div class="d-flex justify-content-end w-100">
@@ -48,7 +49,10 @@
 </template>
 
 <script>
-import Logo from "./../components/Logo";
+import Logo from "./../components/Logo"
+//eslint-disable-next-line
+import authorizationAPI from './../apis/authorization'
+import { Toast } from './../utils/helpers'
 
 //eslint-disable-next-line
 const dummyUser = {
@@ -64,12 +68,14 @@ export default {
     return {
       email: '',
       password: '',
-      isProcessing: true
+      isProcessing: false
     }
   },
   methods: {
     async handleSubmit() {
       try {
+        this.isProcessing = false
+
         if (!this.email || !this.password) {
           Toast.fire({
             icon: 'warning',
@@ -78,24 +84,26 @@ export default {
           return
         }
 
-        this.isProcessing = true
+        // const response = await authorizationAPI.AdminSignIn({
+        //   email: this.email,
+        //   password: this.password
+        // })
 
-        const response = await authorizationAPI.AdminSignIn({
-          email: this.email,
-          password: this.password
-        })
-
-        const { data } = response
-
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (this.email !== dummyUser.email || this.password !== dummyUser.password) {
+          throw new Error("bad!")
         }
 
-        // 將 token 存放在 localStorage 內
-        localStorage.setItem('token', data.token)
+        this.isProcessing = false
 
-        // 成功登入後轉址到餐聽首頁
-        this.$router.push('/restaurants')
+        // const { data } = response
+
+        // if (data.status !== 'success') {
+        //   throw new Error(data.message)
+        // }
+
+        // localStorage.setItem('token', data.token)
+        this.$router.push('/admin/tweets')
+
       } catch (error) {
         this.password = ''
         this.isProcessing = false
