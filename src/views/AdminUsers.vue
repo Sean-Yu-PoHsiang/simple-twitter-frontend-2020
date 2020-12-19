@@ -80,7 +80,11 @@ export default {
     async fetchUsers() {
       try {
         const { data } = await adminAPI.getAllUsers()
-        this.users = data
+
+        // filter admin users, only show normal users
+        this.users = data.filter(user => {
+          return user.role !== 'admin'
+        })
 
       } catch (error) {
         console.log(error)

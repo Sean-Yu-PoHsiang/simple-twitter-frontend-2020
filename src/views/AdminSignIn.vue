@@ -74,8 +74,6 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        // this.isProcessing = true
-
         if (!this.email || !this.password) {
           Toast.fire({
             icon: 'warning',
@@ -91,14 +89,7 @@ export default {
           password: this.password
         })
 
-        // console.log(response)
-
-        // if (this.email !== dummyUser.email || this.password !== dummyUser.password) {
-        //   throw new Error("bad!")
-        // }
-
         const { data } = response
-        // console.log(data)
 
         if (data.status !== 'success') {
           throw new Error(data.message)

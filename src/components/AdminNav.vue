@@ -19,6 +19,7 @@
     <button
       type="button"
       class="btn sign-out-btn d-flex fonSize18 align-items-center"
+      @click="signOut"
     >
       <IconSignOut class="mr-3" />
       登出
@@ -39,6 +40,12 @@ export default {
     IconUserProfile,
     IconSignOut
   },
+  methods: {
+    signOut() {
+      localStorage.removeItem('token')
+      this.$router.push('/admin/signin')
+    }
+  }
 }
 </script>
 
