@@ -20,6 +20,9 @@ export default {
 .active .svg-fill {
   fill: #ff6600;
 }
+.router-link-active .svg-fill {
+  fill: #ff6600;
+}
 a,
 a:hover {
   color: black;

@@ -9,7 +9,7 @@
         <div class="userNavbar d-flex">
           <router-link
             class="user-nav-link d-block"
-            :to="{ name: 'user', params: { userId: userProfile.id } }"
+            :to="{ name: 'user-tweets', params: { userId: userProfile.id } }"
             >推文</router-link
           >
           <router-link
@@ -45,7 +45,7 @@ import userAPI from './../apis/user'
 import { Toast } from './../utils/helpers'
 
 
-const dummyCurrentUser = {
+const currentUser = {
   "id": 2,
   "name": "User1",
   "email": "user1@example.com",
@@ -65,16 +65,17 @@ export default {
     return {
       currentUser: {},
       userProfile: {}
-
     }
   },
   created() {
     const { userId: userId } = this.$route.params
-    this.currentUser = dummyCurrentUser
+    this.currentUser = currentUser
     this.fetchUserProfile(userId)
   },
   beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId
+    const { userId: userId } = to.params
+    // const { name: name } = to.name
+    // console.log(name)
     this.fetchUserProfile(userId)
     next()
   },

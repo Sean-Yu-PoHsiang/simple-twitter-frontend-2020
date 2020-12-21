@@ -32,7 +32,7 @@
                     </button>
                   </div>
                   <p>
-                    {{ tweet.description }}
+                    {{ tweet.description | contentToLong }}
                   </p>
                 </div>
               </div>
@@ -48,6 +48,7 @@
 import AdminNav from './../components/AdminNav'
 import { emptyImageFilter } from '../utils/mixins'
 import { fromNowFilter } from '../utils/mixins'
+import { contentLengthFilter } from '../utils/mixins'
 import adminAPI from './../apis/admin'
 import { Toast } from './../utils/helpers'
 
@@ -68,7 +69,7 @@ export default {
       try {
         const { data } = await adminAPI.getAllTweets()
         data.map(tweet => {
-          tweet.createdAt = new Date(tweet.createdAt).toISOString()
+          tweet.createdAt = new Date(tweet.createdAt).toLocaleString()
         })
         this.tweets = data
 
@@ -107,7 +108,7 @@ export default {
       }
     }
   },
-  mixins: [emptyImageFilter, fromNowFilter],
+  mixins: [emptyImageFilter, fromNowFilter, contentLengthFilter],
 }
 </script>
 

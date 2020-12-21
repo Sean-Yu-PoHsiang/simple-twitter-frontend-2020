@@ -35,7 +35,7 @@ const routes = [
   },
   {
     //:user/tweet/: id'
-    path: '/user/tweet/id',
+    path: '/users/:userId/tweets/:tweetId',
     name: 'tweet',
     component: Tweet
   },
@@ -46,28 +46,28 @@ const routes = [
   },
   {
     //:user/follows
-    path: '/:user/followers',
+    path: '/users/:userId/followers',
     name: 'user-followers',
     component: UserFollows
   },
   {
     //:user/follows
-    path: '/:user/followings',
+    path: '/users/:userId/followings',
     name: 'user-followings',
     component: UserFollows
   },
   {
-    path: '/:user',
+    path: '/users/:userId',
     name: 'user',
     component: () => import('../views/User.vue')
   },
   {
-    path: '/:user/with_replies',
+    path: '/users/:userId/with_replies',
     name: 'user-with-replies',
     component: () => import('../views/User.vue')
   },
   {
-    path: '/:user/likes',
+    path: '/users/:userId/likes',
     name: 'user-likes',
     component: () => import('../views/User.vue')
   },
