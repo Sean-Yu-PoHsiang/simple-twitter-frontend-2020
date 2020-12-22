@@ -6,7 +6,7 @@
       </button>
       <div class="title-content d-flex flex-column justify-content-center ml-4">
         <span class="user-name">{{ userProfile.name }}</span>
-        <span class="tweets-count">25推文???</span>
+        <span class="tweets-count">{{ userProfile.tweetsCount }}推文</span>
       </div>
     </div>
 
@@ -39,12 +39,14 @@
         <button
           v-if="userProfile.id !== currentUser.id && !userProfile.isFollowed"
           class="btn btn-shallow"
+          @click="addFollowing(userProfile.id)"
         >
           跟隨
         </button>
         <button
           v-if="userProfile.id !== currentUser.id && userProfile.isFollowed"
           class="btn btn-solid"
+          @click="deleteFollowing(userProfile.id)"
         >
           正在跟隨
         </button>
@@ -56,10 +58,20 @@
           {{ userProfile.introduction }}
         </p>
         <div>
-          <router-link to="/" class="user-follow following"
+          <router-link
+            :to="{
+              name: 'user-followings',
+              params: { userId: userProfile.id },
+            }"
+            class="user-follow following"
             >{{ userProfile.FollowingsCount }}個</router-link
           >
-          <router-link to="/" class="user-follow follower ml-2"
+          <router-link
+            :to="{
+              name: 'user-followers',
+              params: { userId: userProfile.id },
+            }"
+            class="user-follow follower ml-2"
             >{{ userProfile.FollowersCount }}位</router-link
           >
         </div>
@@ -77,12 +89,8 @@ import IconRingActive from './../components/IconRingActive'
 import { emptyImageFilter } from '../utils/mixins'
 import { emptyCoverFilter } from '../utils/mixins'
 
-const dummyCurrentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null
-}
+import userAPI from './../apis/user'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
@@ -93,7 +101,7 @@ export default {
 
   },
   props: {
-    userProfile: {
+    initialUserProfile: {
       type: Object,
       required: true
     },
@@ -102,12 +110,61 @@ export default {
       required: true
     },
   },
-  mixins: [emptyImageFilter, emptyCoverFilter],
   data() {
     return {
-      isCurrentUser: true,
+      userProfile: this.initialUserProfile
     }
-  }
+  },
+  watch: {
+    initialUserProfile(newValue) {
+      this.userProfile = {
+        ...this.userProfile,
+        ...newValue
+      }
+    }
+  },
+  methods: {
+    async addFollowing(userId) {
+      try {
+        const { data } = await userAPI.addFollowing({ id: userId })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.userProfile.isFollowed = true
+
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法跟隨，請稍後再試'
+        })
+        console.log('error', error)
+      }
+    },
+    async deleteFollowing(userId) {
+      try {
+        const { data } = await userAPI.deleteFollowing({ userId })
+
+        console.log(data)
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.userProfile.isFollowed = false
+
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消跟隨，請稍後再試'
+        })
+        console.log('error', error)
+      }
+    }
+  },
+  mixins: [emptyImageFilter, emptyCoverFilter],
+
 }
 </script>
 

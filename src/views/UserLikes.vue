@@ -29,7 +29,7 @@
             >喜歡的內容</router-link
           >
         </div>
-        <Tweets :tweets="tweets" />
+        <Tweets :tweets="tweetsLikes" />
       </div>
       <div class="col-auto">
         <TopFollowersUser />
@@ -42,10 +42,9 @@
 import Navbar from './../components/Navbar'
 import TopFollowersUser from './../components/TopFollowersUser'
 import UserProfile from './../components/UserProfile'
-import Tweets from "./../components/Tweets.vue"
+import Tweets from "./../components/Tweets.vue";
 
 import userAPI from './../apis/user'
-// import tweetAPI from './../apis/tweet'
 import { Toast } from './../utils/helpers'
 
 
@@ -69,19 +68,19 @@ export default {
     return {
       currentUser: {},
       userProfile: {},
-      tweets: []
+      tweetsLikes: []
     }
   },
   created() {
     const { userId: userId } = this.$route.params
     this.currentUser = dummyCurrentUser
     this.fetchUserProfile(userId)
-    this.fetchUserTweets(userId)
+    this.fetchUserTweetsLikes(userId)
   },
   beforeRouteUpdate(to, from, next) {
     const userId = to.params.userId
     this.fetchUserProfile(userId)
-    this.fetchUserTweets(userId)
+    this.fetchUserTweetsLikes(userId)
     next()
   },
   methods: {
@@ -102,14 +101,15 @@ export default {
         })
       }
     },
-    async fetchUserTweets(userId) {
+    async fetchUserTweetsLikes(userId) {
       try {
-        const { data } = await userAPI.getUserTweets({ userId })
+        const { data } = await userAPI.getUserTweetsLikes({ userId })
 
-        this.tweets = {
-          ...this.userProfile,
-          ...data
-        }
+        this.tweetsLikes = data
+        // this.tweetsWithReplies = {
+        //   ...this.tweetsWithReplies,
+        //   ...data
+        // }
 
       } catch (error) {
         console.log(error)

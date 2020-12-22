@@ -4,7 +4,6 @@ import NotFound from '../views/NotFound.vue'
 import SignIn from './../views/SignIn.vue'
 import SignUp from './../views/SignUp.vue'
 import UserSetting from './../views/UserSetting.vue'
-import UserFollows from './../views/UserFollows.vue'
 // import UserFollowings from './../views/UserFollowings.vue'
 import Home from './../views/Home.vue'
 import Tweet from './../views/Tweet.vue'
@@ -35,7 +34,7 @@ const routes = [
   },
   {
     //:user/tweet/: id'
-    path: '/users/:userId/tweets/:tweetId',
+    path: '/tweets/:tweetId',
     name: 'tweet',
     component: Tweet
   },
@@ -48,13 +47,13 @@ const routes = [
     //:user/follows
     path: '/users/:userId/followers',
     name: 'user-followers',
-    component: UserFollows
+    component: () => import('../views/UserFollowers.vue')
   },
   {
     //:user/follows
     path: '/users/:userId/followings',
     name: 'user-followings',
-    component: UserFollows
+    component: () => import('../views/UserFollowings.vue')
   },
   {
     path: '/users/:userId',
@@ -64,12 +63,12 @@ const routes = [
   {
     path: '/users/:userId/with_replies',
     name: 'user-with-replies',
-    component: () => import('../views/User.vue')
+    component: () => import('../views/UserWithReplies.vue')
   },
   {
     path: '/users/:userId/likes',
     name: 'user-likes',
-    component: () => import('../views/User.vue')
+    component: () => import('../views/UserLikes.vue')
   },
   {
     path: '/admin/signin',

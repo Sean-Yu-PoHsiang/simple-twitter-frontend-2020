@@ -4,11 +4,12 @@
       <Logo class="logo-image" />
       <div class="title">登入 Alphitter</div>
     </div>
-    <form>
+    <form @submit.stop.prevent>
       <div class="input-container">
         <div class="input-title">帳號</div>
         <label for="exampleInputEmail1" class="form-label"></label>
         <input
+          v-model="email"
           type="email"
           class="form-control"
           id="exampleInputEmail1"
@@ -25,14 +26,22 @@
           aria-placeholder="密碼"
         ></label>
         <input
+          v-model="password"
           type="password"
           class="form-control"
           id="exampleInputPassword1"
+          @keyup.enter="handleSubmit"
         />
       </div>
     </form>
-    <button type="submit" class="btn btn btn-submit" id="btn-submit">
-      登入
+    <button
+      type="submit"
+      class="btn btn btn-submit"
+      id="btn-submit"
+      :disabled="isProcessing"
+      @click="handleSubmit"
+    >
+      {{ isProcessing ? "登入中..." : "登入" }}
     </button>
 
     <div class="pages-link">
@@ -45,11 +54,60 @@
 
 <script>
 import Logo from "./../components/Logo";
+import authorizationAPI from './../apis/authorization'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
     Logo,
   },
+  data() {
+    return {
+      email: '',
+      password: '',
+      isProcessing: false
+    }
+  },
+  methods: {
+    async handleSubmit() {
+      try {
+        if (!this.email || !this.password) {
+          Toast.fire({
+            icon: 'warning',
+            title: '請填入 email 和 password'
+          })
+          return
+        }
+
+        this.isProcessing = true
+
+        const response = await authorizationAPI.SignIn({
+          email: this.email,
+          password: this.password
+        })
+
+        const { data } = response
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        localStorage.setItem('token', data.token)
+        this.isProcessing = false
+        this.$router.push('/home')
+
+      } catch (error) {
+        console.log(error)
+        this.password = ''
+        this.isProcessing = false
+
+        Toast.fire({
+          icon: 'warning',
+          title: '請確認您輸入了正確的帳號密碼'
+        })
+      }
+    }
+  }
 };
 </script>
 

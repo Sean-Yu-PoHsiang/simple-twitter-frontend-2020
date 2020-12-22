@@ -1,13 +1,41 @@
 <template>
   <ul class="nav justify-content">
     <li class="nav-item">
-      <router-link class="nav-link" to="/user/follows">跟隨者</router-link>
+      <router-link
+        class="nav-link"
+        :to="{ name: 'user-followers', params: { userId: userId } }"
+        >跟隨者</router-link
+      >
     </li>
     <li class="nav-item">
-      <router-link class="nav-link" to="/user/followings">正在跟隨</router-link>
+      <router-link
+        class="nav-link"
+        :to="{ name: 'user-followings', params: { userId: userId } }"
+        >正在跟隨</router-link
+      >
     </li>
   </ul>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      userId: -1
+    }
+  },
+  created() {
+    const { userId: userId } = this.$route.params
+    this.userId = userId
+  },
+  beforeRouteUpdate(to, from, next) {
+    const userId = to.params.userId
+    this.userId = userId
+    console.log(this.userId)
+    next()
+  },
+}
+</script>
 
 <style scoped>
 .nav-link {

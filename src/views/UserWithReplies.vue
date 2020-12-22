@@ -5,11 +5,14 @@
         <Navbar />
       </div>
       <div class="col">
-        <UserProfile :userProfile="userProfile" :currentUser="currentUser" />
+        <UserProfile
+          :initialUserProfile="userProfile"
+          :currentUser="currentUser"
+        />
         <div class="userNavbar d-flex">
           <router-link
             class="user-nav-link d-block"
-            :to="{ name: 'user-tweets', params: { userId: userProfile.id } }"
+            :to="{ name: 'user', params: { userId: userProfile.id } }"
             >推文</router-link
           >
           <router-link
@@ -26,7 +29,7 @@
             >喜歡的內容</router-link
           >
         </div>
-        <Tweets />
+        <Tweets :tweetsWithReplies="tweetsWithReplies" />
       </div>
       <div class="col-auto">
         <TopFollowersUser />
@@ -45,7 +48,7 @@ import userAPI from './../apis/user'
 import { Toast } from './../utils/helpers'
 
 
-const currentUser = {
+const dummyCurrentUser = {
   "id": 2,
   "name": "User1",
   "email": "user1@example.com",
@@ -64,19 +67,20 @@ export default {
   data() {
     return {
       currentUser: {},
-      userProfile: {}
+      userProfile: {},
+      tweetsWithReplies: []
     }
   },
   created() {
     const { userId: userId } = this.$route.params
-    this.currentUser = currentUser
+    this.currentUser = dummyCurrentUser
     this.fetchUserProfile(userId)
+    this.fetchUserTweetsWithReplies(userId)
   },
   beforeRouteUpdate(to, from, next) {
-    const { userId: userId } = to.params
-    // const { name: name } = to.name
-    // console.log(name)
+    const userId = to.params.userId
     this.fetchUserProfile(userId)
+    this.fetchUserTweetsWithReplies(userId)
     next()
   },
   methods: {
@@ -84,12 +88,34 @@ export default {
       try {
         const { data } = await userAPI.getUserProfile({ userId })
         this.userProfile = data
+        this.userProfile = {
+          ...this.userProfile,
+          ...data
+        }
 
       } catch (error) {
         console.log(error)
         Toast.fire({
           icon: 'error',
           title: '無法取得使用者資料，請稍後再試'
+        })
+      }
+    },
+    async fetchUserTweetsWithReplies(userId) {
+      try {
+        const { data } = await userAPI.getUserTweetsWithReplies({ userId })
+
+        this.tweetsWithReplies = data
+        // this.tweetsWithReplies = {
+        //   ...this.tweetsWithReplies,
+        //   ...data
+        // }
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推文，請稍後再試'
         })
       }
     },

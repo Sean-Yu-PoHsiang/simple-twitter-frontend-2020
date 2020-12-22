@@ -6,5 +6,11 @@ export default {
       email,
       password
     })
+  },
+  SignIn({ email, password }) {
+    return apiHelper.post('/signin', {
+      email,
+      password
+    })
   }
 }

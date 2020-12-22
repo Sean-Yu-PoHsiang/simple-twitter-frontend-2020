@@ -32,6 +32,7 @@
     <button
       type="button"
       class="btn sign-out-btn d-flex fonSize18 align-items-center"
+      @click="signOut"
     >
       <IconSignOut class="mr-3" />
       登出
@@ -59,7 +60,7 @@
           </div>
           <div class="modal-body">
             <div class="d-flex">
-              <img :src="avatar | emptyImage" alt="no photo" />
+              <img :src="currentUser.image | emptyImage" alt="no photo" />
               <form class="d-flex flex-column w-100" @submit.stop.prevent>
                 <textarea
                   class="form-textarea w-100"
@@ -98,7 +99,8 @@ const currentUser = {
   "id": 2,
   "name": "User1",
   "email": "user1@example.com",
-  "role": null
+  "role": null,
+  "image": ""
 }
 
 export default {
@@ -116,6 +118,12 @@ export default {
   },
   created() {
     this.currentUser = currentUser
+  },
+  methods: {
+    signOut() {
+      localStorage.removeItem('token')
+      this.$router.push('/signin')
+    }
   },
   mixins: [emptyImageFilter],
 }

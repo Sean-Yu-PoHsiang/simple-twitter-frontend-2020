@@ -29,6 +29,7 @@
           class="form-control"
           id="InputPassword"
           required
+          @keyup.enter="handleSubmit"
         />
       </div>
       <button
@@ -50,7 +51,6 @@
 
 <script>
 import Logo from "./../components/Logo"
-//eslint-disable-next-line
 import authorizationAPI from './../apis/authorization'
 import { Toast } from './../utils/helpers'
 
