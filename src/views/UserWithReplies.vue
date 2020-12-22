@@ -54,8 +54,6 @@ const dummyCurrentUser = {
   "email": "user1@example.com",
   "role": null
 }
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg'
-localStorage.setItem('token', token)
 
 export default {
   components: {

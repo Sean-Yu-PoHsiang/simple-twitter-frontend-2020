@@ -1,26 +1,27 @@
 <template>
-  <div class="user-follows">
-    <div class="col-auto left-container">
-      <Navbar />
-    </div>
-    <div class="col main-container">
-      <div class="control-area">
-        <div class="previous-page">
-          <div class="arrow-icon">
-            <ArrowIcon />
-          </div>
-          <div class="user-detail">
-            <div class="user-name">John Doe</div>
-            <div class="tweet-count">25 推文</div>
-          </div>
-        </div>
-        <NavTabs />
+  <div class="container">
+    <div class="row">
+      <div class="col-auto">
+        <Navbar />
       </div>
-      <UsersFollowersList />
-    </div>
-
-    <div class="col-auto right-container">
-      <TopFollowersUser />
+      <div class="col main-container">
+        <div class="control-area">
+          <div class="previous-page">
+            <div class="arrow-icon" @click="$router.push('/')">
+              <ArrowIcon />
+            </div>
+            <div class="user-detail">
+              <div class="user-name">{{ userProfile.name }}</div>
+              <div class="tweet-count">{{ userProfile.tweetsCount }} 推文</div>
+            </div>
+          </div>
+          <NavTabs :initialUserId="userProfile.id" />
+        </div>
+        <UsersFollowersList :initialFollowers="followers" />
+      </div>
+      <div class="col-auto right-container">
+        <TopFollowersUser />
+      </div>
     </div>
   </div>
 </template>
@@ -31,8 +32,10 @@ import Navbar from "./../components/Navbar.vue";
 import NavTabs from "./../components/NavTabs";
 import TopFollowersUser from "./../components/TopFollowersUser.vue";
 import ArrowIcon from "./../components/ArrowIcon.vue";
-// UserFollowsList 載入跟隨使用者的清單
 import UsersFollowersList from "./../components/UsersFollowersList.vue";
+
+import userAPI from './../apis/user'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
@@ -42,21 +45,75 @@ export default {
     ArrowIcon,
     UsersFollowersList,
   },
+  data() {
+    return {
+      userProfile: {},
+      followers: []
+    }
+  },
+  created() {
+    const { userId: userId } = this.$route.params
+    this.fetchUserProfile(userId)
+    this.fetchUserFollowers(userId)
+  },
+  beforeRouteUpdate(to, from, next) {
+    const userId = to.params.userId
+    this.fetchUserProfile(userId)
+    this.fetchUserFollowers(userId)
+    next()
+  },
+  methods: {
+    async fetchUserProfile(userId) {
+      try {
+        const response = await userAPI.getUserProfile({ userId })
+
+        this.userProfile = {
+          ...this.userProfile,
+          ...response.data
+        }
+
+        if (response.status !== 200) {
+          throw new Error(response)
+        }
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得使用者資料，請稍後再試'
+        })
+      }
+    },
+    async fetchUserFollowers(userId) {
+      try {
+        const response = await userAPI.getUserFollowers({ userId })
+        console.log(response)
+
+        this.followers = response.data
+
+        if (response.status !== 200) {
+          throw new Error(response)
+        }
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得跟隨者資料，請稍後再試'
+        })
+      }
+    }
+  }
 };
 </script>
 
 <style scoped>
-/* 最外層整個網頁大方向排版 */
-.user-follows {
-  display: flex;
-}
-
 /* 中間區塊排版 */
 .main-container {
   display: flex;
   flex-direction: column;
   width: 600px;
-  height: 100%;
+  height: 100vh;
   border: 1px solid #e6ecf0;
   border-bottom: transparent;
 }
@@ -68,6 +125,7 @@ export default {
 .arrow-icon {
   margin-right: 43px;
   margin-left: 15px;
+  cursor: pointer;
 }
 
 .user-detail {

@@ -17,6 +17,9 @@ export default {
 </script>
 
 <style>
+body {
+  font-family: Noto Sans TC;
+}
 .active .svg-fill {
   fill: #ff6600;
 }

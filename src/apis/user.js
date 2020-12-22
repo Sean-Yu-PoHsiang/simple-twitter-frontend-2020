@@ -7,7 +7,6 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-
   addFollowing({ id }) {
     return apiHelper.post('/followships', { id }, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -18,7 +17,6 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-
   getUserTweets({ userId }) {
     return apiHelper.get(`/users/${userId}/tweets`, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -31,6 +29,16 @@ export default {
   },
   getUserTweetsLikes({ userId }) {
     return apiHelper.get(`/users/${userId}/likes`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getUserFollowers({ userId }) {
+    return apiHelper.get(`/users/${userId}/followers`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getUserFollowings({ userId }) {
+    return apiHelper.get(`/users/${userId}/followings`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

@@ -1,17 +1,16 @@
 <template>
   <div class="following-list">
-    <div class="user">
-      <img
-        class="user-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
+    <div v-if="followings.length === 0" class="warning-sign">
+      沒有正在跟隨的人
+    </div>
+    <div v-for="following in followings" :key="following.id" class="user">
+      <img class="user-avator" :src="following.avatar | emptyImage" alt="" />
       <div class="user-detail">
         <div class="user-and-follow-btn">
           <div class="user-info">
-            <div class="user-name">Mary Jane</div>
+            <div class="user-name">{{ following.name }}</div>
 
-            <div class="user-at">@apple</div>
+            <div class="user-at">@{{ following.account }}</div>
           </div>
 
           <button type="submit" id="follow-btn" class="btn follow-btn active">
@@ -19,54 +18,7 @@
           </button>
         </div>
         <div class="user-description">
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-          sint. Velit officia consequat duis enim velit mollit.
-        </div>
-      </div>
-    </div>
-    <div class="user">
-      <img
-        class="user-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div class="user-detail">
-        <div class="user-and-follow-btn">
-          <div class="user-info">
-            <div class="user-name">Mary Jane</div>
-
-            <div class="user-at">@apple</div>
-          </div>
-
-          <button type="submit" id="follow-btn" class="btn follow-btn active">
-            正在跟隨
-          </button>
-        </div>
-        <div class="user-description">
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-          sint. Velit officia consequat duis enim velit mollit.
-        </div>
-      </div>
-    </div>
-    <div class="user">
-      <img
-        class="user-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div class="user-detail">
-        <div class="user-and-follow-btn">
-          <div class="user-info">
-            <div class="user-name">Mary Jane</div>
-
-            <div class="user-at">@apple</div>
-          </div>
-
-          <button type="submit" id="follow-btn" class="btn follow-btn">
-            跟隨
-          </button>
-        </div>
-        <div class="user-description">
+          {{ following.introduction }}
           Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
           sint. Velit officia consequat duis enim velit mollit.
         </div>
@@ -75,12 +27,44 @@
   </div>
 </template>
 
+<script>
+import { emptyImageFilter } from '../utils/mixins'
+
+export default {
+  components: {},
+  props: {
+    initialFollowings: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      followings: this.initialFollowings
+    }
+  },
+  watch: {
+    initialFollowings(newValue) {
+      this.followings = newValue
+    }
+  },
+  mixins: [emptyImageFilter],
+};
+</script>
 
 <style scoped>
 .following-list {
   min-width: 300px;
+  overflow: scroll;
   /* width: 600px; */
 }
+
+.warning-sign {
+  text-align: center;
+  line-height: 100px;
+  color: #657786;
+}
+
 .user {
   display: flex;
   border-bottom: 1px solid #e6ecf0;
@@ -104,7 +88,7 @@
   font-style: normal;
   font-weight: bold;
   font-size: 15px;
-  line-height: 15px;
+  line-height: 20px;
   color: #1c1c1c;
 }
 .user-at {
@@ -112,7 +96,7 @@
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
-  line-height: 15px;
+  line-height: 20px;
   color: #657786;
 }
 
@@ -140,6 +124,7 @@
 }
 
 .user-description {
+  margin-top: 3px;
   margin-right: 15px;
 }
 </style>

@@ -19,21 +19,22 @@
 
 <script>
 export default {
-  data() {
-    return {
-      userId: -1
+  props: {
+    initialUserId: {
+      type: Number,
+      required: true
     }
   },
-  created() {
-    const { userId: userId } = this.$route.params
-    this.userId = userId
+  data() {
+    return {
+      userId: this.initialUserId
+    }
   },
-  beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId
-    this.userId = userId
-    console.log(this.userId)
-    next()
-  },
+  watch: {
+    initialUserId(newValue) {
+      this.userId = newValue
+    }
+  }
 }
 </script>
 

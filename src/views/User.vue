@@ -45,7 +45,6 @@ import UserProfile from './../components/UserProfile'
 import Tweets from "./../components/Tweets.vue"
 
 import userAPI from './../apis/user'
-// import tweetAPI from './../apis/tweet'
 import { Toast } from './../utils/helpers'
 
 
@@ -55,8 +54,6 @@ const dummyCurrentUser = {
   "email": "user1@example.com",
   "role": null
 }
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg'
-localStorage.setItem('token', token)
 
 export default {
   components: {
@@ -87,11 +84,15 @@ export default {
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const { data } = await userAPI.getUserProfile({ userId })
-        this.userProfile = data
+        const response = await userAPI.getUserProfile({ userId })
+
         this.userProfile = {
           ...this.userProfile,
-          ...data
+          ...response.data
+        }
+
+        if (response.status !== 200) {
+          throw new Error(response)
         }
 
       } catch (error) {
@@ -104,11 +105,16 @@ export default {
     },
     async fetchUserTweets(userId) {
       try {
-        const { data } = await userAPI.getUserTweets({ userId })
+        const response = await userAPI.getUserTweets({ userId })
+        console.log(response)
 
         this.tweets = {
           ...this.userProfile,
-          ...data
+          ...response.data
+        }
+
+        if (response.status !== 200) {
+          throw new Error(response)
         }
 
       } catch (error) {
