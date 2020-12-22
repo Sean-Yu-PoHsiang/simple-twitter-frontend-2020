@@ -9,7 +9,7 @@
         <div class="userNavbar d-flex">
           <router-link
             class="user-nav-link d-block"
-            :to="{ name: 'user', params: { userId: userProfile.id } }"
+            :to="{ name: 'user-tweets', params: { userId: userProfile.id } }"
             >推文</router-link
           >
           <router-link
@@ -36,62 +36,65 @@
 </template>
 
 <script>
-import Navbar from "./../components/Navbar";
-import TopFollowersUser from "./../components/TopFollowersUser";
-import UserProfile from "./../components/UserProfile";
+import Navbar from './../components/Navbar'
+import TopFollowersUser from './../components/TopFollowersUser'
+import UserProfile from './../components/UserProfile'
 import Tweets from "./../components/Tweets.vue";
 
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
+import userAPI from './../apis/user'
+import { Toast } from './../utils/helpers'
 
-const dummyCurrentUser = {
-  id: 2,
-  name: "User1",
-  email: "user1@example.com",
-  role: null,
-};
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg";
-localStorage.setItem("token", token);
+
+const currentUser = {
+  "id": 2,
+  "name": "User1",
+  "email": "user1@example.com",
+  "role": null
+}
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg'
+localStorage.setItem('token', token)
 
 export default {
   components: {
     Navbar,
     TopFollowersUser,
     UserProfile,
-    Tweets,
+    Tweets
   },
   data() {
     return {
       currentUser: {},
-      userProfile: {},
-    };
+      userProfile: {}
+    }
   },
   created() {
-    const { userId: userId } = this.$route.params;
-    this.currentUser = dummyCurrentUser;
-    this.fetchUserProfile(userId);
+    const { userId: userId } = this.$route.params
+    this.currentUser = currentUser
+    this.fetchUserProfile(userId)
   },
   beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId;
-    this.fetchUserProfile(userId);
-    next();
+    const { userId: userId } = to.params
+    // const { name: name } = to.name
+    // console.log(name)
+    this.fetchUserProfile(userId)
+    next()
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const { data } = await userAPI.getUserProfile({ userId });
-        this.userProfile = data;
+        const { data } = await userAPI.getUserProfile({ userId })
+        this.userProfile = data
+
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
-          icon: "error",
-          title: "無法取得使用者資料，請稍後再試",
-        });
+          icon: 'error',
+          title: '無法取得使用者資料，請稍後再試'
+        })
       }
     },
-  },
-};
+  }
+}
 </script>
 
 <style scoped>

@@ -8,77 +8,31 @@
         <h1 class="title">推文清單</h1>
         <div class="tweets-panel px-3">
           <div class="row">
-            <div class="col-12">
+            <div v-for="tweet in tweets" :key="tweet.id" class="col-12">
               <div class="tweet-card d-flex">
                 <img
                   class="user-avatar"
-                  :src="picture | emptyImage"
+                  :src="tweet.User.avatar | emptyImage"
                   alt="no pic"
                 />
                 <div class="tweet-content">
                   <div
                     class="tweet-content-title d-flex align-items-center mb-1"
                   >
-                    <span class="user-name">John Doe</span>
-                    <span class="user-acount">&#64;heyjohn</span>
+                    <span class="user-name">{{ tweet.User.name }}</span>
+                    <span class="user-acount"
+                      >&#64;{{ tweet.User.account }}</span
+                    >
                     <span class="dot fonSize30">&#8901;</span>
-                    <span class="tweet-create-time">3小時</span>
-                    <button class="btn-exit">&#10005;</button>
+                    <span class="tweet-create-time">
+                      {{ tweet.createdAt | fromNow }}
+                    </span>
+                    <button class="btn-exit" @click="deleteTweet(tweet.id)">
+                      &#10005;
+                    </button>
                   </div>
                   <p>
-                    Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                    ullamco cillum dolor. Voluptate exercitation incididunt
-                    aliquip deserunt reprehenderit elit laborum.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="tweet-card d-flex">
-                <img
-                  class="user-avatar"
-                  :src="picture | emptyImage"
-                  alt="no pic"
-                />
-                <div class="tweet-content">
-                  <div
-                    class="tweet-content-title d-flex align-items-center mb-1"
-                  >
-                    <span class="user-name">John Doe</span>
-                    <span class="user-acount">&#64;heyjohn</span>
-                    <span class="dot fonSize30">&#8901;</span>
-                    <span class="tweet-create-time">3小時</span>
-                    <button class="btn-exit">&#10005;</button>
-                  </div>
-                  <p>
-                    Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                    ullamco cillum dolor. Voluptate exercitation incididunt
-                    aliquip deserunt reprehenderit elit laborum.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="tweet-card d-flex">
-                <img
-                  class="user-avatar"
-                  :src="picture | emptyImage"
-                  alt="no pic"
-                />
-                <div class="tweet-content">
-                  <div
-                    class="tweet-content-title d-flex align-items-center mb-1"
-                  >
-                    <span class="user-name">John Doe</span>
-                    <span class="user-acount">&#64;heyjohn</span>
-                    <span class="dot fonSize30">&#8901;</span>
-                    <span class="tweet-create-time">3小時</span>
-                    <button class="btn-exit">&#10005;</button>
-                  </div>
-                  <p>
-                    Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                    ullamco cillum dolor. Voluptate exercitation incididunt
-                    aliquip deserunt reprehenderit elit laborum.
+                    {{ tweet.description | contentToLong }}
                   </p>
                 </div>
               </div>
@@ -93,12 +47,68 @@
 <script>
 import AdminNav from './../components/AdminNav'
 import { emptyImageFilter } from '../utils/mixins'
+import { fromNowFilter } from '../utils/mixins'
+import { contentLengthFilter } from '../utils/mixins'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
     AdminNav
   },
-  mixins: [emptyImageFilter],
+  data() {
+    return {
+      tweets: []
+    }
+  },
+  created() {
+    this.fetchTweets()
+  },
+  methods: {
+    async fetchTweets() {
+      try {
+        const { data } = await adminAPI.getAllTweets()
+        data.map(tweet => {
+          tweet.createdAt = new Date(tweet.createdAt).toLocaleString()
+        })
+        this.tweets = data
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推文，請稍後再試'
+        })
+      }
+    },
+    async deleteTweet(tweetId) {
+      try {
+        if (!confirm('確定刪除？')) {
+          return
+        }
+
+        console.log('confirm delete')
+
+        const { data } = await adminAPI.deleteTweet({ tweetId })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.tweets = this.tweets.filter(tweet =>
+          tweet.id !== tweetId
+        )
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '刪除推文失敗，請稍後再試'
+        })
+      }
+    }
+  },
+  mixins: [emptyImageFilter, fromNowFilter, contentLengthFilter],
 }
 </script>
 
@@ -148,6 +158,7 @@ export default {
 }
 .tweet-content {
   margin-top: 12px;
+  width: 100%;
 }
 .tweet-content-title {
   position: relative;

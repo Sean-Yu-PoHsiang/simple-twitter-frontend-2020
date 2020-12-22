@@ -6,7 +6,7 @@
       首頁
     </router-link>
     <router-link
-      :to="{ name: 'user', params: { user: userName } }"
+      :to="{ name: 'user', params: { userId: currentUser.id } }"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <IconUserProfile class="mr-3" />
@@ -93,6 +93,14 @@ import IconUserProfile from './IconUserProfile'
 import IconSignOut from './IconSignOut'
 import { emptyImageFilter } from '../utils/mixins'
 
+
+const currentUser = {
+  "id": 2,
+  "name": "User1",
+  "email": "user1@example.com",
+  "role": null
+}
+
 export default {
   components: {
     Logo,
@@ -103,8 +111,11 @@ export default {
   },
   data() {
     return {
-      userName: 'sean'
+      currentUser: {}
     }
+  },
+  created() {
+    this.currentUser = currentUser
   },
   mixins: [emptyImageFilter],
 }
@@ -246,5 +257,8 @@ textarea:focus {
 }
 .btn-cancel::after {
   transform: rotate(-45deg);
+}
+.router-link-active {
+  color: #ff6600;
 }
 </style>

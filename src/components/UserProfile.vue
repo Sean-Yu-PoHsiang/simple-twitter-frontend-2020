@@ -1,42 +1,66 @@
 <template>
   <div>
     <div class="title-box d-flex">
-      <button type="button" class="btn btn-link" @click="$router.back()">
+      <button type="button" class="btn btn-link" @click="$router.push('/')">
         <ArrowIcon />
       </button>
       <div class="title-content d-flex flex-column justify-content-center ml-4">
-        <span class="user-name">John Doe</span>
-        <span class="tweets-count">25推文</span>
+        <span class="user-name">{{ userProfile.name }}</span>
+        <span class="tweets-count">25推文???</span>
       </div>
     </div>
 
     <div class="user-card d-flex flex-column">
       <img
         class="user-cover"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Classic_view_of_a_cloudfree_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada_%284110933448%29.jpg/240px-Classic_view_of_a_cloudfree_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada_%284110933448%29.jpg"
+        :src="userProfile.cover | emptyCover"
         alt="no pic"
       />
-      <img class="user-avatar" :src="picture | emptyImage" alt="no pic" />
+      <img
+        class="user-avatar"
+        :src="userProfile.avatar | emptyImage"
+        alt="no pic"
+      />
       <div class="control-panel d-flex justify-content-end px-2 pt-2">
-        <button class="btn btn-shallow">編輯個人資料</button>
-        <button class="btn"><IconMessage /></button>
-        <button class="btn"><IconRing /></button>
-        <button class="btn"><IconRingActive /></button>
+        <button
+          v-if="userProfile.id === currentUser.id"
+          class="btn btn-shallow"
+        >
+          編輯個人資料
+        </button>
+        <button v-if="userProfile.id !== currentUser.id" class="btn">
+          <IconMessage />
+        </button>
+        <button v-if="userProfile.id !== currentUser.id" class="btn">
+          <IconRing />
+        </button>
+        <button v-if="false" class="btn"><IconRingActive /></button>
 
-        <button class="btn btn-shallow">跟隨</button>
-        <button class="btn btn-solid">正在跟隨</button>
+        <button
+          v-if="userProfile.id !== currentUser.id && !userProfile.isFollowed"
+          class="btn btn-shallow"
+        >
+          跟隨
+        </button>
+        <button
+          v-if="userProfile.id !== currentUser.id && userProfile.isFollowed"
+          class="btn btn-solid"
+        >
+          正在跟隨
+        </button>
       </div>
       <div class="user-content d-flex flex-column p-3">
-        <span class="user-name">John Doe</span>
-        <span class="user-acount">&#64;heyjohn</span>
+        <span class="user-name">{{ userProfile.name }}</span>
+        <span class="user-acount">&#64;{{ userProfile.account }}</span>
         <p class="user-description">
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-          sint.
+          {{ userProfile.introduction }}
         </p>
         <div>
-          <router-link to="/" class="user-follow following">34個</router-link>
+          <router-link to="/" class="user-follow following"
+            >{{ userProfile.FollowingsCount }}個</router-link
+          >
           <router-link to="/" class="user-follow follower ml-2"
-            >59位</router-link
+            >{{ userProfile.FollowersCount }}位</router-link
           >
         </div>
       </div>
@@ -49,7 +73,16 @@ import ArrowIcon from './../components/ArrowIcon'
 import IconMessage from './../components/IconMessage'
 import IconRing from './../components/IconRing'
 import IconRingActive from './../components/IconRingActive'
+
 import { emptyImageFilter } from '../utils/mixins'
+import { emptyCoverFilter } from '../utils/mixins'
+
+const dummyCurrentUser = {
+  "id": 2,
+  "name": "User1",
+  "email": "user1@example.com",
+  "role": null
+}
 
 export default {
   components: {
@@ -59,7 +92,17 @@ export default {
     IconRingActive
 
   },
-  mixins: [emptyImageFilter],
+  props: {
+    userProfile: {
+      type: Object,
+      required: true
+    },
+    currentUser: {
+      type: Object,
+      required: true
+    },
+  },
+  mixins: [emptyImageFilter, emptyCoverFilter],
   data() {
     return {
       isCurrentUser: true,
