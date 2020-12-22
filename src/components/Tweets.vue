@@ -1,24 +1,28 @@
 <template>
   <div class="all-users-newest-tweets">
-    <div class="avator-and-tweet">
-      <img
-        class="user-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
+    <router-link
+      :to="{
+        name: 'tweet',
+        params: { tweetId: tweet.id },
+      }"
+      v-for="tweet in tweets"
+      :key="tweet.id"
+      class="avator-and-tweet"
+    >
+      <img class="user-avator" :src="tweet.User.avatar" alt="" />
       <div>
         <div class="tweet-detail">
-          <div class="user-name">Apple</div>
+          <div class="user-name">{{ tweet.User.name }}</div>
           <div>
-            <span class="at-user">@apple</span>
+            <span class="at-user">@{{ tweet.User.name }}</span>
             <span>・</span>
-            <span class="tweet-update-time">3 小時</span>
+            <span class="tweet-update-time">{{
+              tweet.createdAt | fromNow
+            }}</span>
           </div>
         </div>
         <div class="tweet-text">
-          Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-          cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-          reprehenderit elit laborum.
+          {{ tweet.description }}
         </div>
         <div class="reply-and-like-btn">
           <div class="reply-container">
@@ -27,7 +31,7 @@
 
               <ReplyIcon class="reply-icon" />
 
-              <p class="replies-count">13</p>
+              <p class="replies-count">{{ tweet.repliesCount }}</p>
             </div>
           </div>
 
@@ -35,93 +39,12 @@
           <div class="like-container">
             <div class="btn-container">
               <LikeIcon class="like-icon" />
-              <p class="likes-count">76</p>
+              <p class="likes-count">{{ tweet.likesCount }}</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="avator-and-tweet">
-      <img
-        class="user-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div>
-        <div class="tweet-detail">
-          <div class="user-name">Apple</div>
-          <div>
-            <span class="at-user">@apple</span>
-            <span>・</span>
-            <span class="tweet-update-time">3 小時</span>
-          </div>
-        </div>
-        <div class="tweet-text">
-          Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-          cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-          reprehenderit elit laborum.
-        </div>
-        <div class="reply-and-like-btn">
-          <div class="reply-container">
-            <div class="btn-container">
-              <!-- 點回文可以跳轉到回文頁面 -->
-              <ReplyIcon class="reply-icon" />
-
-              <p class="replies-count">13</p>
-            </div>
-          </div>
-
-          <!-- 點like -->
-          <div class="like-container">
-            <div class="btn-container">
-              <LikeIcon class="like-icon" />
-              <p class="likes-count">76</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="avator-and-tweet">
-      <img
-        class="user-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div>
-        <div class="tweet-detail">
-          <div class="user-name">Apple</div>
-          <div>
-            <span class="at-user">@apple</span>
-            <span>・</span>
-            <span class="tweet-update-time">3 小時</span>
-          </div>
-        </div>
-        <div class="tweet-text">
-          Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-          cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-          reprehenderit elit laborum.
-        </div>
-        <div class="reply-and-like-btn">
-          <div class="reply-container">
-            <div class="btn-container">
-              <!-- 點回文可以跳轉到回文頁面 -->
-
-              <ReplyIcon class="reply-icon" />
-
-              <p class="replies-count">13</p>
-            </div>
-          </div>
-
-          <!-- 點like -->
-          <div class="like-container">
-            <div class="btn-container">
-              <LikeIcon class="like-icon" />
-              <p class="likes-count">76</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -129,11 +52,27 @@
 <script>
 import ReplyIcon from "./../components/ReplyIcon";
 import LikeIcon from "./../components/LikeIcon";
+import moment from "moment";
 
 export default {
   components: {
     ReplyIcon,
     LikeIcon,
+  },
+  props: {
+    tweets: {
+      type: Array,
+      required: true,
+    },
+  },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      // 使用 moment 提供的 fromNow 方法
+      return moment(datetime).fromNow();
+    },
   },
 };
 </script>

@@ -69,46 +69,45 @@
 </template>
 
 <script>
-import ArrowIcon from './../components/ArrowIcon'
-import IconMessage from './../components/IconMessage'
-import IconRing from './../components/IconRing'
-import IconRingActive from './../components/IconRingActive'
+import ArrowIcon from "./../components/ArrowIcon";
+import IconMessage from "./../components/IconMessage";
+import IconRing from "./../components/IconRing";
+import IconRingActive from "./../components/IconRingActive";
 
-import { emptyImageFilter } from '../utils/mixins'
-import { emptyCoverFilter } from '../utils/mixins'
-
+import { emptyImageFilter } from "../utils/mixins";
+import { emptyCoverFilter } from "../utils/mixins";
+// eslint-disable-next-line
 const dummyCurrentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null
-}
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  role: null,
+};
 
 export default {
   components: {
     ArrowIcon,
     IconMessage,
     IconRing,
-    IconRingActive
-
+    IconRingActive,
   },
   props: {
     userProfile: {
       type: Object,
-      required: true
+      required: true,
     },
     currentUser: {
       type: Object,
-      required: true
+      required: true,
     },
   },
   mixins: [emptyImageFilter, emptyCoverFilter],
   data() {
     return {
       isCurrentUser: true,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style scoped>

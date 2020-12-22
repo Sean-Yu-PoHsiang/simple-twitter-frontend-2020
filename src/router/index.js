@@ -35,7 +35,7 @@ const routes = [
   },
   {
     //:user/tweet/: id'
-    path: '/users/:userId/tweets/:tweetId',
+    path: '/tweets/:tweetId',
     name: 'tweet',
     component: Tweet
   },
