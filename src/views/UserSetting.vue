@@ -8,19 +8,20 @@
         <div class="title">帳戶設定</div>
         <form class="input-forms">
           <div class="input-container">
-            <div class="input-title">帳號</div>
+            <div class="input-account">帳號</div>
             <label class="form-label"></label>
-            <input type="text" class="form-control" />
+            <input v-model="account" type="text" class="form-control" />
           </div>
           <div class="input-container">
-            <div class="input-title">名稱</div>
+            <div class="input-name">名稱</div>
             <label class="form-label"></label>
-            <input type="text" class="form-control" />
+            <input v-model="name" type="text" class="form-control" />
           </div>
           <div class="input-container">
-            <div class="input-title">email</div>
+            <div class="input-email">email</div>
             <label for="inputEmail" class="form-label"></label>
             <input
+              v-model="email"
               type="email"
               class="form-control"
               id="inputEmail"
@@ -35,16 +36,26 @@
               class="form-label"
               aria-placeholder="密碼"
             ></label>
-            <input type="password" class="form-control" id="password" />
+            <input
+              v-model="password"
+              type="password"
+              class="form-control"
+              id="password"
+            />
           </div>
           <div class="input-container">
             <div class="input-title">密碼確認</div>
             <label
-              for="password-confirm"
+              for="password-check"
               class="form-label"
               aria-placeholder="密碼確認"
             ></label>
-            <input type="password" class="form-control" id="password-confirm" />
+            <input
+              v-model="passwordCheck"
+              type="password"
+              class="form-control"
+              id="password-check"
+            />
           </div>
         </form>
         <div class="flex-end">
@@ -60,9 +71,50 @@
 <script>
 import Navbar from "./../components/Navbar.vue";
 
+const dummyData = {
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  account: "User1",
+  cover: "https://loremflickr.com/598/200/landscape/?random=29",
+  avatar: "https://loremflickr.com/140/140/people/?random=11",
+  introduction:
+    "Iusto animi qui et sapiente impedit animi molestiae provident. Enim ad aut vitae est inventore deserunt enim. Sint et corporis reprehenderit praesentium. Blanditiis molestias reprehenderit tenetur dolorem qui. Minus sit nihil ea deserunt enim ad error.",
+  FollowingsCount: 4,
+  FollowersCount: 0,
+  isFollowed: false,
+};
+
 export default {
   components: {
     Navbar,
+  },
+  data() {
+    return {
+      account: "",
+      name: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
+    };
+  },
+  created() {
+    this.fetchUser();
+  },
+  methods: {
+    // eslint-disable-next-line
+    fetchUser() {
+      const { account, name, email } = dummyData;
+      this.account = account;
+      this.name = name;
+      this.email = email;
+      // this.password = dummyData.password;
+      // 密碼核對好像要寫邏輯，但是不用送進後端資料中
+      // TODO: 向後端驗證使用者登入資訊是否合法
+      // console.log("this.data", this.data);
+    },
+    // handleSubmit(e){
+    //表單提交時要put回去修改原始資料}
   },
 };
 </script>
