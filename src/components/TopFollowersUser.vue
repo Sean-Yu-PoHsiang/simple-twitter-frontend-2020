@@ -15,11 +15,12 @@
           type="submit"
           id="btn-is-following"
           class="btn follow-btn"
+          @click="deleteFollowing(user.id)"
         >
           正在跟隨
         </button>
         <button
-          @click.stop.prevent="addFollowed(user.id)"
+          @click.stop.prevent="addFollowing(user.id)"
           v-else
           type="submit"
           id="btn-not-following"
@@ -35,6 +36,8 @@
 
 <script>
 import topUsersAPI from "./../apis/user";
+import userAPI from "./../apis/user";
+
 import { Toast } from "./../utils/helpers";
 
 const token =
@@ -59,26 +62,64 @@ export default {
         console.log(error);
         Toast.fire({
           icon: "error",
-          title: "無法取得推文，請稍後再試",
+          title: "無法取得追蹤用戶資料，請稍後再試",
         });
       }
     },
-    addFollowed(userId) {
-      this.topUsers = this.topUsers.map((user) => {
-        if (user.id === userId) {
-          // console.log("addFollowed");
-          return {
-            ...user,
-            isFollowed: true,
-          };
-        } else {
-          // console.log("not addFollowed");
+    async addFollowing(userId) {
+      try {
+        const { data } = await userAPI.addFollowing({ id: userId });
 
-          return user;
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
-      });
+
+        this.topUsers = this.topUsers.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              isFollowed: true,
+            };
+          } else {
+            return user;
+          }
+        });
+        console.log("this.topUsers:", this.topUsers);
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法跟隨，請稍後再試",
+        });
+        console.log("error", error);
+      }
     },
-    // deleteFollowed() {},
+    async deleteFollowing(userId) {
+      try {
+        const { data } = await userAPI.deleteFollowing({ userId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.topUsers = this.topUsers.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              isFollowed: false,
+            };
+          } else {
+            return user;
+          }
+        });
+        console.log("this.topUsers:", this.topUsers);
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+        console.log("error", error);
+      }
+    },
   },
 };
 </script>
