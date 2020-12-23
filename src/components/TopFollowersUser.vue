@@ -84,7 +84,6 @@ export default {
             return user;
           }
         });
-        console.log("this.topUsers:", this.topUsers);
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -111,7 +110,6 @@ export default {
             return user;
           }
         });
-        console.log("this.topUsers:", this.topUsers);
       } catch (error) {
         Toast.fire({
           icon: "error",

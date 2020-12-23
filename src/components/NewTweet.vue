@@ -51,7 +51,6 @@ export default {
   created() {
     this.currentUser = dummyCurrentUser;
     const userId = this.currentUser.id;
-    console.log("userProfile", this.userProfile);
     this.fetchUserProfile(userId);
   },
   methods: {
@@ -168,6 +167,7 @@ export default {
 /* tweet input */
 .new-tweet {
   width: 100%;
+  display: flex;
 }
 textarea {
   border: none;

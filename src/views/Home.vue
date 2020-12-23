@@ -86,7 +86,6 @@ export default {
         likesCount,
         isLiked,
       });
-      console.log("tweets", this.tweets);
     },
   },
 };
