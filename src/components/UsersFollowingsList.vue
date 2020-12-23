@@ -12,7 +12,7 @@
 
             <div class="user-at">@{{ following.account }}</div>
           </div>
-          <div v-if="false">
+          <div>
             <button
               v-if="!following.isFollowed"
               type="submit"
