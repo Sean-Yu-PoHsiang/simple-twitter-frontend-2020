@@ -30,11 +30,6 @@ import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
 import { v4 as uuidv4 } from "uuid";
 
-// const tweetSimple = {
-//   description: "my post contents is here.",
-//   createdTimestamp: 21531564847,
-// };
-
 const dummyCurrentUser = {
   id: 2,
   name: "User1",
@@ -50,15 +45,14 @@ export default {
       userProfile: {},
       id: -1,
       description: "",
-      createdTimestamp: "",
+      createdAt: "",
     };
   },
   created() {
     this.currentUser = dummyCurrentUser;
     const userId = this.currentUser.id;
-    console.log("userId", userId);
+    console.log("userProfile", this.userProfile);
     this.fetchUserProfile(userId);
-    console.log("Date.now", this.createdTimestamp);
   },
   methods: {
     async fetchUserProfile(userId) {
@@ -82,25 +76,45 @@ export default {
       }
     },
     async handleSubmit() {
+      if (this.description.trim() === "") {
+        Toast.fire({
+          icon: "error",
+          title: "親愛的用戶，請勿發空空的思念。",
+        });
+        return;
+      } else if (this.description.length > 140) {
+        Toast.fire({
+          icon: "error",
+          title: "推文字數超過140囉！",
+        });
+        return;
+      }
+
       try {
-        this.createdTimestamp = Date.now();
+        this.createdAt = Date.now();
         const response = await userAPI.addUserNewTweet({
           description: this.description,
-          createdTimestamp: this.createdTimestamp,
+          createdAt: this.createdAt,
         });
-        console.log("this.createdTimestamp", this.createdTimestamp);
-
-        // console.log("response", response);
 
         if (response.status !== 200) {
           throw new Error(response);
         }
 
         this.$emit("after-create-tweet", {
-          User: { avatar: this.userProfile.avatar },
+          User: {
+            id: this.userProfile.id,
+            account: this.userProfile.account,
+            name: this.userProfile.name,
+            avatar: this.userProfile.avatar,
+          },
           id: uuidv4(),
+          name: this.userProfile.name,
           description: this.description,
-          createdTimestamp: this.createdTimestamp,
+          createdAt: this.createdAt,
+          repliesCount: 0,
+          likesCount: 0,
+          isLiked: false,
         });
         this.description = "";
       } catch (error) {
@@ -110,11 +124,6 @@ export default {
           title: "無法取得使用者資料，請稍後再試",
         });
       }
-
-      // return userAPI.post("/tweets", {
-      //   description,
-      //   createdTimestamp,
-      // });
     },
   },
 };

@@ -66,12 +66,25 @@ export default {
       }
     },
     afterCreateTweet(payload) {
-      const { description, createdTimestamp, id, User } = payload;
+      const {
+        User,
+        id,
+        name,
+        description,
+        createdAt,
+        repliesCount,
+        likesCount,
+        isLiked,
+      } = payload;
       this.tweets.unshift({
-        User: User,
-        id: id,
-        description: description,
-        createdTimestamp: createdTimestamp,
+        User,
+        id,
+        name,
+        description,
+        createdAt,
+        repliesCount,
+        likesCount,
+        isLiked,
       });
       console.log("tweets", this.tweets);
     },
