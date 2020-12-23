@@ -22,6 +22,11 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  addUserNewTweet({ description, createdTimestamp }) {
+    return apiHelper.post('/tweets', { description, createdTimestamp }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   getUserTweetsWithReplies({ userId }) {
     return apiHelper.get(`/users/${userId}/replied_tweets`, {
       headers: { Authorization: `Bearer ${getToken()}` }
