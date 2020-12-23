@@ -85,6 +85,8 @@ import ArrowIcon from "./../components/ArrowIcon";
 import IconMessage from "./../components/IconMessage";
 import IconRing from "./../components/IconRing";
 import IconRingActive from "./../components/IconRingActive";
+import { emptyImageFilter } from '../utils/mixins'
+import { emptyCoverFilter } from '../utils/mixins'
 
 import userAPI from './../apis/user'
 import { Toast } from './../utils/helpers'

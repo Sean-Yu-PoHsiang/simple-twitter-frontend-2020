@@ -1,5 +1,5 @@
 <template>
-  <div class="container home-page">
+  <div class="container">
     <div class="row">
       <!-- left component -->
       <div class="col-auto left-container">
@@ -28,9 +28,9 @@ import Navbar from "./../components/Navbar.vue";
 import tweetsAPI from "./../apis/tweet";
 import { Toast } from "./../utils/helpers";
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg";
-localStorage.setItem("token", token);
+// const token =
+//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg";
+// localStorage.setItem("token", token);
 
 export default {
   components: {
@@ -69,8 +69,4 @@ export default {
 </script>
 
 <style scoped>
-.home-page {
-  display: flex;
-  flex-direction: row;
-}
 </style>
