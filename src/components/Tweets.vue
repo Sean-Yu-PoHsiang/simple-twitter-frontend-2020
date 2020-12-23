@@ -14,7 +14,7 @@
         <div class="tweet-detail">
           <div class="user-name">{{ tweet.User.name }}</div>
           <div>
-            <span class="at-user">@{{ tweet.User.name }}</span>
+            <span class="at-user">@{{ tweet.User.account }}</span>
             <span>・</span>
             <span class="tweet-update-time">{{
               tweet.createdAt | fromNow

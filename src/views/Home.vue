@@ -54,7 +54,6 @@ export default {
         // data.map((tweet) => {
         //   tweet.createdAt = new Date(tweet.createdAt).toLocaleString();
         // });
-        console.log(data);
 
         this.tweets = data;
       } catch (error) {

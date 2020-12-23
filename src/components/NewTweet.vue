@@ -28,7 +28,45 @@
 </template>
 
 
+<script>
+import userAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
 
+const dummyCurrentUser = {
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  role: null,
+};
+
+export default {
+  data() {
+    return {
+      currentUser: {},
+      userProfile: {},
+    };
+  },
+  created() {
+    const { userId: userId } = this.$route.params;
+    this.currentUser = dummyCurrentUser;
+    this.fetchUserProfile(userId);
+  },
+  methods: {
+    async fetchUserProfile(userId) {
+      try {
+        const { data } = await userAPI.getUserProfile({ userId });
+        this.userProfile = data;
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
+  },
+};
+</script>
 
 <style scoped>
 .container {

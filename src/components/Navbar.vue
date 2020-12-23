@@ -59,7 +59,7 @@
           </div>
           <div class="modal-body">
             <div class="d-flex">
-              <img :src="avatar | emptyImage" alt="no photo" />
+              <img :src="currentUser.image | emptyImage" alt="no photo" />
               <form class="d-flex flex-column w-100" @submit.stop.prevent>
                 <textarea
                   class="form-textarea w-100"
@@ -86,20 +86,20 @@
 </template>
 
 <script>
-import Logo from './Logo'
-import IconHome from './IconHome'
-import IconSetting from './IconSetting'
-import IconUserProfile from './IconUserProfile'
-import IconSignOut from './IconSignOut'
-import { emptyImageFilter } from '../utils/mixins'
-
+import Logo from "./Logo";
+import IconHome from "./IconHome";
+import IconSetting from "./IconSetting";
+import IconUserProfile from "./IconUserProfile";
+import IconSignOut from "./IconSignOut";
+import { emptyImageFilter } from "../utils/mixins";
 
 const currentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null
-}
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  role: null,
+  image: "",
+};
 
 export default {
   components: {
@@ -107,18 +107,18 @@ export default {
     IconHome,
     IconSetting,
     IconUserProfile,
-    IconSignOut
+    IconSignOut,
   },
   data() {
     return {
-      currentUser: {}
-    }
+      currentUser: {},
+    };
   },
   created() {
-    this.currentUser = currentUser
+    this.currentUser = currentUser;
   },
   mixins: [emptyImageFilter],
-}
+};
 </script>
 
 <style scoped>
