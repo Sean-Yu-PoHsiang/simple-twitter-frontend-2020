@@ -10,19 +10,29 @@
 
             <div class="user-at">@{{ follower.account }}</div>
           </div>
-
-          <button
-            type="submit"
-            id="follow-btn"
-            class="btn btn-primary follow-btn"
-          >
-            跟隨
-          </button>
+          <div>
+            <button
+              v-if="!follower.isFollowed"
+              type="submit"
+              id="follow-btn"
+              class="btn btn-primary follow-btn"
+              @click="addFollowing(follower.id)"
+            >
+              跟隨
+            </button>
+            <button
+              v-else
+              type="submit"
+              id="follow-btn"
+              class="btn follow-btn active"
+              @click="deleteFollowing(follower.id)"
+            >
+              正在跟隨
+            </button>
+          </div>
         </div>
         <div class="user-description">
-          {{ follower.introduction }}
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-          sint. Velit officia consequat duis enim velit mollit.
+          {{ follower.introduction | contentToLong }}
         </div>
       </div>
     </div>
@@ -32,6 +42,9 @@
 
 <script>
 import { emptyImageFilter } from '../utils/mixins'
+import { contentLengthFilter } from '../utils/mixins'
+import userAPI from './../apis/user'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {},
@@ -51,7 +64,64 @@ export default {
       this.followers = newValue
     }
   },
-  mixins: [emptyImageFilter],
+  methods: {
+    async addFollowing(userId) {
+      // console.log(userId)
+      try {
+        const { data } = await userAPI.addFollowing({ id: userId })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.followers = this.followers.map(follower => {
+          if (follower.id === userId) {
+            return {
+              ...follower,
+              isFollowed: true
+            }
+          } else {
+            return follower
+          }
+        })
+
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法跟隨，請稍後再試'
+        })
+        console.log('error', error)
+      }
+    },
+    async deleteFollowing(userId) {
+      try {
+        const { data } = await userAPI.deleteFollowing({ userId })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.followers = this.followers.map(follower => {
+          if (follower.id === userId) {
+            return {
+              ...follower,
+              isFollowed: false
+            }
+          } else {
+            return follower
+          }
+        })
+
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消跟隨，請稍後再試'
+        })
+        console.log('error', error)
+      }
+    }
+  },
+  mixins: [emptyImageFilter, contentLengthFilter],
 };
 </script>
 
@@ -75,6 +145,7 @@ export default {
 }
 .user-detail {
   padding: 10px;
+  width: 100%;
 }
 .user-and-follow-btn {
   display: flex;
@@ -125,6 +196,7 @@ export default {
 .active {
   color: #ffffff;
   background: #ff6600;
+  width: 92px;
 }
 
 .user-description {

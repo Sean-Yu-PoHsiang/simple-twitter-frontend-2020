@@ -32,6 +32,7 @@ export default {
   },
   watch: {
     initialUserId(newValue) {
+      console.log(newValue)
       this.userId = newValue
     }
   }

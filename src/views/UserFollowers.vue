@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      userProfile: {},
+      userProfile: { id: -1 },
       followers: []
     }
   },
