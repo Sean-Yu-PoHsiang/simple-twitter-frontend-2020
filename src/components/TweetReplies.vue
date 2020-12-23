@@ -1,5 +1,5 @@
 <template>
-  <div class="reply-list">
+  <div class="container reply-list">
     <div class="replyer">
       <img
         class="replyer-avator"
@@ -74,7 +74,8 @@ export default {
 </script>
 
 <style scoped>
-.reply-list {
+.container {
+  width: 100%;
   border-right: 1px solid #e6ecf0;
   border-left: 1px solid #e6ecf0;
 }

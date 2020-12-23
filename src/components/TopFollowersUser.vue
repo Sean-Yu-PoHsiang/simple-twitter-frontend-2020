@@ -2,51 +2,29 @@
   <div class="top-followers">
     <div class="title">跟隨誰</div>
     <div class="user-list">
-      <div class="user">
+      <div v-for="user in topUsers" :key="user.id" class="user">
         <div class="user-info">
-          <img
-            class="user-avator"
-            src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-            alt=""
-          />
+          <img class="user-avator" :src="user.avatar" alt="" />
           <div class="user-detail">
-            <div class="user-name">Pizza Hut</div>
-            <div class="at-user">@pizzahut</div>
+            <div class="user-name">{{ user.name }}</div>
+            <div class="at-user">@{{ user.account }}</div>
           </div>
         </div>
-        <button type="submit" id="follow-btn" class="btn follow-btn">
-          跟隨
+        <button
+          v-if="user.isFollowed"
+          type="submit"
+          id="btn-is-following"
+          class="btn follow-btn"
+        >
+          正在跟隨
         </button>
-      </div>
-      <div class="user">
-        <div class="user-info">
-          <img
-            class="user-avator"
-            src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-            alt=""
-          />
-          <div class="user-detail">
-            <div class="user-name">Pizza Hut</div>
-            <div class="at-user">@pizzahut</div>
-          </div>
-        </div>
-        <button type="submit" id="follow-btn" class="btn follow-btn">
-          跟隨
-        </button>
-      </div>
-      <div class="user">
-        <div class="user-info">
-          <img
-            class="user-avator"
-            src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-            alt=""
-          />
-          <div class="user-detail">
-            <div class="user-name">Pizza Hut</div>
-            <div class="at-user">@pizzahut</div>
-          </div>
-        </div>
-        <button type="submit" id="follow-btn" class="btn follow-btn">
+        <button
+          @click.stop.prevent="addFollowed(user.id)"
+          v-else
+          type="submit"
+          id="btn-not-following"
+          class="btn follow-btn"
+        >
           跟隨
         </button>
       </div>
@@ -54,6 +32,58 @@
     </div>
   </div>
 </template>
+
+<script>
+import topUsersAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
+
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg";
+localStorage.setItem("token", token);
+
+export default {
+  data() {
+    return {
+      topUsers: [],
+    };
+  },
+  created() {
+    this.fetchTopUsers();
+  },
+  methods: {
+    async fetchTopUsers() {
+      try {
+        const { data } = await topUsersAPI.getTopFollowersUser();
+        this.topUsers = data;
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文，請稍後再試",
+        });
+      }
+    },
+    addFollowed(userId) {
+      this.topUsers = this.topUsers.map((user) => {
+        if (user.id === userId) {
+          // console.log("addFollowed");
+          return {
+            ...user,
+            isFollowed: true,
+          };
+        } else {
+          // console.log("not addFollowed");
+
+          return user;
+        }
+      });
+    },
+    // deleteFollowed() {},
+  },
+};
+</script>
+
+
 
 <style scoped>
 .top-followers {
@@ -122,8 +152,9 @@
   line-height: 15px;
   color: #ff6600;
 }
-/* 按鈕被點時改文字與背景色 */
-.active {
+
+#btn-is-following {
+  width: auto;
   color: #ffffff;
   background: #ff6600;
 }

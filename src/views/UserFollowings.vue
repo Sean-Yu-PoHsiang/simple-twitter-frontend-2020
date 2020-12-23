@@ -117,7 +117,7 @@ export default {
   border: 1px solid #e6ecf0;
   border-bottom: transparent;
 }
-.col {
+.main-container {
   padding: 0;
 }
 

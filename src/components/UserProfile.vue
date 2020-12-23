@@ -81,13 +81,10 @@
 </template>
 
 <script>
-import ArrowIcon from './../components/ArrowIcon'
-import IconMessage from './../components/IconMessage'
-import IconRing from './../components/IconRing'
-import IconRingActive from './../components/IconRingActive'
-
-import { emptyImageFilter } from '../utils/mixins'
-import { emptyCoverFilter } from '../utils/mixins'
+import ArrowIcon from "./../components/ArrowIcon";
+import IconMessage from "./../components/IconMessage";
+import IconRing from "./../components/IconRing";
+import IconRingActive from "./../components/IconRingActive";
 
 import userAPI from './../apis/user'
 import { Toast } from './../utils/helpers'
@@ -97,17 +94,16 @@ export default {
     ArrowIcon,
     IconMessage,
     IconRing,
-    IconRingActive
-
+    IconRingActive,
   },
   props: {
     initialUserProfile: {
       type: Object,
-      required: true
+      required: true,
     },
     currentUser: {
       type: Object,
-      required: true
+      required: true,
     },
   },
   data() {

@@ -61,9 +61,50 @@
 <script>
 import Navbar from "./../components/Navbar.vue";
 
+const dummyData = {
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  account: "User1",
+  cover: "https://loremflickr.com/598/200/landscape/?random=29",
+  avatar: "https://loremflickr.com/140/140/people/?random=11",
+  introduction:
+    "Iusto animi qui et sapiente impedit animi molestiae provident. Enim ad aut vitae est inventore deserunt enim. Sint et corporis reprehenderit praesentium. Blanditiis molestias reprehenderit tenetur dolorem qui. Minus sit nihil ea deserunt enim ad error.",
+  FollowingsCount: 4,
+  FollowersCount: 0,
+  isFollowed: false,
+};
+
 export default {
   components: {
     Navbar,
+  },
+  data() {
+    return {
+      account: "",
+      name: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
+    };
+  },
+  created() {
+    this.fetchUser();
+  },
+  methods: {
+    // eslint-disable-next-line
+    fetchUser() {
+      const { account, name, email } = dummyData;
+      this.account = account;
+      this.name = name;
+      this.email = email;
+      // this.password = dummyData.password;
+      // 密碼核對好像要寫邏輯，但是不用送進後端資料中
+      // TODO: 向後端驗證使用者登入資訊是否合法
+      // console.log("this.data", this.data);
+    },
+    // handleSubmit(e){
+    //表單提交時要put回去修改原始資料}
   },
 };
 </script>
@@ -71,6 +112,7 @@ export default {
 <style scoped>
 /* 版面調整 */
 .setting-page {
+  width: 100%;
   display: flex;
 }
 

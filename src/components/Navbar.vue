@@ -87,13 +87,12 @@
 </template>
 
 <script>
-import Logo from './Logo'
-import IconHome from './IconHome'
-import IconSetting from './IconSetting'
-import IconUserProfile from './IconUserProfile'
-import IconSignOut from './IconSignOut'
-import { emptyImageFilter } from '../utils/mixins'
-
+import Logo from "./Logo";
+import IconHome from "./IconHome";
+import IconSetting from "./IconSetting";
+import IconUserProfile from "./IconUserProfile";
+import IconSignOut from "./IconSignOut";
+import { emptyImageFilter } from "../utils/mixins";
 
 const currentUser = {
   "id": 2,
@@ -109,15 +108,15 @@ export default {
     IconHome,
     IconSetting,
     IconUserProfile,
-    IconSignOut
+    IconSignOut,
   },
   data() {
     return {
-      currentUser: {}
-    }
+      currentUser: {},
+    };
   },
   created() {
-    this.currentUser = currentUser
+    this.currentUser = currentUser;
   },
   methods: {
     signOut() {
@@ -126,7 +125,7 @@ export default {
     }
   },
   mixins: [emptyImageFilter],
-}
+};
 </script>
 
 <style scoped>

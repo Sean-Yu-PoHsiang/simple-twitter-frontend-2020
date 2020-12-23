@@ -7,12 +7,13 @@
     <form @submit.stop.prevent>
       <div class="input-container">
         <div class="input-title">帳號</div>
-        <label for="exampleInputEmail1" class="form-label"></label>
+        <label for="Email" class="form-label"></label>
         <input
           v-model="email"
           type="email"
           class="form-control"
-          id="exampleInputEmail1"
+          required
+          autofocus
           aria-describedby="emailHelp"
         />
         <div id="emailHelp" class="form-text"></div>
@@ -21,7 +22,7 @@
         <div class="input-title">帳號</div>
 
         <label
-          for="exampleInputPassword1"
+          for="password"
           class="form-label"
           aria-placeholder="密碼"
         ></label>
@@ -33,6 +34,9 @@
           @keyup.enter="handleSubmit"
         />
       </div>
+      <button type="submit" class="btn btn btn-submit" id="btn-submit">
+        登入
+      </button>
     </form>
     <button
       type="submit"

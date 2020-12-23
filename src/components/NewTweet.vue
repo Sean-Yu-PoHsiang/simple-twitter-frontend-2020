@@ -1,5 +1,5 @@
 <template>
-  <div class="main-user-container">
+  <div class="container">
     <div class="title">首頁</div>
     <div class="user-area">
       <div class="avator-and-tweet">
@@ -8,7 +8,7 @@
           src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
           alt=""
         />
-        <form class="tweet-container">
+        <form class="new-tweet">
           <label for="tweet-textarea" class="form-label"></label>
           <textarea
             class="form-control"
@@ -28,11 +28,50 @@
 </template>
 
 
+<script>
+import userAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
 
+const dummyCurrentUser = {
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  role: null,
+};
+
+export default {
+  data() {
+    return {
+      currentUser: {},
+      userProfile: {},
+    };
+  },
+  created() {
+    const { userId: userId } = this.$route.params;
+    this.currentUser = dummyCurrentUser;
+    this.fetchUserProfile(userId);
+  },
+  methods: {
+    async fetchUserProfile(userId) {
+      try {
+        const { data } = await userAPI.getUserProfile({ userId });
+        this.userProfile = data;
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
+  },
+};
+</script>
 
 <style scoped>
-.main-user-container {
-  width: 600px;
+.container {
+  padding: 0;
+  /* width: 600px; */
   border: 1px solid #e6ecf0;
   border-bottom: 10px solid #e6ecf0;
 }
@@ -65,9 +104,12 @@
   position: absolute;
   z-index: -2;
 }
+/* tweet input */
+.new-tweet {
+  width: 100%;
+}
 textarea {
   border: none;
-  width: 445px;
   height: 120px;
   resize: none;
   overflow-y: scroll;
@@ -84,6 +126,7 @@ textarea {
 }
 
 .flex-end {
+  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -98,7 +141,6 @@ textarea {
   top: 123px;
   background: #ff6600;
   border-radius: 100px;
-  margin-bottom: 10px;
-  margin-right: 5px;
+  margin: 10px;
 }
 </style>>

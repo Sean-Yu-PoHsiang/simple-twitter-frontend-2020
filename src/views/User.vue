@@ -44,9 +44,8 @@ import TopFollowersUser from './../components/TopFollowersUser'
 import UserProfile from './../components/UserProfile'
 import Tweets from "./../components/Tweets.vue"
 
-import userAPI from './../apis/user'
-import { Toast } from './../utils/helpers'
-
+import userAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
 
 const dummyCurrentUser = {
   "id": 2,
@@ -60,7 +59,7 @@ export default {
     Navbar,
     TopFollowersUser,
     UserProfile,
-    Tweets
+    Tweets,
   },
   data() {
     return {
@@ -96,11 +95,11 @@ export default {
         }
 
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得使用者資料，請稍後再試'
-        })
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
       }
     },
     async fetchUserTweets(userId) {
