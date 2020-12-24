@@ -54,12 +54,6 @@ import Logo from "./../components/Logo"
 import authorizationAPI from './../apis/authorization'
 import { Toast } from './../utils/helpers'
 
-//eslint-disable-next-line
-const dummyUser = {
-  email: 'root@example.com',
-  password: '12345678'
-}
-
 export default {
   components: {
     Logo,
@@ -96,7 +90,10 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
+        localStorage.setItem('currentUserId', data.user.id)
+        this.$store.commit('setCurrentUser', data.user)
         this.isProcessing = false
+
         this.$router.push('/admin/tweets')
 
       } catch (error) {

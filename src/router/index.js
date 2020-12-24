@@ -1,12 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from './../store'
+
 import NotFound from '../views/NotFound.vue'
 import SignIn from './../views/SignIn.vue'
-import SignUp from './../views/SignUp.vue'
-import UserSetting from './../views/UserSetting.vue'
-// import UserFollowings from './../views/UserFollowings.vue'
 import Home from './../views/Home.vue'
-import Tweet from './../views/Tweet.vue'
 
 
 Vue.use(VueRouter)
@@ -25,7 +23,7 @@ const routes = [
   {
     path: '/signup',
     name: 'sign-up',
-    component: SignUp
+    component: () => import('../views/SignUp.vue')
   },
   {
     path: '/home',
@@ -36,12 +34,12 @@ const routes = [
     //:user/tweet/: id'
     path: '/tweets/:tweetId',
     name: 'tweet',
-    component: Tweet
+    component: () => import('../views/Tweet.vue')
   },
   {
     path: '/setting',
     name: 'user-setting',
-    component: UserSetting
+    component: () => import('../views/UserSetting.vue')
   },
   {
     //:user/follows
@@ -93,9 +91,46 @@ const routes = [
 
 ]
 
+// const authorizeIsAdmin = (to, from, next) => {
+//   const currentUser = store.state.currentUser
+//   if (currentUser && !currentUser.isAdmin) {
+//     next('/404')
+//     return
+//   }
+
+//   next()
+// }
+
 const router = new VueRouter({
   linkExactActiveClass: 'active',
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  const tokenInLocalStorage = localStorage.getItem('token')
+  const tokenInStore = store.state.token
+  let isAuthenticated = store.state.isAuthenticated
+
+  // // 對於不需要驗證 token 的頁面
+  const pathsWithoutAuthentication = ['sign-up', 'sign-in', 'admin-sign-in']
+
+  // 比較 localStorage 和 store 中的 token 是否一樣
+  if (tokenInLocalStorage && tokenInLocalStorage !== tokenInStore) {
+    isAuthenticated = await store.dispatch('fetchCurrentUser')
+  }
+  // 如果 token 無效則轉址到登入頁
+  if (!isAuthenticated && !pathsWithoutAuthentication.includes(to.name)) {
+    next('/signin')
+    return
+  }
+
+  // 如果 token 有效則轉址到餐廳首頁
+  if (isAuthenticated && pathsWithoutAuthentication.includes(to.name)) {
+    next('/home')
+    return
+  }
+
+  next()
 })
 
 export default router

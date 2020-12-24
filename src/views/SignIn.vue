@@ -19,7 +19,7 @@
         <div id="emailHelp" class="form-text"></div>
       </div>
       <div class="input-container">
-        <div class="input-title">帳號</div>
+        <div class="input-title">密碼</div>
 
         <label
           for="password"
@@ -34,9 +34,9 @@
           @keyup.enter="handleSubmit"
         />
       </div>
-      <button type="submit" class="btn btn btn-submit" id="btn-submit">
+      <!-- <button type="submit" class="btn btn btn-submit" id="btn-submit">
         登入
-      </button>
+      </button> -->
     </form>
     <button
       type="submit"
@@ -97,7 +97,10 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
+        localStorage.setItem('currentUserId', data.user.id)
+        this.$store.commit('setCurrentUser', data.user)
         this.isProcessing = false
+
         this.$router.push('/home')
 
       } catch (error) {
