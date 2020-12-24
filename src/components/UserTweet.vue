@@ -1,10 +1,12 @@
 <template>
   <div class="main-user-container">
-    <div class="previous-page">
-      <div class="arrow-icon">
-        <ArrowIcon />
-      </div>
-      <div class="title">推文</div>
+    <div>
+      <router-link class="previous-page" to="/">
+        <div class="arrow-icon">
+          <ArrowIcon />
+        </div>
+        <div class="title">推文</div>
+      </router-link>
     </div>
 
     <div class="user-area">
@@ -106,6 +108,10 @@ export default {
   border-bottom: 1px solid #e6ecf0;
 }
 
+.previous-page:hover {
+  background-color: #ebebeb;
+}
+
 .arrow-icon {
   line-height: 26px;
   padding: 0;
@@ -205,7 +211,7 @@ export default {
 
 .count-container {
   display: flex;
-  border-bottom: 1px solid #e6ecf0;
+  border-bottom: 1px solid #f3f3f3;
 }
 
 .count-info {

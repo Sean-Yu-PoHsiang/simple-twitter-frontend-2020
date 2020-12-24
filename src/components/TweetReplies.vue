@@ -5,17 +5,17 @@
       <div class="reply-detail">
         <div class="replyer-info">
           <div class="replyer-name">{{ reply.User.name }}</div>
-          <div>
+          <div class="at-detail">
             <span class="replyer-at"> @{{ reply.User.account }}</span>
             <span>・</span>
-            <span class="reply-time">{{ reply.createdAt }}</span>
+            <span class="reply-time">{{ reply.createdAt | fromNow }}</span>
           </div>
         </div>
         <div>
-          <span>回覆</span>
+          <span class="reply">回覆</span>
           <span class="reply-to-user-at">@{{ userTweet.User.account }}</span>
         </div>
-        <div class="reply-text">Great~</div>
+        <div class="reply-text">{{ reply.comment }}</div>
       </div>
     </div>
   </div>
@@ -23,6 +23,8 @@
 
 
 <script>
+import moment from "moment";
+
 export default {
   props: {
     tweetReplies: {
@@ -32,6 +34,15 @@ export default {
     userTweet: {
       type: Object,
       required: true,
+    },
+  },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      // 使用 moment 提供的 fromNow 方法
+      return moment(datetime).fromNow();
     },
   },
 };
@@ -63,5 +74,39 @@ export default {
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid #e6ecf0;
+}
+
+.replyer-name {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 22px;
+  color: #1c1c1c;
+}
+
+.at-detail {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  color: #657786;
+}
+
+.reply,
+.reply-to-user-at {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  color: #657786;
+}
+.reply-to-user-at {
+  color: #ff6600;
+}
+.reply-text {
+  color: #1c1c1c;
 }
 </style>
