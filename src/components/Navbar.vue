@@ -60,9 +60,13 @@
           </div>
           <div class="modal-body">
             <div class="d-flex">
-              <img :src="currentUser.image | emptyImage" alt="no photo" />
-              <form class="d-flex flex-column w-100" @submit.stop.prevent>
+              <img :src="currentUser.avatar | emptyImage" alt="no photo" />
+              <form
+                class="d-flex flex-column w-100"
+                @submit.stop.prevent="handleSubmit"
+              >
                 <textarea
+                  v-model="description"
                   class="form-textarea w-100"
                   name="text"
                   id="newTweet"
@@ -74,6 +78,7 @@
                   type="submit"
                   class="btn-tweet-submit align-self-end"
                   data-dismiss="modal"
+                  @click="handleSubmit"
                 >
                   推文
                 </button>
@@ -94,7 +99,11 @@ import IconUserProfile from "./IconUserProfile";
 import IconSignOut from "./IconSignOut";
 import { emptyImageFilter } from "../utils/mixins";
 
-import { mapState } from 'vuex'
+import userAPI from "./../apis/user";
+import { v4 as uuidv4 } from "uuid";
+import { Toast } from "./../utils/helpers";
+
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -104,14 +113,74 @@ export default {
     IconUserProfile,
     IconSignOut,
   },
-  computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+  data() {
+    return {
+      avatar: "",
+      id: -1,
+      description: "",
+      createdAt: "",
+    };
   },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
+  },
+
   methods: {
     signOut() {
-      this.$store.commit('revokeAuthentication')
-      this.$router.push('/signin')
-    }
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/signin");
+    },
+
+    async handleSubmit() {
+      if (this.description.trim() === "") {
+        Toast.fire({
+          icon: "error",
+          title: "親愛的用戶，請勿發空空的思念。",
+        });
+        return;
+      } else if (this.description.length > 140) {
+        Toast.fire({
+          icon: "error",
+          title: "推文字數超過140囉！",
+        });
+        return;
+      }
+
+      try {
+        this.createdAt = Date.now();
+        const response = await userAPI.addUserNewTweet({
+          description: this.description,
+          createdAt: this.createdAt,
+        });
+
+        if (response.status !== 200) {
+          throw new Error(response);
+        }
+
+        this.$emit("after-create-tweet", {
+          User: {
+            id: this.currentUser.id,
+            account: this.currentUser.account,
+            name: this.currentUser.name,
+            avatar: this.currentUser.avatar,
+          },
+          id: uuidv4(),
+          name: this.currentUser.name,
+          description: this.description,
+          createdAt: this.createdAt,
+          repliesCount: 0,
+          likesCount: 0,
+          isLiked: false,
+        });
+        this.description = "";
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
   },
   mixins: [emptyImageFilter],
 };

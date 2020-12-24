@@ -3,7 +3,7 @@
     <div class="row">
       <!-- left component -->
       <div class="col-auto left-container">
-        <Navbar />
+        <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
       <div class="col main-container">
         <!-- user upload newest tweet  -->
