@@ -1,64 +1,19 @@
 <template>
-  <div class="container reply-list">
-    <div class="replyer">
-      <img
-        class="replyer-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
+  <div class="container">
+    <div v-for="reply in tweetReplies" :key="reply.id" class="replyer">
+      <img class="replyer-avator" :src="reply.User.avatar" alt="" />
       <div class="reply-detail">
         <div class="replyer-info">
-          <div class="replyer-name">Mary Jane</div>
+          <div class="replyer-name">{{ reply.User.name }}</div>
           <div>
-            <span class="replyer-at">@mjjane</span>
+            <span class="replyer-at"> @{{ reply.User.account }}</span>
             <span>・</span>
-            <span class="reply-time">3 小時</span>
+            <span class="reply-time">{{ reply.createdAt }}</span>
           </div>
         </div>
         <div>
-          <span>回覆</span> <span class="reply-to-user-at">@apple</span>
-        </div>
-        <div class="reply-text">Great~</div>
-      </div>
-    </div>
-    <div class="replyer">
-      <img
-        class="replyer-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div class="reply-detail">
-        <div class="replyer-info">
-          <div class="replyer-name">Mary Jane</div>
-          <div>
-            <span class="replyer-at">@mjjane</span>
-            <span>・</span>
-            <span class="reply-time">3 小時</span>
-          </div>
-        </div>
-        <div>
-          <span>回覆</span> <span class="reply-to-user-at">@apple</span>
-        </div>
-        <div class="reply-text">Great~</div>
-      </div>
-    </div>
-    <div class="replyer">
-      <img
-        class="replyer-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div class="reply-detail">
-        <div class="replyer-info">
-          <div class="replyer-name">Mary Jane</div>
-          <div>
-            <span class="replyer-at">@mjjane</span>
-            <span>・</span>
-            <span class="reply-time">3 小時</span>
-          </div>
-        </div>
-        <div>
-          <span>回覆</span> <span class="reply-to-user-at">@apple</span>
+          <span>回覆</span>
+          <span class="reply-to-user-at">@{{ userTweet.User.account }}</span>
         </div>
         <div class="reply-text">Great~</div>
       </div>
@@ -69,7 +24,16 @@
 
 <script>
 export default {
-  components: {},
+  props: {
+    tweetReplies: {
+      type: Array,
+      required: true,
+    },
+    userTweet: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
 

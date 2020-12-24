@@ -9,31 +9,29 @@
 
     <div class="user-area">
       <div class="user-detail">
-        <img class="user-avator" :src="" alt="" />
+        <img class="user-avator" :src="userTweet.User.avatar" alt="" />
         <div class="reply-detail">
-          <div class="user-name">Apple</div>
+          <div class="user-name">{{ userTweet.User.name }}</div>
           <div>
-            <span class="user-self-at">@apple</span>
+            <span class="user-self-at">@{{ userTweet.User.account }}</span>
           </div>
         </div>
       </div>
       <div class="tweet-text">
         <p>
-          Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-          cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-          reprehenderit elit laborum.
+          {{ userTweet.description }}
         </p>
       </div>
       <div class="tweet-upload-time">
-        <div>上午 10:05・2020年6月10日</div>
+        <div>{{ userTweet.createdAt | dateInMandarin }}</div>
       </div>
       <div class="count-container">
         <div class="count-info">
-          <p class="replies-count">34</p>
+          <p class="replies-count">{{ userTweet.repliesCount }}</p>
           <p class="count-title">回覆</p>
         </div>
         <div class="count-info">
-          <p class="likes-count">808</p>
+          <p class="likes-count">{{ userTweet.likesCount }}</p>
           <p class="count-title">喜歡次數</p>
         </div>
       </div>
@@ -53,6 +51,7 @@
 import ArrowIcon from "./../components/ArrowIcon.vue";
 import ReplyIcon from "./../components/ReplyIcon";
 import LikeIcon from "./../components/LikeIcon";
+import moment from "moment";
 
 export default {
   components: {
@@ -67,12 +66,29 @@ export default {
     },
   },
   created() {
-    console.log(this.userTweet);
-    //   // console.log("this.userTweet/tweet comp", this.userTweet);
+    console.log("this.userTweet", this.userTweet);
   },
-  // data(){
 
-  // }
+  filters: {
+    dateInMandarin(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      //日期顯示一：
+      const tweetDate = moment(datetime).calendar();
+      return tweetDate;
+
+      //日期顯示二：
+      //可以回傳中文日期，但是下方程式僅限很久之前的文，才可以正常顯示。
+      //因為太近的，calendar()，會回傳today、yesterday，而不是日月年，就會變成undefine
+      // const tweetDate = moment(datetime).subtract("days").calendar();
+      // const timeArraySplit = tweetDate.toString().split("/");
+      // console.log("timeArraySplit", timeArraySplit);
+      // const dateInMandarin = `
+      // ${timeArraySplit[2]}年${timeArraySplit[1]}月${timeArraySplit[0]}日`;
+      //    return dateInMandarin;
+    },
+  },
 };
 </script>
 

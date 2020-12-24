@@ -8,7 +8,7 @@
       <div class="col main-container">
         <UserTweet :userTweet="userTweet" />
         <!-- all users newest tweet  -->
-        <TweetReplies />
+        <TweetReplies :tweetReplies="tweetReplies" :userTweet="userTweet" />
       </div>
       <div class="col-auto right-container">
         <TopFollowersUser />
@@ -55,7 +55,7 @@ export default {
     //呼叫指定推文
     this.fetchUserTweet(tweetId);
     //呼叫指定推文的回覆
-    // fetchTweetReplies(userId);
+    this.fetchTweetReplies(tweetId);
   },
   methods: {
     async fetchUserTweet(tweetId) {
@@ -72,7 +72,20 @@ export default {
         });
       }
     },
-    // fetchTweetReplies(userId) {},
+    async fetchTweetReplies(tweetId) {
+      try {
+        const { data } = await userTweetAPI.getTweetReplies(tweetId);
+
+        this.tweetReplies = data;
+        console.log("this.tweetReplies", this.tweetReplies);
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得該文回覆資料，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>
