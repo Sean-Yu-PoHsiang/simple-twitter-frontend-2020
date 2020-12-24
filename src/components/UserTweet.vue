@@ -9,11 +9,7 @@
 
     <div class="user-area">
       <div class="user-detail">
-        <img
-          class="user-avator"
-          src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-          alt=""
-        />
+        <img class="user-avator" :src="" alt="" />
         <div class="reply-detail">
           <div class="user-name">Apple</div>
           <div>
@@ -64,6 +60,19 @@ export default {
     ReplyIcon,
     LikeIcon,
   },
+  props: {
+    userTweet: {
+      type: Object,
+      required: true,
+    },
+  },
+  created() {
+    console.log(this.userTweet);
+    //   // console.log("this.userTweet/tweet comp", this.userTweet);
+  },
+  // data(){
+
+  // }
 };
 </script>
 

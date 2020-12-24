@@ -6,7 +6,7 @@
         <Navbar />
       </div>
       <div class="col main-container">
-        <UserTweet />
+        <UserTweet :userTweet="userTweet" />
         <!-- all users newest tweet  -->
         <TweetReplies />
       </div>
@@ -25,12 +25,54 @@ import TweetReplies from "./../components/TweetReplies";
 import UserTweet from "./../components/UserTweet.vue";
 import TopFollowersUser from "./../components/TopFollowersUser.vue";
 
+import userTweetAPI from "./../apis/tweet";
+import { Toast } from "./../utils/helpers";
+
+const dummyCurrentUser = {
+  id: 2,
+  name: "User1",
+  email: "user1@example.com",
+  role: null,
+};
+
 export default {
   components: {
     TweetReplies,
     TopFollowersUser,
     UserTweet,
     Navbar,
+  },
+  data() {
+    return {
+      currentUser: {},
+      userTweet: {},
+      tweetReplies: [],
+    };
+  },
+  created() {
+    const tweetId = this.$route.params;
+    this.currentUser = dummyCurrentUser;
+    //呼叫指定推文
+    this.fetchUserTweet(tweetId);
+    //呼叫指定推文的回覆
+    // fetchTweetReplies(userId);
+  },
+  methods: {
+    async fetchUserTweet(tweetId) {
+      try {
+        const { data } = await userTweetAPI.getUserTweet(tweetId);
+
+        this.userTweet = data;
+        console.log("this.userTweet", this.userTweet);
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
+    // fetchTweetReplies(userId) {},
   },
 };
 </script>
