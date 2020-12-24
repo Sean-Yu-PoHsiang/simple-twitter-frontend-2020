@@ -28,12 +28,7 @@ import TopFollowersUser from "./../components/TopFollowersUser.vue";
 import userTweetAPI from "./../apis/tweet";
 import { Toast } from "./../utils/helpers";
 
-const dummyCurrentUser = {
-  id: 2,
-  name: "User1",
-  email: "user1@example.com",
-  role: null,
-};
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -44,14 +39,15 @@ export default {
   },
   data() {
     return {
-      currentUser: {},
       userTweet: {},
       tweetReplies: [],
     };
   },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
+  },
   created() {
     const tweetId = this.$route.params;
-    this.currentUser = dummyCurrentUser;
     //呼叫指定推文
     this.fetchUserTweet(tweetId);
     //呼叫指定推文的回覆

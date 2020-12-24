@@ -39,20 +39,15 @@
 </template>
 
 <script>
-import Navbar from './../components/Navbar'
-import TopFollowersUser from './../components/TopFollowersUser'
-import UserProfile from './../components/UserProfile'
-import Tweets from "./../components/Tweets.vue"
+import Navbar from "./../components/Navbar";
+import TopFollowersUser from "./../components/TopFollowersUser";
+import UserProfile from "./../components/UserProfile";
+import Tweets from "./../components/Tweets.vue";
 
 import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
 
-const dummyCurrentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null
-}
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -65,35 +60,36 @@ export default {
     return {
       currentUser: {},
       userProfile: {},
-      tweets: []
-    }
+      tweets: [],
+    };
+  },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
   },
   created() {
-    const { userId: userId } = this.$route.params
-    this.currentUser = dummyCurrentUser
-    this.fetchUserProfile(userId)
-    this.fetchUserTweets(userId)
+    const { userId: userId } = this.$route.params;
+    this.fetchUserProfile(userId);
+    this.fetchUserTweets(userId);
   },
   beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId
-    this.fetchUserProfile(userId)
-    this.fetchUserTweets(userId)
-    next()
+    const userId = to.params.userId;
+    this.fetchUserProfile(userId);
+    this.fetchUserTweets(userId);
+    next();
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const response = await userAPI.getUserProfile({ userId })
+        const response = await userAPI.getUserProfile({ userId });
 
         this.userProfile = {
           ...this.userProfile,
-          ...response.data
-        }
+          ...response.data,
+        };
 
         if (response.status !== 200) {
-          throw new Error(response)
+          throw new Error(response);
         }
-
       } catch (error) {
         console.log(error);
         Toast.fire({
@@ -104,31 +100,30 @@ export default {
     },
     async fetchUserTweets(userId) {
       try {
-        const response = await userAPI.getUserTweets({ userId })
-        console.log(response)
+        const response = await userAPI.getUserTweets({ userId });
+        console.log(response);
 
-        this.tweets = response.data
-        this.tweets = this.tweets.map(tweet => {
+        this.tweets = response.data;
+        this.tweets = this.tweets.map((tweet) => {
           return {
             ...tweet,
-            User: { ...this.userProfile }
-          }
-        })
+            User: { ...this.userProfile },
+          };
+        });
 
         if (response.status !== 200) {
-          throw new Error(response)
+          throw new Error(response);
         }
-
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得推文，請稍後再試'
-        })
+          icon: "error",
+          title: "無法取得推文，請稍後再試",
+        });
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

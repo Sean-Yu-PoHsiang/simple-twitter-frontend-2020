@@ -29,27 +29,22 @@
 import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
 import { v4 as uuidv4 } from "uuid";
-
-const dummyCurrentUser = {
-  id: 2,
-  name: "User1",
-  email: "user1@example.com",
-  role: null,
-};
+import { mapState } from "vuex";
 
 export default {
   data() {
     return {
       avatar: "",
-      currentUser: {},
       userProfile: {},
       id: -1,
       description: "",
       createdAt: "",
     };
   },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
+  },
   created() {
-    this.currentUser = dummyCurrentUser;
     const userId = this.currentUser.id;
     this.fetchUserProfile(userId);
   },
