@@ -107,10 +107,13 @@ export default {
         const response = await userAPI.getUserTweets({ userId })
         console.log(response)
 
-        this.tweets = {
-          ...this.userProfile,
-          ...response.data
-        }
+        this.tweets = response.data
+        this.tweets = this.tweets.map(tweet => {
+          return {
+            ...tweet,
+            User: { ...this.userProfile }
+          }
+        })
 
         if (response.status !== 200) {
           throw new Error(response)

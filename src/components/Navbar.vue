@@ -94,13 +94,7 @@ import IconUserProfile from "./IconUserProfile";
 import IconSignOut from "./IconSignOut";
 import { emptyImageFilter } from "../utils/mixins";
 
-const currentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null,
-  "image": ""
-}
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -110,17 +104,12 @@ export default {
     IconUserProfile,
     IconSignOut,
   },
-  data() {
-    return {
-      currentUser: {},
-    };
-  },
-  created() {
-    this.currentUser = currentUser;
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     signOut() {
-      localStorage.removeItem('token')
+      this.$store.commit('revokeAuthentication')
       this.$router.push('/signin')
     }
   },

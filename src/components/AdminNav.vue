@@ -42,10 +42,10 @@ export default {
   },
   methods: {
     signOut() {
-      localStorage.removeItem('token')
+      this.$store.commit('revokeAuthentication')
       this.$router.push('/admin/signin')
     }
-  }
+  },
 }
 </script>
 
