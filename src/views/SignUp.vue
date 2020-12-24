@@ -4,26 +4,40 @@
       <Logo class="logo-image" />
       <div class="page-title">建立你的帳號</div>
     </div>
-    <form method="post" @submit.prevent.stop="handleSubmit">
+    <form method="post" @submit.stop.prevent="handleSubmit">
       <div class="input-container">
         <div class="input-account title">帳號</div>
         <label class="form-label"></label>
-        <input v-model="account" type="text" class="form-control" />
+        <input
+          v-model="account"
+          name="account"
+          type="text"
+          class="form-control"
+          required
+        />
       </div>
       <div class="input-container">
         <div class="input-name title">名稱</div>
         <label class="form-label"></label>
-        <input v-model="name" type="text" class="form-control" />
+        <input
+          v-model="name"
+          name="name"
+          type="text"
+          class="form-control"
+          required
+        />
       </div>
       <div class="input-container">
         <div class="input-email title">email</div>
         <label for="inputEmail" class="form-label"></label>
         <input
           v-model="email"
+          name="email"
           type="email"
           class="form-control"
           id="inputEmail"
           aria-describedby="emailHelp"
+          required
         />
         <div id="emailHelp" class="form-text"></div>
       </div>
@@ -36,9 +50,11 @@
         ></label>
         <input
           v-model="password"
+          name="password"
           type="password"
           class="form-control"
           id="password"
+          required
         />
       </div>
       <div class="input-container">
@@ -51,13 +67,15 @@
         ></label>
         <input
           v-model="checkPassword"
+          name="checkPassword"
           type="password"
           class="form-control"
           id="password-check"
+          required
         />
       </div>
 
-      <button type="submit" class="btn btn-submit" id="btn-submit">登入</button>
+      <button type="submit" class="btn btn-submit" id="btn-submit">建立</button>
     </form>
     <div class="pages-link">
       <router-link class="link" to="/signin"> 取消 </router-link>
@@ -67,6 +85,8 @@
 
 <script>
 import Logo from "./../components/Logo";
+import authorizationAPI from './../apis/authorization'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
@@ -79,21 +99,86 @@ export default {
       email: "",
       password: "",
       checkPassword: "",
+      isProcessing: false
     };
   },
   methods: {
-    // eslint-disable-next-line
-    handleSubmit(e) {
-      const data = JSON.stringify({
-        account: this.account,
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        checkPassword: this.checkPassword,
-      });
+    async handleSubmit() {
+      if (!this.name) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫名稱'
+        })
+        return
+      } else if (!this.account) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫帳號'
+        })
+        return
+      } else if (!this.email) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫Email'
+        })
+        return
+      } else if (!this.password) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫密碼'
+        })
+        return
+      } else if (!this.checkPassword) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫密碼確認'
+        })
+        return
+      }
 
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      console.log("data", data);
+      // const signupUser = {
+      //   account: this.account,
+      //   name: this.name,
+      //   email: this.email,
+      //   password: this.password,
+
+      // }
+      // console.log(signupUser)
+
+      // const form = e.target
+      // const formData = new FormData(form)
+      // console.log(formData.values())
+      // for (let value of formData.values()) {
+      //   console.log(value)
+      // }
+
+      try {
+        const response = await authorizationAPI.SignUp({
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword
+        })
+
+        console.log(response)
+
+        if (response.status !== 200) {
+          console.log('fail')
+          throw new Error(response.data.message)
+        }
+
+        this.$router.push({ name: 'home' })
+
+      } catch (error) {
+        error
+        Toast.fire({
+          icon: 'error',
+          title: `無法建立帳號，請稍後再試.`
+        })
+        console.log('err', error)
+      }
+
     },
   },
 };

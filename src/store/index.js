@@ -12,7 +12,7 @@ export default new Vuex.Store({
       account: '',
       email: '',
       avatar: '',
-      // isAdmin: false
+      role: ''
     },
     isAuthenticated: false,
     token: ''
@@ -38,17 +38,13 @@ export default new Vuex.Store({
   actions: {
     async fetchCurrentUser({ commit }) {
       try {
-        const getCurrentUserId = () => localStorage.getItem('currentUserId')
-
-        //add api with token only user profile return
-
-        const response = await userAPI.getUserProfile({ userId: getCurrentUserId() })
+        const response = await userAPI.getCurrentUserProfile()
 
         if (response.status !== 200) {
           throw new Error(response)
         }
 
-        const { id, name, account, email, avatar } = response.data
+        const { id, name, account, email, avatar, role } = response.data
 
         commit('setCurrentUser', {
           id,
@@ -56,7 +52,7 @@ export default new Vuex.Store({
           account,
           email,
           avatar,
-          // isAdmin
+          role
         })
         return true
 
