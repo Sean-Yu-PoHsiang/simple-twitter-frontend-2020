@@ -1,23 +1,30 @@
 <template>
-  <nav class="d-flex flex-column">
+  <nav class="d-flex flex-column nav-wrapper">
     <Logo class="mt-3 mb-5" />
     <router-link to="/home" class="nav-btn d-flex fonSize18 align-items-center">
-      <IconHome class="mr-3" />
-      <p>首頁</p>
+      <div class="d-flex">
+        <IconHome class="mr-3" />
+        <p>首頁</p>
+      </div>
     </router-link>
+
     <router-link
       :to="{ name: 'user', params: { userId: currentUser.id } }"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
-      <IconUserProfile class="mr-3" />
-      <p>個人資料</p>
+      <div class="d-flex">
+        <IconUserProfile class="mr-3" />
+        <p>個人資料</p>
+      </div>
     </router-link>
     <router-link
       to="/setting"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
-      <IconSetting class="mr-3" />
-      <p>設定</p>
+      <div class="d-flex">
+        <IconSetting class="mr-3" />
+        <p>設定</p>
+      </div>
     </router-link>
 
     <button
@@ -315,13 +322,16 @@ img {
   border-radius: 50%;
   margin-right: 16px;
 }
-
-@media (max-width: 576px) {
+.nav-btn {
+  display: flex;
+  align-content: center;
 }
 
 @media (max-width: 768px) {
   p {
     display: none;
+    border: 1px solid red;
+    line-height: 100%;
   }
   .modal-dialog,
   .nav-btn,
@@ -333,7 +343,10 @@ img {
   .btn-tweet {
     border-radius: 50%;
   }
-  /* 還沒找到小圖示對齊方法 */
+  .nav-wrapper {
+    justify-content: center;
+  }
+  /* 還沒找到小圖示對齊方法  */
   /* .mr-3 {
     border: 1px solid red;
     width: auto;
