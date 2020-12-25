@@ -6,9 +6,15 @@
         <Navbar />
       </div>
       <div class="col main-container">
-        <UserTweet :userTweet="userTweet" />
+        <UserTweet
+          :userTweet="userTweet"
+          @after-reply-tweet="afterReplyTweet"
+        />
         <!-- all users newest tweet  -->
-        <TweetReplies :tweetReplies="tweetReplies" :userTweet="userTweet" />
+        <TweetReplies
+          :initialTweetReplies="tweetReplies"
+          :initialUserTweet="userTweet"
+        />
       </div>
       <div class="col-auto right-container">
         <TopFollowersUser />
@@ -17,7 +23,7 @@
       <!-- right component -->
     </div>
   </div>
-</template>
+</template> 
 
 <script>
 import Navbar from "./../components/Navbar.vue";
@@ -53,6 +59,7 @@ export default {
     //呼叫指定推文的回覆
     this.fetchTweetReplies(tweetId);
   },
+
   methods: {
     async fetchUserTweet(tweetId) {
       try {
@@ -81,6 +88,19 @@ export default {
           title: "無法取得該文回覆資料，請稍後再試",
         });
       }
+    },
+    afterReplyTweet(payload) {
+      console.log("afterReplyTweet執行");
+      // console.log("payload::", payload);
+
+      const { User, tweetId, comment, createdAt, id } = payload;
+      this.tweets.unshift({
+        User,
+        tweetId,
+        comment,
+        createdAt,
+        id,
+      });
     },
   },
 };

@@ -272,24 +272,7 @@ hr {
   cursor: pointer;
 }
 /* modal-setting */
-.new-tweet-card-pack {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-}
-.new-tweet-card {
-  position: relative;
-  height: auto;
-  width: 600px;
-  background: white;
-  margin: 30px auto;
-  z-index: 999;
-  border-radius: 14px;
-}
+
 textarea {
   margin: 0;
   padding: 0;
@@ -325,5 +308,12 @@ textarea:focus {
 }
 .router-link-active {
   color: #ff6600;
+}
+img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 16px;
 }
 </style>

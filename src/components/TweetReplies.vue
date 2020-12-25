@@ -27,13 +27,27 @@ import moment from "moment";
 
 export default {
   props: {
-    tweetReplies: {
+    initialTweetReplies: {
       type: Array,
       required: true,
     },
-    userTweet: {
+    initialUserTweet: {
       type: Object,
       required: true,
+    },
+  },
+  data() {
+    return {
+      tweetReplies: this.initialTweetReplies,
+      userTweet: this.initialUserTweet,
+    };
+  },
+  watch: {
+    initialTweetReplies(newValue) {
+      this.tweetReplies = newValue;
+    },
+    initialUserTweet(newValue) {
+      this.userTweet = newValue;
     },
   },
   filters: {
