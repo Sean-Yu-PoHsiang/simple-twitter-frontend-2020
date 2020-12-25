@@ -19,7 +19,11 @@
 
       <div>
         <div class="tweet-detail">
-          <div class="user-name">{{ tweet.User.name }}</div>
+          <router-link
+            :to="{ name: 'user', params: { userId: tweet.User.id } }"
+          >
+            <div class="user-name">{{ tweet.User.name }}</div>
+          </router-link>
           <div>
             <span class="at-user">@{{ tweet.User.account }}</span>
             <span>・</span>
@@ -28,7 +32,7 @@
             }}</span>
           </div>
         </div>
-        <div class="tweet-text">
+        <div class="tweet-text words">
           {{ tweet.description }}
         </div>
         <div class="reply-and-like-btn">
@@ -104,12 +108,11 @@ export default {
   /* width: 600px; */
   border: 1px solid #e6ecf0;
   border-right: 1px solid #e6ecf0;
-  height: 1000px;
 }
 
 .avator-and-tweet {
   border-bottom: 1px solid #e6ecf0;
-  padding: 10px 0;
+  padding: 10px 10px 10px 0;
 }
 
 .user-avator {
@@ -153,6 +156,10 @@ export default {
 .tweet-text,
 .comment-and-like {
   display: flex;
+}
+/* 貼文單字過長時，切割單字換行 */
+.words {
+  word-break: break-all;
 }
 
 .reply-icon,

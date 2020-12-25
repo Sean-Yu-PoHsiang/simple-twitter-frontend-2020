@@ -11,10 +11,18 @@
 
     <div class="user-area">
       <div class="user-detail">
-        <img class="user-avator" :src="userTweet.User.avatar" alt="" />
+        <router-link
+          :to="{ name: 'user', params: { userId: userTweet.User.id } }"
+        >
+          <img class="user-avator" :src="userTweet.User.avatar" alt="" />
+        </router-link>
         <span class="connect-line"></span>
         <div class="reply-detail">
-          <div class="user-name">{{ userTweet.User.name }}</div>
+          <router-link
+            :to="{ name: 'user', params: { userId: userTweet.User.id } }"
+          >
+            <div class="user-name">{{ userTweet.User.name }}</div>
+          </router-link>
           <div>
             <span class="user-self-at">@{{ userTweet.User.account }}</span>
           </div>

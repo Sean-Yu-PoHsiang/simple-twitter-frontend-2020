@@ -25,10 +25,12 @@
         <button
           v-if="userProfile.id === currentUser.id"
           class="btn btn-shallow"
+          :class="{ btnSolid: isProcessing }"
+          :disabled="isProcessing"
           data-toggle="modal"
           data-target="#settingModal"
         >
-          編輯個人資料
+          {{ isProcessing ? "資料更新中..." : "編輯個人資料" }}
         </button>
         <button v-if="userProfile.id !== currentUser.id" class="btn">
           <IconMessage />
@@ -47,7 +49,7 @@
         </button>
         <button
           v-if="userProfile.id !== currentUser.id && userProfile.isFollowed"
-          class="btn btn-solid"
+          class="btn btnSolid"
           @click="deleteFollowing(userProfile.id)"
         >
           正在跟隨
@@ -113,6 +115,7 @@
           </div>
           <div class="modal-body">
             <form
+              id="edit-user-profile-form"
               class="d-flex flex-column w-100"
               @submit.stop.prevent
               enctype="multipart/form-data"
@@ -134,7 +137,7 @@
                 <input
                   id="image-cover"
                   type="file"
-                  name="image-cover"
+                  name="cover"
                   accept="image/*"
                   class="form-control-file d-none"
                   @change="handleCoverImageChange"
@@ -152,7 +155,7 @@
                 <input
                   id="image-avatar"
                   type="file"
-                  name="image-avatar"
+                  name="avatar"
                   accept="image/*"
                   class="form-control-file d-none"
                   @change="handleAvatarImageChange"
@@ -163,6 +166,7 @@
                 <label class="form-label"></label>
                 <input
                   v-model="tempUserProfile.name"
+                  name="name"
                   type="text"
                   class="form-control"
                 />
@@ -172,8 +176,8 @@
                 <textarea
                   v-model="tempUserProfile.introduction"
                   class="form-textarea w-100"
-                  name="text"
-                  id="newTweet"
+                  name="introduction"
+                  id="user-introduction"
                   rows="6"
                   placeholder="自我介紹"
                   autofocus
@@ -225,6 +229,7 @@ export default {
     return {
       userProfile: this.initialUserProfile,
       tempUserProfile: this.initialUserProfile,
+      isProcessing: false
     };
   },
   computed: {
@@ -282,11 +287,10 @@ export default {
       }
     },
     handleCoverImageChange(e) {
-      console.log("start");
       const { files } = e.target;
 
       if (files.length === 0) {
-        return;
+        this.tempUserProfile.avatar = this.currentUser.avatar
       } else {
         const imageURL = window.URL.createObjectURL(files[0]);
         this.tempUserProfile.cover = imageURL;
@@ -296,7 +300,7 @@ export default {
       const { files } = e.target;
 
       if (files.length === 0) {
-        return;
+        this.tempUserProfile.avatar = this.currentUser.avatar
       } else {
         const imageURL = window.URL.createObjectURL(files[0]);
         this.tempUserProfile.avatar = imageURL;
@@ -304,8 +308,10 @@ export default {
     },
     clearCoverImage() {
       this.tempUserProfile.cover = "";
+      const coverElement = document.getElementById('image-cover')
+      coverElement.value = ""
     },
-    async handleSubmit(e) {
+    async handleSubmit() {
       if (!this.tempUserProfile.name) {
         Toast.fire({
           icon: "warning",
@@ -320,30 +326,28 @@ export default {
         return;
       }
 
-      const form = e.target;
-      const formData = new FormData(form);
-
-      for (let value in formData.value()) {
-        console.log(value);
-      }
-      // this.$emit('after-submit', formData)
+      this.isProcessing = true
+      let formData = new FormData(document.getElementById('edit-user-profile-form'));
 
       try {
-        const { data } = await userAPI.EditUserProfile({
+        const response = await userAPI.EditUserProfile({
           userId: this.tempUserProfile.id,
           formData,
-        });
-
-        if (data.status !== "success") {
-          throw new Error(data.message);
+        })
+        console.log(response)
+        if (response.data.status !== 200) {
+          // throw new Error(data.message);
         }
+        const newUserProfileRes = await userAPI.getCurrentUserProfile()
+        this.userProfile = { ...newUserProfileRes.data }
+        this.$store.commit('setCurrentUser', newUserProfileRes.data)
+        this.isProcessing = false
 
-        this.$router.push("/home");
       } catch (error) {
         this.isProcessing = false;
         Toast.fire({
           icon: "error",
-          title: "無法更新餐廳資料，請稍後再試",
+          title: "無法更新資料，請稍後再試。",
         });
       }
     },
@@ -353,6 +357,10 @@ export default {
 </script>
 
 <style scoped>
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem transparent;
+  background: transparent;
+}
 .btn-edit-photo-cover {
   margin: 0;
   cursor: pointer;
@@ -457,7 +465,7 @@ export default {
   font-size: 15px;
   font-weight: 700;
 }
-.btn-solid {
+.btnSolid {
   border: 1px solid #ff6600;
   border-radius: 20px;
   height: 40px;

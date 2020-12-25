@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto">
+      <div class="col-auto component-navbar">
         <Navbar />
       </div>
       <div class="col">
@@ -29,7 +29,7 @@
         <Tweets :initialTweets="tweets" />
       </div>
       <div class="col-auto">
-        <TopFollowersUser />
+        <TopFollowersUser class="component-top-followers-user" />
       </div>
     </div>
   </div>
@@ -63,15 +63,15 @@ export default {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   async created() {
-    const { userId: userId } = this.$route.params
-    await this.fetchUserProfile(userId)
-    this.fetchUserTweets(userId)
+    const { userId: userId } = this.$route.params;
+    await this.fetchUserProfile(userId);
+    this.fetchUserTweets(userId);
   },
   async beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId
-    await this.fetchUserProfile(userId)
-    this.fetchUserTweets(userId)
-    next()
+    const userId = to.params.userId;
+    await this.fetchUserProfile(userId);
+    this.fetchUserTweets(userId);
+    next();
   },
   methods: {
     async fetchUserProfile(userId) {

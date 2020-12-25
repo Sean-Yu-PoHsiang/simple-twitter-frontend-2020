@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <!-- left component -->
-      <div class="col-auto left-container">
+      <div class="col-auto left-container component-navbar">
         <Navbar />
       </div>
       <div class="col main-container">
@@ -17,7 +17,7 @@
         />
       </div>
       <div class="col-auto right-container">
-        <TopFollowersUser />
+        <TopFollowersUser class="component-top-followers-user" />
       </div>
 
       <!-- right component -->

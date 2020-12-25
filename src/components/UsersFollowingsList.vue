@@ -4,7 +4,11 @@
       沒有正在跟隨的人
     </div>
     <div v-for="following in followings" :key="following.id" class="user">
-      <img class="user-avator" :src="following.avatar | emptyImage" alt="" />
+      <img
+        class="user-avator"
+        :src="following.avatar || '' | emptyImage"
+        alt=""
+      />
       <div class="user-detail">
         <div class="user-and-follow-btn">
           <div class="user-info">
@@ -34,7 +38,9 @@
           </div>
         </div>
         <div class="user-description">
-          {{ following.introduction | contentToLong }}
+          {{
+            following.introduction || "-- no introduction --" | contentToLong
+          }}
         </div>
       </div>
     </div>
@@ -57,8 +63,8 @@ export default {
   },
   data() {
     return {
-      followings: this.initialFollowings,
-    };
+      followings: this.initialFollowings
+    }
   },
   watch: {
     initialFollowings(newValue) {

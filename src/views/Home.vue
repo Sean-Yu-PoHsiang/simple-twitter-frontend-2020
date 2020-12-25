@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <!-- left component -->
-      <div class="col-auto left-container">
+      <div class="col-auto left-container component-navbar">
         <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
       <div class="col main-container">
@@ -13,7 +13,7 @@
       </div>
       <div class="col-auto right-container">
         <!-- right component -->
-        <TopFollowersUser />
+        <TopFollowersUser class="component-top-followers-user" />
       </div>
     </div>
   </div>
