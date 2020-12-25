@@ -2,7 +2,11 @@
   <div class="user-follows-list">
     <div v-if="followers.length === 0" class="warning-sign">沒有跟隨者</div>
     <div v-for="follower in followers" :key="follower.id" class="user">
-      <img class="user-avator" :src="follower.avatar | emptyImage" alt="" />
+      <img
+        class="user-avator"
+        :src="follower.avatar || '' | emptyImage"
+        alt=""
+      />
       <div class="user-detail">
         <div class="user-and-follow-btn">
           <div class="user-info">
@@ -32,7 +36,7 @@
           </div>
         </div>
         <div class="user-description">
-          {{ follower.introduction | contentToLong }}
+          {{ follower.introduction || "-- no introduction --" | contentToLong }}
         </div>
       </div>
     </div>

@@ -138,24 +138,28 @@ export default {
       }
 
       try {
-        console.log(this.currentUser.id)
-        const response = await authorizationAPI.EditUserSetting({
+        let userEditContent = {
           userId: this.currentUser.id,
           account: this.account,
           name: this.name,
           email: this.email,
           password: this.password,
           checkPassword: this.checkPassword
-        })
+        }
+
+        const response = await authorizationAPI.EditUserSetting(userEditContent)
 
         if (response.status === "error") {
           throw new Error(response.message)
         }
 
+        userEditContent = { ...userEditContent, password: "", checkPassword: "" }
+
         Toast.fire({
           icon: 'success',
           title: `修改成功！`
         })
+        this.$store.commit('setCurrentUser', userEditContent)
         this.$router.push({ name: 'home' })
 
       } catch (error) {
