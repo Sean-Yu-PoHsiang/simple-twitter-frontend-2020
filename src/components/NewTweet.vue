@@ -3,11 +3,13 @@
     <div class="title">首頁</div>
     <div class="user-area">
       <div class="avator-and-tweet">
-        <img
-          class="user-avator"
-          :src="userProfile.avatar || 'https://i.imgur.com/S4PE66O.png'"
-          alt=""
-        />
+        <router-link :to="{ name: 'user', params: { userId: currentUser.id } }">
+          <img
+            class="user-avator"
+            :src="userProfile.avatar || 'https://i.imgur.com/S4PE66O.png'"
+            alt=""
+          />
+        </router-link>
         <form class="new-tweet" @submit.stop.prevent="handleSubmit">
           <label for="tweet-textarea" class="form-label"></label>
           <textarea

@@ -9,11 +9,14 @@
       :key="tweet.id"
       class="avator-and-tweet"
     >
-      <img
-        class="user-avator"
-        :src="tweet.User.avatar || 'https://i.imgur.com/S4PE66O.png'"
-        alt=""
-      />
+      <router-link :to="{ name: 'user', params: { userId: tweet.User.id } }">
+        <img
+          class="user-avator"
+          :src="tweet.User.avatar || 'https://i.imgur.com/S4PE66O.png'"
+          alt=""
+        />
+      </router-link>
+
       <div>
         <div class="tweet-detail">
           <div class="user-name">{{ tweet.User.name }}</div>
