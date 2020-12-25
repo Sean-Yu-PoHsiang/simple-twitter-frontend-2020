@@ -34,7 +34,7 @@ button:focus {
   outline: none;
 }
 
-.col {
+.vh100scroll {
   height: 100vh;
   overflow: scroll;
 }

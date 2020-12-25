@@ -4,7 +4,7 @@
       <div class="col-auto component-navbar">
         <Navbar />
       </div>
-      <div class="col">
+      <div class="col vh100scroll">
         <UserProfile :initialUserProfile="userProfile" />
         <div class="userNavbar d-flex">
           <router-link
