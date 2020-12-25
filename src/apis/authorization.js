@@ -1,4 +1,5 @@
 import { apiHelper } from './../utils/helpers'
+const getToken = () => localStorage.getItem('token')
 
 export default {
   AdminSignIn({ email, password }) {
@@ -21,5 +22,29 @@ export default {
       password,
       checkPassword
     })
+      .then(response => {
+        return response
+      })
+      .catch(err => {
+        return err.response.data
+      })
+  },
+  EditUserSetting({ userId, account, name, email, password, checkPassword }) {
+    return apiHelper.put(`/users/${userId}`, {
+      page: "setting",
+      account,
+      name,
+      email,
+      password,
+      checkPassword,
+    }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+      .then(response => {
+        return response
+      })
+      .catch(err => {
+        return err.response.data
+      })
   },
 }

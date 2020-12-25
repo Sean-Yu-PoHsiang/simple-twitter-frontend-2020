@@ -25,6 +25,8 @@
         <button
           v-if="userProfile.id === currentUser.id"
           class="btn btn-shallow"
+          data-toggle="modal"
+          data-target="#settingModal"
         >
           編輯個人資料
         </button>
@@ -77,6 +79,118 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="settingModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="d-flex">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <div class="btn-cancel pointer"></div>
+              </button>
+              <div class="modal-title">編輯個人資料</div>
+            </div>
+            <button
+              type="submit"
+              class="btn-tweet-submit"
+              data-dismiss="modal"
+              @click="handleSubmit"
+            >
+              儲存
+            </button>
+          </div>
+          <div class="modal-body">
+            <form
+              class="d-flex flex-column w-100"
+              @submit.stop.prevent
+              enctype="multipart/form-data"
+            >
+              <div class="form-group cover-box">
+                <div class="btn-box-cover d-flex align-items-center">
+                  <label class="btn-edit-photo-cover" for="image-cover"
+                    ><IconEditPhoto
+                  /></label>
+                  <div class="btn-delete-photo" @click="clearCoverImage">
+                    <div class="btn-cancel pointer ml-3 white"></div>
+                  </div>
+                </div>
+                <img
+                  :src="tempUserProfile.cover | emptyCover"
+                  class="d-block img-thumbnail-cover"
+                />
+                <!-- cover image -->
+                <input
+                  id="image-cover"
+                  type="file"
+                  name="image-cover"
+                  accept="image/*"
+                  class="form-control-file d-none"
+                  @change="handleCoverImageChange"
+                />
+              </div>
+              <div class="form-group avatar-box">
+                <label class="btn-edit-photo-avatar" for="image-avatar"
+                  ><IconEditPhoto
+                /></label>
+                <img
+                  :src="tempUserProfile.avatar | emptyImage"
+                  class="d-block img-thumbnail-avatar"
+                />
+                <!-- avatar image -->
+                <input
+                  id="image-avatar"
+                  type="file"
+                  name="image-avatar"
+                  accept="image/*"
+                  class="form-control-file d-none"
+                  @change="handleAvatarImageChange"
+                />
+              </div>
+              <div class="input-container">
+                <div class="input-title">名稱</div>
+                <label class="form-label"></label>
+                <input
+                  v-model="tempUserProfile.name"
+                  type="text"
+                  class="form-control"
+                />
+              </div>
+              <div class="d-flex justify-content-end"><span>0/40</span></div>
+              <div class="texarea-box">
+                <textarea
+                  v-model="tempUserProfile.introduction"
+                  class="form-textarea w-100"
+                  name="text"
+                  id="newTweet"
+                  rows="6"
+                  placeholder="自我介紹"
+                  autofocus
+                ></textarea>
+              </div>
+              <div class="d-flex justify-content-end"><span>0/160</span></div>
+              <input
+                type="text"
+                class="form-control d-none"
+                name="page"
+                value="profile"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -85,11 +199,13 @@ import ArrowIcon from "./../components/ArrowIcon";
 import IconMessage from "./../components/IconMessage";
 import IconRing from "./../components/IconRing";
 import IconRingActive from "./../components/IconRingActive";
+import IconEditPhoto from "./../components/IconEditPhoto";
 import { emptyImageFilter } from '../utils/mixins'
 import { emptyCoverFilter } from '../utils/mixins'
 
 import userAPI from './../apis/user'
 import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -97,26 +213,31 @@ export default {
     IconMessage,
     IconRing,
     IconRingActive,
+    IconEditPhoto
   },
   props: {
     initialUserProfile: {
       type: Object,
       required: true,
     },
-    currentUser: {
-      type: Object,
-      required: true,
-    },
   },
   data() {
     return {
-      userProfile: this.initialUserProfile
+      userProfile: this.initialUserProfile,
+      tempUserProfile: this.initialUserProfile
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   watch: {
     initialUserProfile(newValue) {
       this.userProfile = {
         ...this.userProfile,
+        ...newValue
+      }
+      this.tempUserProfile = {
+        ...this.tempUserProfile,
         ...newValue
       }
     }
@@ -131,6 +252,7 @@ export default {
         }
 
         this.userProfile.isFollowed = true
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1
 
       } catch (error) {
         Toast.fire({
@@ -151,6 +273,7 @@ export default {
         }
 
         this.userProfile.isFollowed = false
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1
 
       } catch (error) {
         Toast.fire({
@@ -159,7 +282,74 @@ export default {
         })
         console.log('error', error)
       }
-    }
+    },
+    handleCoverImageChange(e) {
+      console.log("start")
+      const { files } = e.target
+
+      if (files.length === 0) {
+        return
+      } else {
+        const imageURL = window.URL.createObjectURL(files[0])
+        this.tempUserProfile.cover = imageURL
+      }
+    },
+    handleAvatarImageChange(e) {
+      const { files } = e.target
+
+      if (files.length === 0) {
+        return
+      } else {
+        const imageURL = window.URL.createObjectURL(files[0])
+        this.tempUserProfile.avatar = imageURL
+      }
+    },
+    clearCoverImage() {
+      this.tempUserProfile.cover = ''
+    },
+    async handleSubmit(e) {
+      if (!this.tempUserProfile.name) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫名稱'
+        })
+        return
+      } else if (!this.tempUserProfile.introduction) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫介紹'
+        })
+        return
+      }
+
+      const form = e.target
+      const formData = new FormData(form)
+
+      for (let value in formData.value()) {
+        console.log(value)
+      }
+      // this.$emit('after-submit', formData)
+
+      try {
+        const { data } = await userAPI.EditUserProfile({
+          userId: this.tempUserProfile.id,
+          formData
+        })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.$router.push('/home')
+
+      } catch (error) {
+        this.isProcessing = false
+        Toast.fire({
+          icon: 'error',
+          title: '無法更新餐廳資料，請稍後再試'
+        })
+      }
+    },
   },
   mixins: [emptyImageFilter, emptyCoverFilter],
 
@@ -167,6 +357,97 @@ export default {
 </script>
 
 <style scoped>
+.btn-edit-photo-cover {
+  margin: 0;
+  cursor: pointer;
+}
+.btn-edit-photo-avatar {
+  cursor: pointer;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-body {
+  position: relative;
+}
+.cover-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 200px;
+  /* background: #666666; */
+}
+.btn-box-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.avatar-box {
+  position: absolute;
+  top: 140px;
+  left: 20;
+  width: 120px;
+  height: 120px;
+}
+.img-thumbnail-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.img-thumbnail-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid white;
+}
+.modal-title {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 24px;
+  margin-left: 16px;
+}
+.modal-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+.btn-tweet-submit {
+  position: relative;
+  top: -8px;
+
+  color: white;
+  background: #ff6600;
+  border-color: transparent;
+  height: 40px;
+  border-radius: 20px;
+  width: 64px;
+}
+.modal-dialog {
+  max-width: 600px;
+}
+.modal-content {
+  border-radius: 14px;
+  border: 0;
+}
+.modal-header {
+  height: 54px;
+}
+.close {
+  color: #ff6600;
+  opacity: 1;
+  margin: -1rem -1rem -1rem -1rem;
+  font-size: 30px;
+}
+.modal-footer {
+  border: 0;
+}
 .btn {
   padding: 0;
   margin: 0 5px;
@@ -227,11 +508,7 @@ export default {
   border: 1px solid #e6ecf0;
   border-bottom: 0;
   width: 100%;
-  /* height: 450px; */
 }
-/* .user-content {
-  margin-top: 70px;
-} */
 .user-acount {
   font-size: 13px;
   font-weight: 500;
@@ -257,5 +534,82 @@ export default {
 .follower::after {
   content: "跟隨者";
   color: #657786;
+}
+
+/* modal-setting */
+textarea {
+  margin: 0;
+  padding: 0;
+  background: #f5f8fa;
+  resize: none;
+  border: none;
+}
+.texarea-box {
+  padding: 10px;
+  border-radius: 4px;
+  background: #f5f8fa;
+  border-bottom: 2px solid #657786;
+}
+textarea:focus {
+  outline: none;
+}
+.btn-cancel {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+.btn-cancel::before,
+.btn-cancel::after {
+  content: "";
+  position: absolute;
+  height: 24px;
+  width: 2px;
+  border-radius: 2px;
+  background: #ff6600;
+  z-index: 99;
+  left: 42%;
+  /* transform: translate(-50%, -50%); */
+}
+.white::after,
+.white::before {
+  background: white;
+}
+.btn-cancel::before {
+  transform: rotate(45deg);
+}
+.btn-cancel::after {
+  transform: rotate(-45deg);
+}
+
+/* input name */
+.input-container {
+  position: relative;
+  margin-top: 250px;
+}
+input {
+  text-align: start;
+  vertical-align: bottom;
+  position: relative;
+  height: 50px;
+  border-style: none;
+  background: #f5f8fa;
+  border-radius: 4px;
+  border-bottom: 2px solid #657786;
+  padding-top: 30px;
+}
+.input-title {
+  position: absolute;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #657786;
+  top: 28px;
+  left: 12px;
+  z-index: 2;
+}
+.pointer {
+  cursor: pointer;
 }
 </style>

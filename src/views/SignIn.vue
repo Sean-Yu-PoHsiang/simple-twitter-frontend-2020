@@ -34,9 +34,6 @@
           @keyup.enter="handleSubmit"
         />
       </div>
-      <!-- <button type="submit" class="btn btn btn-submit" id="btn-submit">
-        登入
-      </button> -->
     </form>
     <button
       type="submit"
@@ -97,6 +94,7 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
+        console.log(data.user)
         this.$store.commit('setCurrentUser', data.user)
         this.isProcessing = false
 

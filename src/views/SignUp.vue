@@ -75,7 +75,14 @@
         />
       </div>
 
-      <button type="submit" class="btn btn-submit" id="btn-submit">建立</button>
+      <button
+        type="submit"
+        class="btn btn-submit"
+        id="btn-submit"
+        :disabled="isProcessing"
+      >
+        {{ isProcessing ? "建立中..." : "建立" }}
+      </button>
     </form>
     <div class="pages-link">
       <router-link class="link" to="/signin"> 取消 </router-link>
@@ -134,25 +141,16 @@ export default {
           title: '請填寫密碼確認'
         })
         return
+      } else if (this.checkPassword !== this.password) {
+        Toast.fire({
+          icon: 'warning',
+          title: '密碼與密碼確認不符'
+        })
+        return
       }
 
-      // const signupUser = {
-      //   account: this.account,
-      //   name: this.name,
-      //   email: this.email,
-      //   password: this.password,
-
-      // }
-      // console.log(signupUser)
-
-      // const form = e.target
-      // const formData = new FormData(form)
-      // console.log(formData.values())
-      // for (let value of formData.values()) {
-      //   console.log(value)
-      // }
-
       try {
+        this.isProcessing = true
         const response = await authorizationAPI.SignUp({
           account: this.account,
           name: this.name,
@@ -161,22 +159,24 @@ export default {
           checkPassword: this.checkPassword
         })
 
-        console.log(response)
-
-        if (response.status !== 200) {
-          console.log('fail')
-          throw new Error(response.data.message)
+        if (response.status === "error") {
+          throw new Error(response.message)
         }
 
-        this.$router.push({ name: 'home' })
+        Toast.fire({
+          icon: 'success',
+          title: `建立成功！ 請登入`
+        })
+        this.isProcessing = false
+        this.$router.push({ name: 'sign-in' })
 
       } catch (error) {
-        error
+        console.log('err', error)
         Toast.fire({
           icon: 'error',
-          title: `無法建立帳號，請稍後再試.`
+          title: `無法建立帳號，${error}`
         })
-        console.log('err', error)
+        this.isProcessing = false
       }
 
     },

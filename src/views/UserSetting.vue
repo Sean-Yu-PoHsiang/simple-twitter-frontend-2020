@@ -7,21 +7,22 @@
       <div class="col user-setting-wrapper">
         <div class="title">帳戶設定</div>
 
-        <form class="input-forms">
+        <form class="input-forms" @submit.stop.prevent="handleSubmit">
           <div class="input-container">
             <div class="input-title">帳號</div>
             <label class="form-label"></label>
-            <input type="text" class="form-control" />
+            <input v-model="account" type="text" class="form-control" />
           </div>
           <div class="input-container">
             <div class="input-title">名稱</div>
             <label class="form-label"></label>
-            <input type="text" class="form-control" />
+            <input v-model="name" type="text" class="form-control" />
           </div>
           <div class="input-container">
             <div class="input-title">email</div>
             <label for="inputEmail" class="form-label"></label>
             <input
+              v-model="email"
               type="email"
               class="form-control"
               id="inputEmail"
@@ -36,7 +37,12 @@
               class="form-label"
               aria-placeholder="密碼"
             ></label>
-            <input type="password" class="form-control" id="password" />
+            <input
+              v-model="password"
+              type="password"
+              class="form-control"
+              id="password"
+            />
           </div>
           <div class="input-container">
             <div class="input-title">密碼確認</div>
@@ -45,7 +51,12 @@
               class="form-label"
               aria-placeholder="密碼確認"
             ></label>
-            <input type="password" class="form-control" id="password-confirm" />
+            <input
+              v-model="checkPassword"
+              type="password"
+              class="form-control"
+              id="password-confirm"
+            />
           </div>
           <div class="flex-end">
             <button type="submit" class="btn btn-submit" id="btn-submit">
@@ -60,20 +71,9 @@
 
 <script>
 import Navbar from "./../components/Navbar.vue";
-
-const dummyData = {
-  id: 2,
-  name: "User1",
-  email: "user1@example.com",
-  account: "User1",
-  cover: "https://loremflickr.com/598/200/landscape/?random=29",
-  avatar: "https://loremflickr.com/140/140/people/?random=11",
-  introduction:
-    "Iusto animi qui et sapiente impedit animi molestiae provident. Enim ad aut vitae est inventore deserunt enim. Sint et corporis reprehenderit praesentium. Blanditiis molestias reprehenderit tenetur dolorem qui. Minus sit nihil ea deserunt enim ad error.",
-  FollowingsCount: 4,
-  FollowersCount: 0,
-  isFollowed: false,
-};
+import { mapState } from 'vuex'
+import authorizationAPI from './../apis/authorization'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
@@ -85,28 +85,89 @@ export default {
       name: "",
       email: "",
       password: "",
-      passwordCheck: "",
-    };
+      checkPassword: ""
+    }
   },
   created() {
-    this.fetchUser();
+    this.account = this.currentUser.account
+    this.name = this.currentUser.name
+    this.email = this.currentUser.email
+
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
-    // eslint-disable-next-line
-    fetchUser() {
-      const { account, name, email } = dummyData;
-      this.account = account;
-      this.name = name;
-      this.email = email;
-      // this.password = dummyData.password;
-      // 密碼核對好像要寫邏輯，但是不用送進後端資料中
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      // console.log("this.data", this.data);
-    },
-    // handleSubmit(e){
-    //表單提交時要put回去修改原始資料}
+    async handleSubmit() {
+      if (!this.name) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫名稱'
+        })
+        return
+      } else if (!this.account) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫帳號'
+        })
+        return
+      } else if (!this.email) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫Email'
+        })
+        return
+      } else if (!this.password) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫密碼'
+        })
+        return
+      } else if (!this.checkPassword) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫密碼確認'
+        })
+        return
+      } else if (this.checkPassword !== this.password) {
+        Toast.fire({
+          icon: 'warning',
+          title: '密碼與密碼確認不符'
+        })
+        return
+      }
+
+      try {
+        console.log(this.currentUser.id)
+        const response = await authorizationAPI.EditUserSetting({
+          userId: this.currentUser.id,
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword
+        })
+
+        if (response.status === "error") {
+          throw new Error(response.message)
+        }
+
+        Toast.fire({
+          icon: 'success',
+          title: `修改成功！`
+        })
+        this.$router.push({ name: 'home' })
+
+      } catch (error) {
+        console.log('err', error)
+        Toast.fire({
+          icon: 'error',
+          title: `無法儲存設定，${error}`
+        })
+      }
+    }
   },
-};
+}
 </script>
 
 <style scoped>

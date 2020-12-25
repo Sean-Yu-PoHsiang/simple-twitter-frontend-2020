@@ -51,5 +51,16 @@ export default {
     return apiHelper.get(`/users`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  EditUserProfile({ userId, formData }) {
+    return apiHelper.put(`/users/${userId}`, formData, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+      .then(response => {
+        return response
+      })
+      .catch(err => {
+        return err.response.data
+      })
   }
 }

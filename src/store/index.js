@@ -44,7 +44,7 @@ export default new Vuex.Store({
           throw new Error(response)
         }
 
-        const { id, name, account, email, avatar, role } = response.data
+        const { id, name, account, email, avatar, cover, introduction, role } = response.data
 
         commit('setCurrentUser', {
           id,
@@ -52,6 +52,8 @@ export default new Vuex.Store({
           account,
           email,
           avatar,
+          cover,
+          introduction,
           role
         })
         return true

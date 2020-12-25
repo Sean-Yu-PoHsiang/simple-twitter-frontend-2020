@@ -5,10 +5,7 @@
         <Navbar />
       </div>
       <div class="col">
-        <UserProfile
-          :initialUserProfile="userProfile"
-          :currentUser="currentUser"
-        />
+        <UserProfile :initialUserProfile="userProfile" />
         <div class="userNavbar d-flex">
           <router-link
             class="user-nav-link d-block"
@@ -47,13 +44,6 @@ import Tweets from "./../components/Tweets.vue"
 import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
 
-const dummyCurrentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null
-}
-
 export default {
   components: {
     Navbar,
@@ -63,20 +53,18 @@ export default {
   },
   data() {
     return {
-      currentUser: {},
       userProfile: {},
       tweets: []
     }
   },
-  created() {
+  async created() {
     const { userId: userId } = this.$route.params
-    this.currentUser = dummyCurrentUser
-    this.fetchUserProfile(userId)
+    await this.fetchUserProfile(userId)
     this.fetchUserTweets(userId)
   },
-  beforeRouteUpdate(to, from, next) {
+  async beforeRouteUpdate(to, from, next) {
     const userId = to.params.userId
-    this.fetchUserProfile(userId)
+    await this.fetchUserProfile(userId)
     this.fetchUserTweets(userId)
     next()
   },
