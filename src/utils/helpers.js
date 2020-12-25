@@ -13,5 +13,3 @@ export const Toast = Swal.mixin({
   showConfirmButton: false,
   timer: 3000
 })
-
-//eslint-disable-next-line

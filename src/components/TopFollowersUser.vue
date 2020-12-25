@@ -37,10 +37,6 @@
 import topUsersAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA4NTQxODgzfQ.hjy_pdYF9fBEDsUz4V_YLQO60gWTY3sWcynQgwD2zwg";
-localStorage.setItem("token", token);
-
 export default {
   data() {
     return {

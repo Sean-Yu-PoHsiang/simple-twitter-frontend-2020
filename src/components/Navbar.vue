@@ -94,13 +94,7 @@ import IconUserProfile from "./IconUserProfile";
 import IconSignOut from "./IconSignOut";
 import { emptyImageFilter } from "../utils/mixins";
 
-const currentUser = {
-  "id": 2,
-  "name": "User1",
-  "email": "user1@example.com",
-  "role": null,
-  "image": ""
-}
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -110,17 +104,12 @@ export default {
     IconUserProfile,
     IconSignOut,
   },
-  data() {
-    return {
-      currentUser: {},
-    };
-  },
-  created() {
-    this.currentUser = currentUser;
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     signOut() {
-      localStorage.removeItem('token')
+      this.$store.commit('revokeAuthentication')
       this.$router.push('/signin')
     }
   },
@@ -214,24 +203,6 @@ hr {
   cursor: pointer;
 }
 /* modal-setting */
-.new-tweet-card-pack {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-}
-.new-tweet-card {
-  position: relative;
-  height: auto;
-  width: 600px;
-  background: white;
-  margin: 30px auto;
-  z-index: 999;
-  border-radius: 14px;
-}
 textarea {
   margin: 0;
   padding: 0;

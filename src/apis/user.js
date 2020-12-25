@@ -2,6 +2,11 @@ import { apiHelper } from './../utils/helpers'
 const getToken = () => localStorage.getItem('token')
 
 export default {
+  getCurrentUserProfile() {
+    return apiHelper.get(`/users/currentUser`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   getUserProfile({ userId }) {
     return apiHelper.get(`/users/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -46,5 +51,16 @@ export default {
     return apiHelper.get(`/users`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  EditUserProfile({ userId, formData }) {
+    return apiHelper.put(`/users/${userId}`, formData, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+      .then(response => {
+        return response
+      })
+      .catch(err => {
+        return err.response.data
+      })
   }
 }
