@@ -4,10 +4,16 @@
     <div class="user-list">
       <div v-for="user in topUsers" :key="user.id" class="user">
         <div class="user-info">
-          <img class="user-avator" :src="user.avatar" alt="" />
+          <router-link :to="{ name: 'user', params: { userId: user.id } }">
+            <img class="user-avator" :src="user.avatar" alt="" />
+          </router-link>
           <div class="user-detail">
-            <div class="user-name">{{ user.name }}</div>
-            <div class="at-user">@{{ user.account }}</div>
+            <router-link :to="{ name: 'user', params: { userId: user.id } }">
+              <div class="user-name">{{ user.name }}</div>
+            </router-link>
+            <router-link :to="{ name: 'user', params: { userId: user.id } }">
+              <div class="at-user">@{{ user.account }}</div>
+            </router-link>
           </div>
         </div>
         <button

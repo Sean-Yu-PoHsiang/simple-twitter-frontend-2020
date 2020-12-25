@@ -200,12 +200,12 @@ import IconMessage from "./../components/IconMessage";
 import IconRing from "./../components/IconRing";
 import IconRingActive from "./../components/IconRingActive";
 import IconEditPhoto from "./../components/IconEditPhoto";
-import { emptyImageFilter } from '../utils/mixins'
-import { emptyCoverFilter } from '../utils/mixins'
+import { emptyImageFilter } from "../utils/mixins";
+import { emptyCoverFilter } from "../utils/mixins";
 
-import userAPI from './../apis/user'
-import { Toast } from './../utils/helpers'
-import { mapState } from 'vuex'
+import userAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -213,7 +213,7 @@ export default {
     IconMessage,
     IconRing,
     IconRingActive,
-    IconEditPhoto
+    IconEditPhoto,
   },
   props: {
     initialUserProfile: {
@@ -224,136 +224,132 @@ export default {
   data() {
     return {
       userProfile: this.initialUserProfile,
-      tempUserProfile: this.initialUserProfile
-    }
+      tempUserProfile: this.initialUserProfile,
+    };
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   watch: {
     initialUserProfile(newValue) {
       this.userProfile = {
         ...this.userProfile,
-        ...newValue
-      }
+        ...newValue,
+      };
       this.tempUserProfile = {
         ...this.tempUserProfile,
-        ...newValue
-      }
-    }
+        ...newValue,
+      };
+    },
   },
   methods: {
     async addFollowing(userId) {
       try {
-        const { data } = await userAPI.addFollowing({ id: userId })
+        const { data } = await userAPI.addFollowing({ id: userId });
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        this.userProfile.isFollowed = true
-        this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1
-
+        this.userProfile.isFollowed = true;
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1;
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: '無法跟隨，請稍後再試'
-        })
-        console.log('error', error)
+          icon: "error",
+          title: "無法跟隨，請稍後再試",
+        });
+        console.log("error", error);
       }
     },
     async deleteFollowing(userId) {
       try {
-        const { data } = await userAPI.deleteFollowing({ userId })
+        const { data } = await userAPI.deleteFollowing({ userId });
 
-        console.log(data)
+        console.log(data);
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        this.userProfile.isFollowed = false
-        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1
-
+        this.userProfile.isFollowed = false;
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1;
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: '無法取消跟隨，請稍後再試'
-        })
-        console.log('error', error)
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+        console.log("error", error);
       }
     },
     handleCoverImageChange(e) {
-      console.log("start")
-      const { files } = e.target
+      console.log("start");
+      const { files } = e.target;
 
       if (files.length === 0) {
-        return
+        return;
       } else {
-        const imageURL = window.URL.createObjectURL(files[0])
-        this.tempUserProfile.cover = imageURL
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.tempUserProfile.cover = imageURL;
       }
     },
     handleAvatarImageChange(e) {
-      const { files } = e.target
+      const { files } = e.target;
 
       if (files.length === 0) {
-        return
+        return;
       } else {
-        const imageURL = window.URL.createObjectURL(files[0])
-        this.tempUserProfile.avatar = imageURL
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.tempUserProfile.avatar = imageURL;
       }
     },
     clearCoverImage() {
-      this.tempUserProfile.cover = ''
+      this.tempUserProfile.cover = "";
     },
     async handleSubmit(e) {
       if (!this.tempUserProfile.name) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫名稱'
-        })
-        return
+          icon: "warning",
+          title: "請填寫名稱",
+        });
+        return;
       } else if (!this.tempUserProfile.introduction) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫介紹'
-        })
-        return
+          icon: "warning",
+          title: "請填寫介紹",
+        });
+        return;
       }
 
-      const form = e.target
-      const formData = new FormData(form)
+      const form = e.target;
+      const formData = new FormData(form);
 
       for (let value in formData.value()) {
-        console.log(value)
+        console.log(value);
       }
       // this.$emit('after-submit', formData)
 
       try {
         const { data } = await userAPI.EditUserProfile({
           userId: this.tempUserProfile.id,
-          formData
-        })
+          formData,
+        });
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        this.$router.push('/home')
-
+        this.$router.push("/home");
       } catch (error) {
-        this.isProcessing = false
+        this.isProcessing = false;
         Toast.fire({
-          icon: 'error',
-          title: '無法更新餐廳資料，請稍後再試'
-        })
+          icon: "error",
+          title: "無法更新餐廳資料，請稍後再試",
+        });
       }
     },
   },
   mixins: [emptyImageFilter, emptyCoverFilter],
-
-}
+};
 </script>
 
 <style scoped>
