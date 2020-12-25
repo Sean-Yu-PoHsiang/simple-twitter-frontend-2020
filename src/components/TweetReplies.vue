@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="replies-box">
     <div v-for="reply in tweetReplies" :key="reply.id" class="replyer">
       <img class="replyer-avator" :src="reply.User.avatar" alt="" />
       <div class="reply-detail">
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.replies-box {
   width: 100%;
   border-right: 1px solid #e6ecf0;
   border-left: 1px solid #e6ecf0;

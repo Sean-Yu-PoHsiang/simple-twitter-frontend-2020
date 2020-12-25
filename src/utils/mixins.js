@@ -24,7 +24,7 @@ export const emptyCoverFilter = {
 export const contentLengthFilter = {
   filters: {
     contentToLong(src) {
-      return src.length < 50 ? src : src.slice(0, 49) + "..."
+      return src.length <= 50 ? src : src.slice(0, 49) + "..."
 
       // let string = ''
       // let input = src.split(' ')

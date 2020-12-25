@@ -26,7 +26,7 @@
             >喜歡的內容</router-link
           >
         </div>
-        <Tweets :tweetsWithReplies="tweetsWithReplies" />
+        <Tweets :initialTweets="tweetsWithReplies" />
       </div>
       <div class="col-auto">
         <TopFollowersUser />
@@ -92,8 +92,11 @@ export default {
     async fetchUserTweetsWithReplies(userId) {
       try {
         const { data } = await userAPI.getUserTweetsWithReplies({ userId });
+        console.log(data)
 
-        this.tweetsWithReplies = data;
+        this.tweetsWithReplies = data.map(tweet => {
+          return tweet.Tweet
+        })
         // this.tweetsWithReplies = {
         //   ...this.tweetsWithReplies,
         //   ...data

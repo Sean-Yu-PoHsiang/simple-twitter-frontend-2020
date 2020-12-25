@@ -3,7 +3,11 @@
     <div class="title">首頁</div>
     <div class="user-area">
       <div class="avator-and-tweet">
-        <img class="user-avator" :src="userProfile.avatar" alt="" />
+        <img
+          class="user-avator"
+          :src="userProfile.avatar || 'https://i.imgur.com/S4PE66O.png'"
+          alt=""
+        />
         <form class="new-tweet" @submit.stop.prevent="handleSubmit">
           <label for="tweet-textarea" class="form-label"></label>
           <textarea

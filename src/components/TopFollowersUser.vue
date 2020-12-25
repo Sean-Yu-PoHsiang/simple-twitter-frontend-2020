@@ -4,7 +4,11 @@
     <div class="user-list">
       <div v-for="user in topUsers" :key="user.id" class="user">
         <div class="user-info">
-          <img class="user-avator" :src="user.avatar" alt="" />
+          <img
+            class="user-avator"
+            :src="user.avatar || 'https://i.imgur.com/S4PE66O.png'"
+            alt=""
+          />
           <div class="user-detail">
             <div class="user-name">{{ user.name }}</div>
             <div class="at-user">@{{ user.account }}</div>

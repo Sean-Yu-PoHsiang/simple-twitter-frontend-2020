@@ -26,7 +26,7 @@
             >喜歡的內容</router-link
           >
         </div>
-        <Tweets :tweets="tweetsLikes" />
+        <Tweets :initialTweets="tweetsLikes" />
       </div>
       <div class="col-auto">
         <TopFollowersUser />
