@@ -5,7 +5,7 @@
       <div class="col-auto left-container component-navbar">
         <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
-      <div class="col main-container">
+      <div class="col main-container vh100scroll">
         <!-- user upload newest tweet  -->
         <NewTweet @after-create-tweet="afterCreateTweet" />
         <!-- all users newest tweet  -->

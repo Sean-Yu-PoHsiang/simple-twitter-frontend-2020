@@ -4,7 +4,7 @@
       <div class="col-auto left-container component-navbar">
         <Navbar />
       </div>
-      <div class="col user-setting-wrapper">
+      <div class="col user-setting-wrapper vh100scroll">
         <div class="title">帳戶設定</div>
 
         <form class="input-forms" @submit.stop.prevent="handleSubmit">

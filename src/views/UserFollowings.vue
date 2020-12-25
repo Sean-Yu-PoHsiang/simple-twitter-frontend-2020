@@ -4,7 +4,7 @@
       <div class="col-auto component-navbar">
         <Navbar />
       </div>
-      <div class="col main-container">
+      <div class="col main-container vh100scroll">
         <div class="control-area">
           <div class="previous-page">
             <div class="arrow-icon" @click="$router.push('/')">

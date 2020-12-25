@@ -5,7 +5,7 @@
       <div class="col-auto left-container component-navbar">
         <Navbar />
       </div>
-      <div class="col main-container">
+      <div class="col main-container vh100scroll">
         <UserTweet
           :userTweet="userTweet"
           @after-reply-tweet="afterReplyTweet"
