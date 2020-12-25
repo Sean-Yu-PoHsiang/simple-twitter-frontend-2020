@@ -176,6 +176,9 @@ textarea {
   resize: none;
   overflow-y: scroll;
 }
+textarea:focus {
+  box-shadow: 0 0 0 0.2rem transparent;
+}
 
 ::placeholder {
   padding-top: 10px;

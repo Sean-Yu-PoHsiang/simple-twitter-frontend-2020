@@ -134,7 +134,7 @@ export default {
 .top-followers {
   background: #f5f8fa;
   border-radius: 14px;
-  width: 350px;
+  width: 320px;
   margin-top: 15px;
 }
 

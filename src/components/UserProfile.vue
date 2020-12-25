@@ -357,6 +357,10 @@ export default {
 </script>
 
 <style scoped>
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem transparent;
+  background: transparent;
+}
 .btn-edit-photo-cover {
   margin: 0;
   cursor: pointer;

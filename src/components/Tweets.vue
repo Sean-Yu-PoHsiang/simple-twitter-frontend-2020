@@ -112,7 +112,7 @@ export default {
 
 .avator-and-tweet {
   border-bottom: 1px solid #e6ecf0;
-  padding: 10px 0;
+  padding: 10px 10px 10px 0;
 }
 
 .user-avator {
