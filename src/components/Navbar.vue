@@ -327,11 +327,9 @@ img {
   align-content: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   p {
     display: none;
-    border: 1px solid red;
-    line-height: 100%;
   }
   .modal-dialog,
   .nav-btn,

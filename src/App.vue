@@ -33,16 +33,30 @@ a:hover {
 button:focus {
   outline: none;
 }
+
+.col {
+  height: 100vh;
+  overflow: scroll;
+}
+
 @media (max-width: 576px) {
 }
 
 @media (max-width: 768px) {
+  .col {
+    min-width: auto;
+  }
+  body {
+    min-width: 768px;
+  }
 }
 
 @media (max-width: 992px) {
-  /* navbar component 使用本身有傳遞資料，如果像TopFollowUser一樣綁在component上， 會沒辦法調整CSS，所以改綁在外層div*/
-  .component-navbar {
-    /* display: none; */
+  .col {
+    min-width: auto;
+  }
+  body {
+    min-width: 992px;
   }
 }
 @media (max-width: 1000px) {
@@ -59,10 +73,10 @@ button:focus {
 /* Extra large devices (large desktops, 1200px and up) */
 @media (max-width: 1200px) {
   .container {
-    max-width: 1300px;
+    max-width: 1200px;
   }
   .col {
-    min-width: 500px;
+    min-width: 600px;
   }
   body {
     min-width: 750px;
