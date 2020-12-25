@@ -3,21 +3,21 @@
     <Logo class="mt-3 mb-5" />
     <router-link to="/home" class="nav-btn d-flex fonSize18 align-items-center">
       <IconHome class="mr-3" />
-      首頁
+      <p>首頁</p>
     </router-link>
     <router-link
       :to="{ name: 'user', params: { userId: currentUser.id } }"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <IconUserProfile class="mr-3" />
-      個人資料
+      <p>個人資料</p>
     </router-link>
     <router-link
       to="/setting"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <IconSetting class="mr-3" />
-      設定
+      <p>設定</p>
     </router-link>
 
     <button
@@ -35,7 +35,7 @@
       @click="signOut"
     >
       <IconSignOut class="mr-3" />
-      登出
+      <p>登出</p>
     </button>
 
     <!-- Modal -->
@@ -314,5 +314,36 @@ img {
   object-fit: cover;
   border-radius: 50%;
   margin-right: 16px;
+}
+
+@media (max-width: 576px) {
+}
+
+@media (max-width: 768px) {
+  p {
+    display: none;
+  }
+  .modal-dialog,
+  .nav-btn,
+  .btn-tweet,
+  .sign-out-btn {
+    max-width: unset;
+    width: unset;
+  }
+  .btn-tweet {
+    border-radius: 50%;
+  }
+  /* 還沒找到小圖示對齊方法 */
+  /* .mr-3 {
+    border: 1px solid red;
+    width: auto;
+  }
+  .nav-btn,
+  #nav-btn {
+    border: 1px solid red;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  } */
 }
 </style>

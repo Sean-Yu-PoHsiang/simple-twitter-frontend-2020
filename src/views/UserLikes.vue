@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto">
+      <div class="col-auto component-navbar">
         <Navbar />
       </div>
       <div class="col">
@@ -29,7 +29,7 @@
         <Tweets :initialTweets="tweetsLikes" />
       </div>
       <div class="col-auto">
-        <TopFollowersUser />
+        <TopFollowersUser class="component-top-followers-user" />
       </div>
     </div>
   </div>

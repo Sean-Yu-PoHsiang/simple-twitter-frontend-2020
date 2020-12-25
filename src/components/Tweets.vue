@@ -32,7 +32,7 @@
             }}</span>
           </div>
         </div>
-        <div class="tweet-text">
+        <div class="tweet-text words">
           {{ tweet.description }}
         </div>
         <div class="reply-and-like-btn">
@@ -157,6 +157,10 @@ export default {
 .tweet-text,
 .comment-and-like {
   display: flex;
+}
+/* 貼文單字過長時，切割單字換行 */
+.words {
+  word-break: break-all;
 }
 
 .reply-icon,

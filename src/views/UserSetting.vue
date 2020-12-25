@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto left-container">
+      <div class="col-auto left-container component-navbar">
         <Navbar />
       </div>
       <div class="col user-setting-wrapper">
@@ -71,9 +71,9 @@
 
 <script>
 import Navbar from "./../components/Navbar.vue";
-import { mapState } from 'vuex'
-import authorizationAPI from './../apis/authorization'
-import { Toast } from './../utils/helpers'
+import { mapState } from "vuex";
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
@@ -85,89 +85,87 @@ export default {
       name: "",
       email: "",
       password: "",
-      checkPassword: ""
-    }
+      checkPassword: "",
+    };
   },
   created() {
-    this.account = this.currentUser.account
-    this.name = this.currentUser.name
-    this.email = this.currentUser.email
-
+    this.account = this.currentUser.account;
+    this.name = this.currentUser.name;
+    this.email = this.currentUser.email;
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   methods: {
     async handleSubmit() {
       if (!this.name) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫名稱'
-        })
-        return
+          icon: "warning",
+          title: "請填寫名稱",
+        });
+        return;
       } else if (!this.account) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫帳號'
-        })
-        return
+          icon: "warning",
+          title: "請填寫帳號",
+        });
+        return;
       } else if (!this.email) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫Email'
-        })
-        return
+          icon: "warning",
+          title: "請填寫Email",
+        });
+        return;
       } else if (!this.password) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫密碼'
-        })
-        return
+          icon: "warning",
+          title: "請填寫密碼",
+        });
+        return;
       } else if (!this.checkPassword) {
         Toast.fire({
-          icon: 'warning',
-          title: '請填寫密碼確認'
-        })
-        return
+          icon: "warning",
+          title: "請填寫密碼確認",
+        });
+        return;
       } else if (this.checkPassword !== this.password) {
         Toast.fire({
-          icon: 'warning',
-          title: '密碼與密碼確認不符'
-        })
-        return
+          icon: "warning",
+          title: "密碼與密碼確認不符",
+        });
+        return;
       }
 
       try {
-        console.log(this.currentUser.id)
+        console.log(this.currentUser.id);
         const response = await authorizationAPI.EditUserSetting({
           userId: this.currentUser.id,
           account: this.account,
           name: this.name,
           email: this.email,
           password: this.password,
-          checkPassword: this.checkPassword
-        })
+          checkPassword: this.checkPassword,
+        });
 
         if (response.status === "error") {
-          throw new Error(response.message)
+          throw new Error(response.message);
         }
 
         Toast.fire({
-          icon: 'success',
-          title: `修改成功！`
-        })
-        this.$router.push({ name: 'home' })
-
+          icon: "success",
+          title: `修改成功！`,
+        });
+        this.$router.push({ name: "home" });
       } catch (error) {
-        console.log('err', error)
+        console.log("err", error);
         Toast.fire({
-          icon: 'error',
-          title: `無法儲存設定，${error}`
-        })
+          icon: "error",
+          title: `無法儲存設定，${error}`,
+        });
       }
-    }
+    },
   },
-}
+};
 </script>
 
 <style scoped>

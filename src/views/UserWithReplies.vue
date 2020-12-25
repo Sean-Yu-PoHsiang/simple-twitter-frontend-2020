@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto">
+      <div class="col-auto component-navbar">
         <Navbar />
       </div>
       <div class="col">
@@ -29,7 +29,7 @@
         <Tweets :initialTweets="tweetsWithReplies" />
       </div>
       <div class="col-auto">
-        <TopFollowersUser />
+        <TopFollowersUser class="component-top-followers-user" />
       </div>
     </div>
   </div>
@@ -62,15 +62,15 @@ export default {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   async created() {
-    const { userId: userId } = this.$route.params
-    await this.fetchUserProfile(userId)
-    this.fetchUserTweetsWithReplies(userId)
+    const { userId: userId } = this.$route.params;
+    await this.fetchUserProfile(userId);
+    this.fetchUserTweetsWithReplies(userId);
   },
   async beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId
-    await this.fetchUserProfile(userId)
-    this.fetchUserTweetsWithReplies(userId)
-    next()
+    const userId = to.params.userId;
+    await this.fetchUserProfile(userId);
+    this.fetchUserTweetsWithReplies(userId);
+    next();
   },
   methods: {
     async fetchUserProfile(userId) {
@@ -92,11 +92,11 @@ export default {
     async fetchUserTweetsWithReplies(userId) {
       try {
         const { data } = await userAPI.getUserTweetsWithReplies({ userId });
-        console.log(data)
+        console.log(data);
 
-        this.tweetsWithReplies = data.map(tweet => {
-          return tweet.Tweet
-        })
+        this.tweetsWithReplies = data.map((tweet) => {
+          return tweet.Tweet;
+        });
         // this.tweetsWithReplies = {
         //   ...this.tweetsWithReplies,
         //   ...data
