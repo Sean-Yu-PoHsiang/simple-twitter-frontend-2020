@@ -1,10 +1,16 @@
 <template>
   <div class="replies-box">
     <div v-for="reply in tweetReplies" :key="reply.id" class="replyer">
-      <img class="replyer-avator" :src="reply.User.avatar" alt="" />
+      <router-link :to="{ name: 'user', params: { userId: reply.User.id } }">
+        <img class="replyer-avator" :src="reply.User.avatar" alt="" />
+      </router-link>
       <div class="reply-detail">
         <div class="replyer-info">
-          <div class="replyer-name">{{ reply.User.name }}</div>
+          <router-link
+            :to="{ name: 'user', params: { userId: reply.User.id } }"
+          >
+            <div class="replyer-name">{{ reply.User.name }}</div>
+          </router-link>
           <div class="at-detail">
             <span class="replyer-at"> @{{ reply.User.account }}</span>
             <span>・</span>

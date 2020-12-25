@@ -19,7 +19,11 @@
 
       <div>
         <div class="tweet-detail">
-          <div class="user-name">{{ tweet.User.name }}</div>
+          <router-link
+            :to="{ name: 'user', params: { userId: tweet.User.id } }"
+          >
+            <div class="user-name">{{ tweet.User.name }}</div>
+          </router-link>
           <div>
             <span class="at-user">@{{ tweet.User.account }}</span>
             <span>・</span>
