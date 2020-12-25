@@ -3,25 +3,22 @@
     <div class="title">首頁</div>
     <div class="user-area">
       <div class="avator-and-tweet">
-        <img
-          class="user-avator"
-          src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-          alt=""
-        />
-        <form class="new-tweet">
+        <img class="user-avator" :src="userProfile.avatar" alt="" />
+        <form class="new-tweet" @submit.stop.prevent="handleSubmit">
           <label for="tweet-textarea" class="form-label"></label>
           <textarea
+            v-model="description"
             class="form-control"
             id="tweet-textarea"
             rows="3"
             placeholder="有什麼新鮮事？"
           ></textarea>
+          <div class="flex-end">
+            <button type="submit" id="tweet-submit-btn" class="btn btn-primary">
+              推文
+            </button>
+          </div>
         </form>
-        <div class="flex-end">
-          <button type="submit" id="tweet-submit-btn" class="btn btn-primary">
-            推文
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -31,31 +28,89 @@
 <script>
 import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
-
-const dummyCurrentUser = {
-  id: 2,
-  name: "User1",
-  email: "user1@example.com",
-  role: null,
-};
+import { v4 as uuidv4 } from "uuid";
+import { mapState } from "vuex";
 
 export default {
   data() {
     return {
-      currentUser: {},
+      avatar: "",
       userProfile: {},
+      id: -1,
+      description: "",
+      createdAt: "",
     };
   },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
+  },
   created() {
-    const { userId: userId } = this.$route.params;
-    this.currentUser = dummyCurrentUser;
+    const userId = this.currentUser.id;
     this.fetchUserProfile(userId);
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const { data } = await userAPI.getUserProfile({ userId });
-        this.userProfile = data;
+        const response = await userAPI.getUserProfile({ userId });
+
+        this.userProfile = {
+          ...this.userProfile,
+          ...response.data,
+        };
+
+        if (response.status !== 200) {
+          throw new Error(response);
+        }
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
+    async handleSubmit() {
+      if (this.description.trim() === "") {
+        Toast.fire({
+          icon: "error",
+          title: "親愛的用戶，請勿發空空的思念。",
+        });
+        return;
+      } else if (this.description.length > 140) {
+        Toast.fire({
+          icon: "error",
+          title: "推文字數超過140囉！",
+        });
+        return;
+      }
+
+      try {
+        this.createdAt = Date.now();
+        const response = await userAPI.addUserNewTweet({
+          description: this.description,
+          createdAt: this.createdAt,
+        });
+
+        if (response.status !== 200) {
+          throw new Error(response);
+        }
+
+        this.$emit("after-create-tweet", {
+          User: {
+            id: this.userProfile.id,
+            account: this.userProfile.account,
+            name: this.userProfile.name,
+            avatar: this.userProfile.avatar,
+          },
+          id: uuidv4(),
+          name: this.userProfile.name,
+          description: this.description,
+          createdAt: this.createdAt,
+          repliesCount: 0,
+          likesCount: 0,
+          isLiked: false,
+        });
+        this.description = "";
       } catch (error) {
         console.log(error);
         Toast.fire({
@@ -107,6 +162,7 @@ export default {
 /* tweet input */
 .new-tweet {
   width: 100%;
+  display: flex;
 }
 textarea {
   border: none;

@@ -53,17 +53,32 @@
 import ReplyIcon from "./../components/ReplyIcon";
 import LikeIcon from "./../components/LikeIcon";
 import moment from "moment";
+// import tweet from "../apis/tweet";
 
 export default {
   components: {
     ReplyIcon,
     LikeIcon,
   },
+
   props: {
-    tweets: {
+    initialTweets: {
       type: Array,
       required: true,
     },
+  },
+  data() {
+    return {
+      tweets: this.initialTweets,
+    };
+  },
+  watch: {
+    initialTweets(newValue) {
+      this.tweets = newValue;
+    },
+  },
+  created() {
+    console.log("initial", this.initialTweets);
   },
   filters: {
     fromNow(datetime) {

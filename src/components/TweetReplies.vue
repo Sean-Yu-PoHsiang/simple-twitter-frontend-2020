@@ -1,66 +1,21 @@
 <template>
-  <div class="container reply-list">
-    <div class="replyer">
-      <img
-        class="replyer-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
+  <div class="container">
+    <div v-for="reply in tweetReplies" :key="reply.id" class="replyer">
+      <img class="replyer-avator" :src="reply.User.avatar" alt="" />
       <div class="reply-detail">
         <div class="replyer-info">
-          <div class="replyer-name">Mary Jane</div>
-          <div>
-            <span class="replyer-at">@mjjane</span>
+          <div class="replyer-name">{{ reply.User.name }}</div>
+          <div class="at-detail">
+            <span class="replyer-at"> @{{ reply.User.account }}</span>
             <span>・</span>
-            <span class="reply-time">3 小時</span>
+            <span class="reply-time">{{ reply.createdAt | fromNow }}</span>
           </div>
         </div>
         <div>
-          <span>回覆</span> <span class="reply-to-user-at">@apple</span>
+          <span class="reply">回覆</span>
+          <span class="reply-to-user-at">@{{ userTweet.User.account }}</span>
         </div>
-        <div class="reply-text">Great~</div>
-      </div>
-    </div>
-    <div class="replyer">
-      <img
-        class="replyer-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div class="reply-detail">
-        <div class="replyer-info">
-          <div class="replyer-name">Mary Jane</div>
-          <div>
-            <span class="replyer-at">@mjjane</span>
-            <span>・</span>
-            <span class="reply-time">3 小時</span>
-          </div>
-        </div>
-        <div>
-          <span>回覆</span> <span class="reply-to-user-at">@apple</span>
-        </div>
-        <div class="reply-text">Great~</div>
-      </div>
-    </div>
-    <div class="replyer">
-      <img
-        class="replyer-avator"
-        src="https://img.ruten.com.tw/s1/3/53/81/21728707593089_916.jpg"
-        alt=""
-      />
-      <div class="reply-detail">
-        <div class="replyer-info">
-          <div class="replyer-name">Mary Jane</div>
-          <div>
-            <span class="replyer-at">@mjjane</span>
-            <span>・</span>
-            <span class="reply-time">3 小時</span>
-          </div>
-        </div>
-        <div>
-          <span>回覆</span> <span class="reply-to-user-at">@apple</span>
-        </div>
-        <div class="reply-text">Great~</div>
+        <div class="reply-text">{{ reply.comment }}</div>
       </div>
     </div>
   </div>
@@ -68,8 +23,42 @@
 
 
 <script>
+import moment from "moment";
+
 export default {
-  components: {},
+  props: {
+    initialTweetReplies: {
+      type: Array,
+      required: true,
+    },
+    initialUserTweet: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      tweetReplies: this.initialTweetReplies,
+      userTweet: this.initialUserTweet,
+    };
+  },
+  watch: {
+    initialTweetReplies(newValue) {
+      this.tweetReplies = newValue;
+    },
+    initialUserTweet(newValue) {
+      this.userTweet = newValue;
+    },
+  },
+  filters: {
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      // 使用 moment 提供的 fromNow 方法
+      return moment(datetime).fromNow();
+    },
+  },
 };
 </script>
 
@@ -99,5 +88,39 @@ export default {
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid #e6ecf0;
+}
+
+.replyer-name {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 22px;
+  color: #1c1c1c;
+}
+
+.at-detail {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  color: #657786;
+}
+
+.reply,
+.reply-to-user-at {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  color: #657786;
+}
+.reply-to-user-at {
+  color: #ff6600;
+}
+.reply-text {
+  color: #1c1c1c;
 }
 </style>

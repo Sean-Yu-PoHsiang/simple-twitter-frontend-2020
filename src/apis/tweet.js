@@ -7,4 +7,20 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getUserTweet({ tweetId }) {
+    return apiHelper.get(`/tweets/${tweetId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getTweetReplies({ tweetId }) {
+    return apiHelper.get(`/tweets/${tweetId}/replies`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  addTweetsLikes({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/like`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+
 }

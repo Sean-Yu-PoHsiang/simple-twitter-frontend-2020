@@ -27,6 +27,16 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  addUserNewTweet({ description, createdTimestamp }) {
+    return apiHelper.post('/tweets', { description, createdTimestamp }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  addUserReply({ tweetId, comment, createdTimestamp }) {
+    return apiHelper.post(`/tweets/${tweetId}/replies`, { comment, createdTimestamp }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   getUserTweetsWithReplies({ userId }) {
     return apiHelper.get(`/users/${userId}/replied_tweets`, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -37,6 +47,7 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+
   getUserFollowers({ userId }) {
     return apiHelper.get(`/users/${userId}/followers`, {
       headers: { Authorization: `Bearer ${getToken()}` }

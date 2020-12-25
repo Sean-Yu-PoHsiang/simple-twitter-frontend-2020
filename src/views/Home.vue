@@ -3,13 +3,13 @@
     <div class="row">
       <!-- left component -->
       <div class="col-auto left-container">
-        <Navbar />
+        <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
       <div class="col main-container">
         <!-- user upload newest tweet  -->
-        <NewTweet />
+        <NewTweet @after-create-tweet="afterCreateTweet" />
         <!-- all users newest tweet  -->
-        <Tweets :tweets="tweets" />
+        <Tweets :initialTweets="tweets" />
       </div>
       <div class="col-auto right-container">
         <!-- right component -->
@@ -24,6 +24,7 @@ import NewTweet from "./../components/NewTweet.vue";
 import Tweets from "./../components/Tweets.vue";
 import TopFollowersUser from "./../components/TopFollowersUser.vue";
 import Navbar from "./../components/Navbar.vue";
+// import { v4 as uuidv4 } from "uuid";
 
 import tweetsAPI from "./../apis/tweet";
 import { Toast } from "./../utils/helpers";
@@ -63,6 +64,28 @@ export default {
           title: "無法取得推文，請稍後再試",
         });
       }
+    },
+    afterCreateTweet(payload) {
+      const {
+        User,
+        id,
+        name,
+        description,
+        createdAt,
+        repliesCount,
+        likesCount,
+        isLiked,
+      } = payload;
+      this.tweets.unshift({
+        User,
+        id,
+        name,
+        description,
+        createdAt,
+        repliesCount,
+        likesCount,
+        isLiked,
+      });
     },
   },
 };

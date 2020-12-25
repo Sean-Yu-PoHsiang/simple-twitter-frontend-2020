@@ -42,84 +42,82 @@
 </template>
 
 <script>
-import { emptyImageFilter } from '../utils/mixins'
-import { contentLengthFilter } from '../utils/mixins'
-import userAPI from './../apis/user'
-import { Toast } from './../utils/helpers'
+import { emptyImageFilter } from "../utils/mixins";
+import { contentLengthFilter } from "../utils/mixins";
+import userAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {},
   props: {
     initialFollowings: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      followings: this.initialFollowings
-    }
+      followings: this.initialFollowings,
+    };
   },
   watch: {
     initialFollowings(newValue) {
-      this.followings = newValue
-    }
+      this.followings = newValue;
+    },
   },
   methods: {
     async addFollowing(userId) {
       try {
-        const { data } = await userAPI.addFollowing({ id: userId })
+        const { data } = await userAPI.addFollowing({ id: userId });
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        this.followings = this.followings.map(following => {
+        this.followings = this.followings.map((following) => {
           if (following.id === userId) {
             return {
               ...following,
-              isFollowed: true
-            }
+              isFollowed: true,
+            };
           } else {
-            return following
+            return following;
           }
-        })
-
+        });
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: '無法跟隨，請稍後再試'
-        })
-        console.log('error', error)
+          icon: "error",
+          title: "無法跟隨，請稍後再試",
+        });
+        console.log("error", error);
       }
     },
     async deleteFollowing(userId) {
       try {
-        const { data } = await userAPI.deleteFollowing({ userId })
+        const { data } = await userAPI.deleteFollowing({ userId });
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        this.followings = this.followings.map(following => {
+        this.followings = this.followings.map((following) => {
           if (following.id === userId) {
             return {
               ...following,
-              isFollowed: false
-            }
+              isFollowed: false,
+            };
           } else {
-            return following
+            return following;
           }
-        })
-
+        });
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: '無法取消跟隨，請稍後再試'
-        })
-        console.log('error', error)
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+        console.log("error", error);
       }
-    }
+    },
   },
   mixins: [emptyImageFilter, contentLengthFilter],
 };

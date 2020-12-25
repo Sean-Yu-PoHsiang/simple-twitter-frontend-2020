@@ -36,76 +36,78 @@
 </template>
 
 <script>
-import Navbar from './../components/Navbar'
-import TopFollowersUser from './../components/TopFollowersUser'
-import UserProfile from './../components/UserProfile'
+import Navbar from "./../components/Navbar";
+import TopFollowersUser from "./../components/TopFollowersUser";
+import UserProfile from "./../components/UserProfile";
 import Tweets from "./../components/Tweets.vue";
 
-import userAPI from './../apis/user'
-import { Toast } from './../utils/helpers'
+import userAPI from "./../apis/user";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 
 export default {
   components: {
     Navbar,
     TopFollowersUser,
     UserProfile,
-    Tweets
+    Tweets,
   },
   data() {
     return {
       userProfile: {},
-      tweetsLikes: []
-    }
+      tweetsLikes: [],
+    };
   },
   async created() {
-    const { userId: userId } = this.$route.params
-    await this.fetchUserProfile(userId)
-    this.fetchUserTweetsLikes(userId)
+    const { userId: userId } = this.$route.params;
+    await this.fetchUserProfile(userId);
+    this.fetchUserTweetsLikes(userId);
   },
   async beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId
-    await this.fetchUserProfile(userId)
-    this.fetchUserTweetsLikes(userId)
-    next()
+    const userId = to.params.userId;
+    await this.fetchUserProfile(userId);
+    this.fetchUserTweetsLikes(userId);
+    next();
+  },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const { data } = await userAPI.getUserProfile({ userId })
-        this.userProfile = data
+        const { data } = await userAPI.getUserProfile({ userId });
+        this.userProfile = data;
         this.userProfile = {
           ...this.userProfile,
-          ...data
-        }
-
+          ...data,
+        };
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得使用者資料，請稍後再試'
-        })
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
       }
     },
     async fetchUserTweetsLikes(userId) {
       try {
-        const { data } = await userAPI.getUserTweetsLikes({ userId })
+        const { data } = await userAPI.getUserTweetsLikes({ userId });
 
-        this.tweetsLikes = data
+        this.tweetsLikes = data;
         // this.tweetsWithReplies = {
         //   ...this.tweetsWithReplies,
         //   ...data
         // }
-
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得推文，請稍後再試'
-        })
+          icon: "error",
+          title: "無法取得推文，請稍後再試",
+        });
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
