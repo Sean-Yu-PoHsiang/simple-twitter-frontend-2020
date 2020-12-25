@@ -51,7 +51,14 @@
         </div>
 
         <div>
-          <LikeIcon class="like-icon" />
+          <button
+            type="button"
+            class="btn-like"
+            data-toggle="modal"
+            @click="addLike(userTweet.id)"
+          >
+            <LikeIcon class="like-icon" />
+          </button>
         </div>
       </div>
     </div>
@@ -136,6 +143,7 @@ import LikeIcon from "./../components/LikeIcon";
 import moment from "moment";
 import { Toast } from "./../utils/helpers";
 import userAPI from "./../apis/user";
+// import tweetAPI from "./../apis/tweet";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -175,23 +183,21 @@ export default {
   },
   methods: {
     async handleReplySubmit(tweetId) {
-      // console.log("this.comment", this.comment);
       this.createdAt = Date.now();
-      // this.tweetId =
 
-      // if (this.comment.trim() === "") {
-      //   Toast.fire({
-      //     icon: "error",
-      //     title: "親愛的用戶，請勿發空空的思念。",
-      //   });
-      //   return;
-      // } else if (this.comment.length > 140) {
-      //   Toast.fire({
-      //     icon: "error",
-      //     title: "推文字數超過140囉！",
-      //   });
-      //   return;
-      // }
+      if (this.comment.trim() === "") {
+        Toast.fire({
+          icon: "error",
+          title: "親愛的用戶，請勿發空空的思念。",
+        });
+        return;
+      } else if (this.comment.length > 140) {
+        Toast.fire({
+          icon: "error",
+          title: "推文字數超過140囉！",
+        });
+        return;
+      }
 
       try {
         const response = await userAPI.addUserReply({
@@ -223,33 +229,64 @@ export default {
         });
       }
     },
-    filters: {
-      dateInMandarin(datetime) {
-        if (!datetime) {
-          return "-";
-        }
-        //日期顯示一：
-        const tweetDate = moment(datetime).calendar();
-        return tweetDate;
+    async addLike(tweetId) {
+      console.log("addLike tweetId ", tweetId);
 
-        //日期顯示二：
-        //可以回傳中文日期，但是下方程式僅限很久之前的文，才可以正常顯示。
-        //因為太近的，calendar()，會回傳today、yesterday，而不是日月年，就會變成undefine
-        // const tweetDate = moment(datetime).subtract("days").calendar();
-        // const timeArraySplit = tweetDate.toString().split("/");
-        // console.log("timeArraySplit", timeArraySplit);
-        // const dateInMandarin = `
-        // ${timeArraySplit[2]}年${timeArraySplit[1]}月${timeArraySplit[0]}日`;
-        //    return dateInMandarin;
-      },
+      try {
+        // const response = await tweetAPI.addTweetsLikes({
+        //   tweetId: tweetId,
+        // });
+        // this.$emit("after-reply-tweet", {
+        //   User: {
+        //     id: this.currentUser.id,
+        //     account: this.currentUser.account,
+        //     name: this.currentUser.name,
+        //     avatar: this.currentUser.avatar,
+        //   },
+        //   tweetId: this.tweetId,
+        //   comment: this.comment,
+        //   createdAt: this.createdAt,
+        //   id: uuidv4(),
+        // });
+        // this.comment = "";
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法發送回覆，請稍後再試",
+        });
+      }
+    },
+    // unLike(){
 
-      fromNow(datetime) {
-        if (!datetime) {
-          return "-";
-        }
-        // 使用 moment 提供的 fromNow 方法
-        return moment(datetime).fromNow();
-      },
+    // }
+  },
+  filters: {
+    dateInMandarin(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      //日期顯示一：
+      const tweetDate = moment(datetime).calendar();
+      return tweetDate;
+
+      //日期顯示二：
+      //可以回傳中文日期，但是下方程式僅限很久之前的文，才可以正常顯示。
+      //因為太近的，calendar()，會回傳today、yesterday，而不是日月年，就會變成undefine
+      // const tweetDate = moment(datetime).subtract("days").calendar();
+      // const timeArraySplit = tweetDate.toString().split("/");
+      // console.log("timeArraySplit", timeArraySplit);
+      // const dateInMandarin = `
+      // ${timeArraySplit[2]}年${timeArraySplit[1]}月${timeArraySplit[0]}日`;
+      //    return dateInMandarin;
+    },
+
+    fromNow(datetime) {
+      if (!datetime) {
+        return "-";
+      }
+      // 使用 moment 提供的 fromNow 方法
+      return moment(datetime).fromNow();
     },
   },
 };
@@ -354,6 +391,7 @@ export default {
 .reply-icon,
 .like-icon {
   transform: scale(2, 2);
+  margin-left: 10px;
   margin-right: 155px;
 }
 
@@ -526,5 +564,11 @@ img {
 
 button {
   width: auto;
+  border: 1px solid transparent;
+  background: transparent;
+}
+button:hover {
+  background: #f0f0f0;
+  border-radius: 30px;
 }
 </style>

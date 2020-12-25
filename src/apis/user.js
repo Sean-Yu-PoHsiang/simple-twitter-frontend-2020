@@ -42,6 +42,7 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+
   getUserFollowers({ userId }) {
     return apiHelper.get(`/users/${userId}/followers`, {
       headers: { Authorization: `Bearer ${getToken()}` }

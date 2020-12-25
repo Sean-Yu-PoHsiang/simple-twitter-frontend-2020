@@ -1,5 +1,5 @@
 <template>
-  <div class="container tweet-page">
+  <div class="container">
     <div class="row">
       <!-- left component -->
       <div class="col-auto left-container">
@@ -108,7 +108,7 @@ export default {
 
 
 <style scoped>
-.tweet-page {
+.container {
   display: flex;
   flex-direction: row;
 }
