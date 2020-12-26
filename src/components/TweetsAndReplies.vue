@@ -50,11 +50,11 @@
         <div class="connection-line"></div>
       </div>
 
-      <div class="d-flex mt-5">
-        <router-link :to="{ name: 'user', params: { userId: currentUser.id } }">
+      <div class="d-flex mt-3">
+        <router-link :to="{ name: 'user', params: { userId: userProfile.id } }">
           <img
             class="user-avator"
-            :src="currentUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
+            :src="userProfile.avatar || 'https://i.imgur.com/S4PE66O.png'"
             alt=""
           />
         </router-link>
@@ -63,19 +63,27 @@
             <router-link
               :to="{
                 name: 'user',
-                params: { userId: currentUser.id },
+                params: { userId: userProfile.id },
               }"
             >
-              <div class="user-name">{{ currentUser.name }}</div>
+              <div class="user-name">{{ userProfile.name }}</div>
             </router-link>
             <div>
-              <span class="at-user">@{{ currentUser.account }}</span>
+              <span class="at-user">@{{ userProfile.account }}</span>
               <span>・</span>
               <span class="tweet-update-time">{{
                 tweetAndReply.createdAt | fromNow
               }}</span>
             </div>
           </div>
+
+          <div class="tweet-detail">
+            <div class="">回覆給</div>
+            <span class="at-user orange"
+              >@{{ tweetAndReply.Tweet.User.account }}</span
+            >
+          </div>
+
           <div class="tweet-text words">
             {{ tweetAndReply.comment }}
           </div>
@@ -102,10 +110,15 @@ export default {
       type: Array,
       required: true,
     },
+    initialUserProfile: {
+      type: Object,
+      required: true
+    }
   },
   data() {
     return {
       tweetsAndReplies: this.initialTweetsAndReplies,
+      userProfile: this.initialUserProfile
     }
   },
   computed: {
@@ -114,6 +127,9 @@ export default {
   watch: {
     initialTweetsAndReplies(newValue) {
       this.tweetsAndReplies = newValue
+    },
+    initialUserProfile(newValue) {
+      this.userProfile = newValue
     },
   },
   filters: {
@@ -129,17 +145,20 @@ export default {
 </script>
 
 <style scoped>
+.orange {
+  color: salmon;
+}
 .first-box {
   position: relative;
 }
 .connection-line {
   /* height: 50px; */
-  width: 3px;
+  width: 2px;
   background: #cccccc;
   position: absolute;
-  top: 70px;
+  top: 65px;
   left: 33px;
-  bottom: -50px;
+  bottom: -20px;
 }
 .all-users-newest-tweets {
   /* width: 600px; */

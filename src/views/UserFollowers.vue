@@ -52,20 +52,20 @@ export default {
     };
   },
   created() {
-    const { userId: userId } = this.$route.params;
-    this.fetchUserProfile(userId);
-    this.fetchUserFollowers(userId);
+    const { userId: userId } = this.$route.params
+    this.fetchUserProfile(userId)
+    this.fetchUserFollowers(userId)
   },
   beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId;
-    this.fetchUserProfile(userId);
-    this.fetchUserFollowers(userId);
-    next();
+    const userId = to.params.userId
+    this.fetchUserProfile(userId)
+    this.fetchUserFollowers(userId)
+    next()
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const response = await userAPI.getUserProfile({ userId });
+        const response = await userAPI.getUserProfile({ userId })
 
         this.userProfile = {
           ...this.userProfile,
@@ -73,10 +73,10 @@ export default {
         };
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
@@ -85,16 +85,16 @@ export default {
     },
     async fetchUserFollowers(userId) {
       try {
-        const response = await userAPI.getUserFollowers({ userId });
-        console.log(response);
+        const response = await userAPI.getUserFollowers({ userId })
+        console.log(response)
 
-        this.followers = response.data;
+        this.followers = response.data
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得跟隨者資料，請稍後再試",

@@ -26,7 +26,10 @@
             >喜歡的內容</router-link
           >
         </div>
-        <TweetsAndReplies :initialTweetsAndReplies="tweetsWithReplies" />
+        <TweetsAndReplies
+          :initialTweetsAndReplies="tweetsWithReplies"
+          :initialUserProfile="userProfile"
+        />
       </div>
       <div class="col-auto">
         <TopFollowersUser class="component-top-followers-user" />

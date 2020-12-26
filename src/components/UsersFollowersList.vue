@@ -2,11 +2,13 @@
   <div class="user-follows-list">
     <div v-if="followers.length === 0" class="warning-sign">沒有跟隨者</div>
     <div v-for="follower in followers" :key="follower.id" class="user">
-      <img
-        class="user-avator"
-        :src="follower.avatar || '' | emptyImage"
-        alt=""
-      />
+      <router-link :to="{ name: 'user', params: { userId: follower.id } }">
+        <img
+          class="user-avator"
+          :src="follower.avatar || '' | emptyImage"
+          alt=""
+        />
+      </router-link>
       <div class="user-detail">
         <div class="user-and-follow-btn">
           <div class="user-info">
@@ -14,7 +16,7 @@
 
             <div class="user-at">@{{ follower.account }}</div>
           </div>
-          <div>
+          <div v-if="follower.id !== currentUser.id">
             <button
               v-if="!follower.isFollowed"
               type="submit"
@@ -49,6 +51,7 @@ import { emptyImageFilter } from '../utils/mixins'
 import { contentLengthFilter } from '../utils/mixins'
 import userAPI from './../apis/user'
 import { Toast } from './../utils/helpers'
+import { mapState } from "vuex"
 
 export default {
   components: {},
@@ -62,6 +65,9 @@ export default {
     return {
       followers: this.initialFollowers
     }
+  },
+  computed: {
+    ...mapState(["currentUser"])
   },
   watch: {
     initialFollowers(newValue) {

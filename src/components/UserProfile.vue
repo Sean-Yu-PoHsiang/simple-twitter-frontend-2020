@@ -190,7 +190,7 @@
               </div>
               <div class="d-flex justify-content-end">
                 <span :class="{ fontRed: isIntroductionOverSize }">{{
-                  introductionInputLength
+                  introductionInputLength || 0
                 }}</span
                 ><span>/160</span>
               </div>
@@ -247,12 +247,14 @@ export default {
       return this.tempUserProfile.name.length > 40 ? true : false
     },
     isIntroductionOverSize() {
+      if (this.tempUserProfile.introduction === null) { return false }
       return this.tempUserProfile.introduction.length > 160 ? true : false
     },
     nameInputLength() {
       return this.tempUserProfile.name.length
     },
     introductionInputLength() {
+      if (this.tempUserProfile.introduction === null) { return 0 }
       return this.tempUserProfile.introduction.length
     },
     ...mapState(["currentUser"]),
