@@ -335,10 +335,17 @@ export default {
               likesCount: newLikesCount
             }
 
+
           } else {
             return tweet
           }
+
         })
+
+        this.$emit("after-click-delete-like", {
+          tweets: this.tweets
+        });
+
 
       } catch (error) {
         console.log(error);
@@ -435,10 +442,11 @@ export default {
 /* 點讚、回文按鈕 */
 .unlike-icon {
   transform: scale(0.7);
+  margin: 0;
 }
 
 .btn-container {
-  width: 40px;
+  width: auto;
   border-radius: 50px;
 }
 
