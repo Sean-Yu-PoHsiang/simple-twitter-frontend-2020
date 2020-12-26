@@ -368,12 +368,14 @@ export default {
           userId: this.tempUserProfile.id,
           formData,
         })
-        console.log(response)
-        if (response.data.status !== 200) {
+        if (response.status !== 200) {
           throw new Error(response.data.message)
         }
         const newUserProfileRes = await userAPI.getCurrentUserProfile()
-        this.userProfile = { ...newUserProfileRes.data }
+        this.userProfile = {
+          ...this.userProfile,
+          ...newUserProfileRes.data
+        }
         this.$store.commit('setCurrentUser', newUserProfileRes.data)
         this.isProcessing = false
 
