@@ -158,6 +158,8 @@ import ReplyIcon from "./../components/ReplyIcon";
 import LikeIcon from "./../components/LikeIcon";
 import moment from "moment";
 import tweetAPI from "../apis/tweet";
+import userAPI from "./../apis/user";
+
 import { Toast } from "./../utils/helpers";
 
 import { mapState } from "vuex";
@@ -210,6 +212,29 @@ export default {
     async handleReplySubmit(tweetId) {
 
       console.log('handleReplySubmit', tweetId)
+
+      try {
+        this.createdAt = Date.now();
+        const response = await userAPI.addUserReply({
+          tweetId: tweetId,
+          comment: this.comment,
+          createdAt: this.createdAt,
+
+        });
+        console.log("ReplyResponse:", response);
+
+
+        if (response.status !== 200) {
+          throw new Error(response);
+        }
+        this.comment = "";
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法發送回覆，請稍後再試",
+        });
+      }
     }
 
   },
