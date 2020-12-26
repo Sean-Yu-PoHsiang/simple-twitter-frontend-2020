@@ -64,12 +64,20 @@
 
         <div>
           <button
+            v-if="!userTweet.isLiked"
             type="button"
             class="btn-like"
-            data-toggle="modal"
             @click="addLike(userTweet.id)"
           >
             <LikeIcon class="like-icon" />
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn-unlike"
+            @click="deleteLike(userTweet.id)"
+          >
+            <IconLikeFill class="unlike-icon" />
           </button>
         </div>
       </div>
@@ -158,13 +166,11 @@
 import ArrowIcon from "./../components/ArrowIcon.vue";
 import ReplyIcon from "./../components/ReplyIcon";
 import LikeIcon from "./../components/LikeIcon";
+import IconLikeFill from "./../components/IconLikeFill";
 import moment from "moment";
 import { Toast } from "./../utils/helpers";
 import userAPI from "./../apis/user";
-// import tweetAPI from "./../apis/tweet";
-
-import { v4 as uuidv4 } from "uuid";
-
+import tweetAPI from "./../apis/tweet";
 import { mapState } from "vuex";
 
 export default {
@@ -172,32 +178,31 @@ export default {
     ArrowIcon,
     ReplyIcon,
     LikeIcon,
+    IconLikeFill
   },
   props: {
-    userTweet: {
+    initialUserTweet: {
       type: Object,
       required: true,
     },
   },
   data() {
     return {
-      TweetId: -1,
-      User: {},
-      UserId: -1,
+      userTweet: this.initialUserTweet,
       comment: "",
-      createdAt: "",
-      id: -1,
-      updatedAt: "",
+      createdAt: -1,
     };
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   created() {
-    // this.TweetId = Number(this.$route.params.tweetId);
-    // console.log(">>>>>>>>>>", typeof this.$route.params.tweetId);
-    // console.log(this.tweetId);
-    // // console.log("this.userTweet", this.userTweet);
+
+  },
+  watch: {
+    initialUserTweet(newValue) {
+      this.userTweet = newValue
+    }
   },
   methods: {
     async handleReplySubmit(tweetId) {
@@ -222,25 +227,22 @@ export default {
           tweetId: tweetId,
           comment: this.comment,
           createdAt: this.createdAt,
-        });
+        })
 
-        console.log("ReplyResponse:", response);
+        if (response.data.status !== 'success') {
+          throw new Error(response.data.message)
+        }
 
+        this.userTweet.repliesCount++
         this.$emit("after-reply-tweet", {
-          User: {
-            id: this.currentUser.id,
-            account: this.currentUser.account,
-            name: this.currentUser.name,
-            avatar: this.currentUser.avatar,
-          },
-          tweetId: this.tweetId,
+          tweetId: tweetId,
           comment: this.comment,
           createdAt: this.createdAt,
-          id: uuidv4(),
-        });
-        this.comment = "";
+        })
+        this.comment = ""
+
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法發送回覆，請稍後再試",
@@ -248,36 +250,43 @@ export default {
       }
     },
     async addLike(tweetId) {
-      console.log("addLike tweetId ", tweetId);
-
       try {
-        // const response = await tweetAPI.addTweetsLikes({
-        //   tweetId: tweetId,
-        // });
-        // this.$emit("after-reply-tweet", {
-        //   User: {
-        //     id: this.currentUser.id,
-        //     account: this.currentUser.account,
-        //     name: this.currentUser.name,
-        //     avatar: this.currentUser.avatar,
-        //   },
-        //   tweetId: this.tweetId,
-        //   comment: this.comment,
-        //   createdAt: this.createdAt,
-        //   id: uuidv4(),
-        // });
-        // this.comment = "";
+        const response = await tweetAPI.addTweetLike({ tweetId })
+
+        console.log(">>>>>>>>>", response)
+        if (response.data.status !== 'success') {
+          throw new Error(response.data.message)
+        }
+        this.userTweet.likesCount++
+        this.userTweet.isLiked = true
+
       } catch (error) {
         console.log(error);
         Toast.fire({
           icon: "error",
-          title: "無法發送回覆，請稍後再試",
+          title: "無法點愛心，請稍後再試",
         });
       }
     },
-    // unLike(){
+    async deleteLike(tweetId) {
+      try {
+        const response = await tweetAPI.deleteTweetLike({ tweetId })
 
-    // }
+        console.log(response)
+        if (response.data.status !== 'success') {
+          throw new Error(response.data.message)
+        }
+        this.userTweet.likesCount--
+        this.userTweet.isLiked = false
+
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消愛心，請稍後再試",
+        });
+      }
+    },
   },
   filters: {
     dateInMandarin(datetime) {
@@ -313,6 +322,9 @@ export default {
 
 
 <style scoped>
+.unlike-icon {
+  transform: scale(1.25, 1.25);
+}
 .main-user-container {
   /* width: 600px; */
   border: 1px solid #e6ecf0;
@@ -415,7 +427,8 @@ export default {
 
 /* 按鈕滑過效果 */
 .reply-icon:hover,
-.like-icon:hover {
+.like-icon:hover,
+.unlike-icon:hover {
   z-index: -2;
   background-color: #e6ecf0;
   border-radius: 50%;
