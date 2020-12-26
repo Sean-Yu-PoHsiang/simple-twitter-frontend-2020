@@ -84,14 +84,23 @@
                   placeholder="有什麼新鮮事？"
                   autofocus
                 ></textarea>
-                <button
-                  type="submit"
-                  class="btn-tweet-submit align-self-end"
-                  data-dismiss="modal"
-                  @click="handleSubmit"
-                >
-                  推文
-                </button>
+                <div class="d-flex justify-content-end">
+                  <div v-if="description.length">
+                    <span
+                      class="contentAlert"
+                      :class="{ fontRed: isDescriptionOverSize }"
+                      >{{ description.length }}</span
+                    ><span class="contentAlert mr-3">/140</span>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn-tweet-submit"
+                    data-dismiss="modal"
+                    @click="handleSubmit"
+                  >
+                    推文
+                  </button>
+                </div>
               </form>
             </div>
           </div>
@@ -133,6 +142,9 @@ export default {
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
+    isDescriptionOverSize() {
+      return this.description.length > 140 ? true : false
+    },
   },
 
   methods: {
@@ -197,6 +209,12 @@ export default {
 </script>
 
 <style scoped>
+.fontRed {
+  color: red;
+}
+.contentAlert {
+  line-height: 40px;
+}
 .modal-dialog {
   max-width: 600px;
 }

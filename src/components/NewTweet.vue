@@ -10,7 +10,10 @@
             alt=""
           />
         </router-link>
-        <form class="new-tweet" @submit.stop.prevent="handleSubmit">
+        <form
+          class="new-tweet d-flex flex-column"
+          @submit.stop.prevent="handleSubmit"
+        >
           <label for="tweet-textarea" class="form-label"></label>
           <textarea
             v-model="description"
@@ -19,7 +22,14 @@
             rows="3"
             placeholder="有什麼新鮮事？"
           ></textarea>
-          <div class="flex-end">
+          <div class="new-tweets-btn-box d-flex justify-content-end">
+            <div v-if="description.length">
+              <span
+                class="contentAlert"
+                :class="{ fontRed: isDescriptionOverSize }"
+                >{{ description.length }}</span
+              ><span class="contentAlert mr-3">/140</span>
+            </div>
             <button type="submit" id="tweet-submit-btn" class="btn btn-primary">
               推文
             </button>
@@ -49,6 +59,9 @@ export default {
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
+    isDescriptionOverSize() {
+      return this.description.length > 140 ? true : false
+    },
   },
   created() {
     const userId = this.currentUser.id;
@@ -130,6 +143,16 @@ export default {
 </script>
 
 <style scoped>
+textarea::placeholder {
+  font-size: 15px;
+  padding: 0;
+}
+.fontRed {
+  color: red;
+}
+.contentAlert {
+  line-height: 60px;
+}
 .container {
   padding: 0;
   /* width: 600px; */
@@ -168,13 +191,13 @@ export default {
 /* tweet input */
 .new-tweet {
   width: 100%;
-  display: flex;
 }
 textarea {
   border: none;
-  height: 120px;
+  height: 80px;
   resize: none;
   overflow-y: scroll;
+  padding: 12px 16px 12px 0;
 }
 textarea:focus {
   box-shadow: 0 0 0 0.2rem transparent;
@@ -190,11 +213,8 @@ textarea:focus {
   color: #9197a3;
 }
 
-.flex-end {
+.new-tweets-btn-box {
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
 }
 
 #tweet-submit-btn {
