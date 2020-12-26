@@ -17,10 +17,26 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  addTweetsLikes({ tweetId }) {
-    return apiHelper.post(`/tweets/${tweetId}/like`, {
+  addTweetLike({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/like`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+      .then(res => {
+        return res
+      })
+      .catch(err => {
+        return err.response
+      })
   },
-
+  deleteTweetLike({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/unlike`, null, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+      .then(res => {
+        return res
+      })
+      .catch(err => {
+        return err.response.data
+      })
+  },
 }
