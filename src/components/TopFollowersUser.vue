@@ -1,7 +1,7 @@
 <template>
   <div class="top-followers">
     <div class="title">跟隨誰</div>
-    <div class="user-list">
+    <div class="user-list list-scroll">
       <div v-for="user in topUsers" :key="user.id" class="user">
         <div class="user-info">
           <router-link :to="{ name: 'user', params: { userId: user.id } }">
@@ -39,8 +39,8 @@
           跟隨
         </button>
       </div>
-      <button class="show-more-btn">顯示更多</button>
     </div>
+    <button class="show-more-btn">顯示更多</button>
   </div>
 </template>
 
@@ -136,6 +136,10 @@ export default {
   border-radius: 14px;
   width: 320px;
   margin-top: 15px;
+}
+.list-scroll {
+  max-height: 83vh;
+  overflow: scroll;
 }
 
 .title {

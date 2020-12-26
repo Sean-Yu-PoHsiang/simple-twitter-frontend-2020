@@ -7,7 +7,7 @@
       </div>
       <div class="col main-container vh100scroll">
         <UserTweet
-          :userTweet="userTweet"
+          :initialUserTweet="userTweet"
           @after-reply-tweet="afterReplyTweet"
         />
         <!-- all users newest tweet  -->
@@ -19,7 +19,6 @@
       <div class="col-auto right-container">
         <TopFollowersUser class="component-top-followers-user" />
       </div>
-
       <!-- right component -->
     </div>
   </div>
@@ -33,7 +32,7 @@ import TopFollowersUser from "./../components/TopFollowersUser.vue";
 
 import userTweetAPI from "./../apis/tweet";
 import { Toast } from "./../utils/helpers";
-
+import { v4 as uuidv4 } from "uuid";
 import { mapState } from "vuex";
 
 export default {
@@ -80,26 +79,24 @@ export default {
         const { data } = await userTweetAPI.getTweetReplies(tweetId);
 
         this.tweetReplies = data;
-        console.log("this.tweetReplies", this.tweetReplies);
+        console.log("this.tweetReplies", this.tweetReplies)
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得該文回覆資料，請稍後再試",
-        });
+        })
       }
     },
     afterReplyTweet(payload) {
-      console.log("afterReplyTweet執行");
-      // console.log("payload::", payload);
+      const { tweetId, comment, createdAt } = payload;
 
-      const { User, tweetId, comment, createdAt, id } = payload;
-      this.tweets.unshift({
-        User,
+      this.tweetReplies.unshift({
+        User: this.currentUser,
         tweetId,
         comment,
         createdAt,
-        id,
+        id: uuidv4()
       });
     },
   },
@@ -108,8 +105,4 @@ export default {
 
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: row;
-}
 </style>

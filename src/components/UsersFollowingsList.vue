@@ -16,7 +16,7 @@
 
             <div class="user-at">@{{ following.account }}</div>
           </div>
-          <div>
+          <div v-if="following.id !== currentUser.id">
             <button
               v-if="!following.isFollowed"
               type="submit"
@@ -52,6 +52,7 @@ import { emptyImageFilter } from "../utils/mixins";
 import { contentLengthFilter } from "../utils/mixins";
 import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex"
 
 export default {
   components: {},
@@ -65,6 +66,9 @@ export default {
     return {
       followings: this.initialFollowings
     }
+  },
+  computed: {
+    ...mapState(["currentUser"])
   },
   watch: {
     initialFollowings(newValue) {

@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-</template>
+</template> 
 
 <script>
 import Navbar from "./../components/Navbar";
@@ -58,6 +58,11 @@ export default {
       userProfile: {},
       tweets: [],
     };
+  },
+  watch: {
+    initialTweets(newValue) {
+      this.tweets = newValue
+    },
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),

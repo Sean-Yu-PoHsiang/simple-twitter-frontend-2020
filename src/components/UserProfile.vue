@@ -171,7 +171,12 @@
                   class="form-control"
                 />
               </div>
-              <div class="d-flex justify-content-end"><span>0/40</span></div>
+              <div class="d-flex justify-content-end">
+                <span :class="{ fontRed: isNameOverSize }">{{
+                  nameInputLength
+                }}</span
+                ><span>/40</span>
+              </div>
               <div class="texarea-box">
                 <textarea
                   v-model="tempUserProfile.introduction"
@@ -183,7 +188,12 @@
                   autofocus
                 ></textarea>
               </div>
-              <div class="d-flex justify-content-end"><span>0/160</span></div>
+              <div class="d-flex justify-content-end">
+                <span :class="{ fontRed: isIntroductionOverSize }">{{
+                  introductionInputLength || 0
+                }}</span
+                ><span>/160</span>
+              </div>
               <input
                 type="text"
                 class="form-control d-none"
@@ -199,17 +209,17 @@
 </template>
 
 <script>
-import ArrowIcon from "./../components/ArrowIcon";
-import IconMessage from "./../components/IconMessage";
-import IconRing from "./../components/IconRing";
-import IconRingActive from "./../components/IconRingActive";
-import IconEditPhoto from "./../components/IconEditPhoto";
-import { emptyImageFilter } from "../utils/mixins";
-import { emptyCoverFilter } from "../utils/mixins";
+import ArrowIcon from "./../components/ArrowIcon"
+import IconMessage from "./../components/IconMessage"
+import IconRing from "./../components/IconRing"
+import IconRingActive from "./../components/IconRingActive"
+import IconEditPhoto from "./../components/IconEditPhoto"
+import { emptyImageFilter } from "../utils/mixins"
+import { emptyCoverFilter } from "../utils/mixins"
 
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
-import { mapState } from "vuex";
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
+import { mapState } from "vuex"
 
 export default {
   components: {
@@ -229,10 +239,24 @@ export default {
     return {
       userProfile: this.initialUserProfile,
       tempUserProfile: this.initialUserProfile,
-      isProcessing: false
+      isProcessing: false,
     };
   },
   computed: {
+    isNameOverSize() {
+      return this.tempUserProfile.name.length > 40 ? true : false
+    },
+    isIntroductionOverSize() {
+      if (this.tempUserProfile.introduction === null) { return false }
+      return this.tempUserProfile.introduction.length > 160 ? true : false
+    },
+    nameInputLength() {
+      return this.tempUserProfile.name.length
+    },
+    introductionInputLength() {
+      if (this.tempUserProfile.introduction === null) { return 0 }
+      return this.tempUserProfile.introduction.length
+    },
     ...mapState(["currentUser"]),
   },
   watch: {
@@ -250,30 +274,30 @@ export default {
   methods: {
     async addFollowing(userId) {
       try {
-        const { data } = await userAPI.addFollowing({ id: userId });
+        const { data } = await userAPI.addFollowing({ id: userId })
 
         if (data.status !== "success") {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
 
         this.userProfile.isFollowed = true;
-        this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1;
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法跟隨，請稍後再試",
         });
-        console.log("error", error);
+        console.log("error", error)
       }
     },
     async deleteFollowing(userId) {
       try {
-        const { data } = await userAPI.deleteFollowing({ userId });
+        const { data } = await userAPI.deleteFollowing({ userId })
 
-        console.log(data);
+        console.log(data)
 
         if (data.status !== "success") {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
 
         this.userProfile.isFollowed = false;
@@ -287,13 +311,13 @@ export default {
       }
     },
     handleCoverImageChange(e) {
-      const { files } = e.target;
+      const { files } = e.target
 
       if (files.length === 0) {
         this.tempUserProfile.avatar = this.currentUser.avatar
       } else {
-        const imageURL = window.URL.createObjectURL(files[0]);
-        this.tempUserProfile.cover = imageURL;
+        const imageURL = window.URL.createObjectURL(files[0])
+        this.tempUserProfile.cover = imageURL
       }
     },
     handleAvatarImageChange(e) {
@@ -302,12 +326,12 @@ export default {
       if (files.length === 0) {
         this.tempUserProfile.avatar = this.currentUser.avatar
       } else {
-        const imageURL = window.URL.createObjectURL(files[0]);
-        this.tempUserProfile.avatar = imageURL;
+        const imageURL = window.URL.createObjectURL(files[0])
+        this.tempUserProfile.avatar = imageURL
       }
     },
     clearCoverImage() {
-      this.tempUserProfile.cover = "";
+      this.tempUserProfile.cover = ""
       const coverElement = document.getElementById('image-cover')
       coverElement.value = ""
     },
@@ -316,39 +340,53 @@ export default {
         Toast.fire({
           icon: "warning",
           title: "請填寫名稱",
-        });
-        return;
+        })
+        return
       } else if (!this.tempUserProfile.introduction) {
         Toast.fire({
           icon: "warning",
           title: "請填寫介紹",
-        });
-        return;
+        })
+        return
+      } else if (this.isNameOverSize) {
+        Toast.fire({
+          icon: "warning",
+          title: "名稱限40個字",
+        })
+        return
+      } else if (this.isIntroductionOverSize) {
+        Toast.fire({
+          icon: "warning",
+          title: "自我介紹限160個字",
+        })
+        return
       }
 
       this.isProcessing = true
-      let formData = new FormData(document.getElementById('edit-user-profile-form'));
+      let formData = new FormData(document.getElementById('edit-user-profile-form'))
 
       try {
         const response = await userAPI.EditUserProfile({
           userId: this.tempUserProfile.id,
           formData,
         })
-        console.log(response)
-        if (response.data.status !== 200) {
-          // throw new Error(data.message);
+        if (response.status !== 200) {
+          throw new Error(response.data.message)
         }
         const newUserProfileRes = await userAPI.getCurrentUserProfile()
-        this.userProfile = { ...newUserProfileRes.data }
+        this.userProfile = {
+          ...this.userProfile,
+          ...newUserProfileRes.data
+        }
         this.$store.commit('setCurrentUser', newUserProfileRes.data)
         this.isProcessing = false
 
       } catch (error) {
-        this.isProcessing = false;
+        this.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法更新資料，請稍後再試。",
-        });
+        })
       }
     },
   },
@@ -357,6 +395,9 @@ export default {
 </script>
 
 <style scoped>
+.fontRed {
+  color: red;
+}
 .form-control:focus {
   box-shadow: 0 0 0 0.2rem transparent;
   background: transparent;

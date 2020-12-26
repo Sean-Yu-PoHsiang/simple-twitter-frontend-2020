@@ -41,8 +41,10 @@
       class="btn sign-out-btn d-flex fonSize18 align-items-center"
       @click="signOut"
     >
-      <IconSignOut class="mr-3" />
-      <p>登出</p>
+      <div class="d-flex">
+        <IconSignOut class="mr-3" />
+        <p>登出</p>
+      </div>
     </button>
 
     <!-- Modal -->
@@ -67,7 +69,10 @@
           </div>
           <div class="modal-body">
             <div class="d-flex">
-              <img :src="currentUser.avatar | emptyImage" alt="no photo" />
+              <img
+                :src="currentUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
+                alt="no photo"
+              />
               <form
                 class="d-flex flex-column w-100"
                 @submit.stop.prevent="handleSubmit"
@@ -81,14 +86,23 @@
                   placeholder="有什麼新鮮事？"
                   autofocus
                 ></textarea>
-                <button
-                  type="submit"
-                  class="btn-tweet-submit align-self-end"
-                  data-dismiss="modal"
-                  @click="handleSubmit"
-                >
-                  推文
-                </button>
+                <div class="d-flex justify-content-end">
+                  <div v-if="description.length">
+                    <span
+                      class="contentAlert"
+                      :class="{ fontRed: isDescriptionOverSize }"
+                      >{{ description.length }}</span
+                    ><span class="contentAlert mr-3">/140</span>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn-tweet-submit"
+                    data-dismiss="modal"
+                    @click="handleSubmit"
+                  >
+                    推文
+                  </button>
+                </div>
               </form>
             </div>
           </div>
@@ -130,6 +144,9 @@ export default {
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
+    isDescriptionOverSize() {
+      return this.description.length > 140 ? true : false
+    },
   },
 
   methods: {
@@ -194,6 +211,12 @@ export default {
 </script>
 
 <style scoped>
+.fontRed {
+  color: red;
+}
+.contentAlert {
+  line-height: 40px;
+}
 .modal-dialog {
   max-width: 600px;
 }

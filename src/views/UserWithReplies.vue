@@ -26,7 +26,10 @@
             >喜歡的內容</router-link
           >
         </div>
-        <Tweets :initialTweets="tweetsWithReplies" />
+        <TweetsAndReplies
+          :initialTweetsAndReplies="tweetsWithReplies"
+          :initialUserProfile="userProfile"
+        />
       </div>
       <div class="col-auto">
         <TopFollowersUser class="component-top-followers-user" />
@@ -39,7 +42,7 @@
 import Navbar from "./../components/Navbar";
 import TopFollowersUser from "./../components/TopFollowersUser";
 import UserProfile from "./../components/UserProfile";
-import Tweets from "./../components/Tweets.vue";
+import TweetsAndReplies from "./../components/TweetsAndReplies.vue";
 
 import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
@@ -50,7 +53,7 @@ export default {
     Navbar,
     TopFollowersUser,
     UserProfile,
-    Tweets,
+    TweetsAndReplies,
   },
   data() {
     return {
@@ -94,13 +97,12 @@ export default {
         const { data } = await userAPI.getUserTweetsWithReplies({ userId });
         console.log(data);
 
-        this.tweetsWithReplies = data.map((tweet) => {
-          return tweet.Tweet;
-        });
-        // this.tweetsWithReplies = {
-        //   ...this.tweetsWithReplies,
-        //   ...data
-        // }
+        this.tweetsWithReplies = data
+
+        // this.tweetsWithReplies = data.map((tweet) => {
+        //   return tweet.Tweet;
+        // });
+
       } catch (error) {
         console.log(error);
         Toast.fire({
