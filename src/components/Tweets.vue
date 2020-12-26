@@ -56,10 +56,29 @@
 
           <!-- 點like -->
           <div class="like-container">
-            <div class="btn-container">
-              <LikeIcon class="like-icon" />
-              <p class="likes-count">{{ tweet.likesCount }}</p>
-            </div>
+            <button
+              v-if="!tweet.isLiked"
+              type="button"
+              class="btn-like"
+              @click.prevent="addLike(tweet.id)"
+            >
+              <div class="btn-container">
+                <LikeIcon class="like-icon" />
+                <p class="likes-count">{{ tweet.likesCount }}</p>
+              </div>
+            </button>
+
+            <button
+              v-else
+              type="button"
+              class="btn-unlike"
+              @click.prevent="deleteLike(tweet.id)"
+            >
+              <div class="btn-container">
+                <IconLikeFill class="unlike-icon" />
+                <p class="likes-count">{{ tweet.likesCount }}</p>
+              </div>
+            </button>
           </div>
         </div>
       </div>
@@ -139,7 +158,7 @@
                   type="submit"
                   class="btn-reply-submit align-self-end"
                   data-dismiss="modal"
-                  @click="handleReplySubmit(tweets.id)"
+                  @click="handleReplySubmit(tweetDataForModel.id)"
                 >
                   推文
                 </button>
@@ -159,6 +178,8 @@ import LikeIcon from "./../components/LikeIcon";
 import moment from "moment";
 import tweetAPI from "../apis/tweet";
 import userAPI from "./../apis/user";
+import IconLikeFill from "./../components/IconLikeFill";
+
 
 import { Toast } from "./../utils/helpers";
 
@@ -168,6 +189,7 @@ export default {
   components: {
     ReplyIcon,
     LikeIcon,
+    IconLikeFill
   },
 
   props: {
@@ -180,6 +202,7 @@ export default {
     return {
       tweets: this.initialTweets,
       comment: "",
+      tweetId: -1,
       tweetDataForModel: {
         User: {
           account: "",
@@ -198,8 +221,9 @@ export default {
     async getTweetForModel(tweetId) {
       try {
         const { data } = await tweetAPI.getUserTweet({ tweetId })
+        this.tweetId = tweetId
         this.tweetDataForModel = data
-        console.log(data)
+        console.log('this.tweetDataForModel ', this.tweetDataForModel)
 
       } catch (error) {
         console.log(error);
@@ -210,24 +234,48 @@ export default {
       }
     },
     async handleReplySubmit(tweetId) {
-
-      console.log('handleReplySubmit', tweetId)
-
       try {
         this.createdAt = Date.now();
+
+        if (this.comment.trim() === "") {
+          Toast.fire({
+            icon: "error",
+            title: "親愛的用戶，請勿發空空的思念。",
+          });
+          return;
+        } else if (this.comment.length > 140) {
+          Toast.fire({
+            icon: "error",
+            title: "推文字數超過140囉！",
+          });
+          return;
+        }
+
         const response = await userAPI.addUserReply({
-          tweetId: tweetId,
+          tweetId: this.tweetId,
           comment: this.comment,
           createdAt: this.createdAt,
 
-        });
-        console.log("ReplyResponse:", response);
-
+        })
 
         if (response.status !== 200) {
           throw new Error(response);
         }
         this.comment = "";
+
+        this.tweets = this.tweets.map((tweet) => {
+          if (tweet.id === tweetId) {
+            const newRepliesCount = tweet.repliesCount + 1
+            return {
+              ...tweet,
+              repliesCount: newRepliesCount
+            }
+
+          } else {
+            return tweet
+          }
+        })
+
       } catch (error) {
         console.log(error);
         Toast.fire({
@@ -235,7 +283,78 @@ export default {
           title: "無法發送回覆，請稍後再試",
         });
       }
-    }
+    },
+    async addLike(tweetId) {
+      try {
+        const response = await tweetAPI.addTweetLike({ tweetId })
+
+        console.log(">>>>>>>>>", response)
+        if (response.data.status !== 'success') {
+          throw new Error(response.data.message)
+        }
+
+        this.tweets = this.tweets.map((tweet) => {
+          if (tweet.id === tweetId) {
+            const newLikesCount = tweet.likesCount + 1
+
+            return {
+              ...tweet,
+              isLiked: true,
+              likesCount: newLikesCount
+            }
+
+          } else {
+            return tweet
+          }
+        })
+
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法點愛心，請稍後再試",
+        });
+      }
+    },
+    async deleteLike(tweetId) {
+      try {
+        const response = await tweetAPI.deleteTweetLike({ tweetId })
+
+        console.log(response)
+        if (response.data.status !== 'success') {
+          throw new Error(response.data.message)
+        }
+
+        this.tweets = this.tweets.map((tweet) => {
+          if (tweet.id === tweetId) {
+            const newLikesCount = tweet.likesCount - 1
+
+            return {
+              ...tweet,
+              isLiked: false,
+              likesCount: newLikesCount
+            }
+
+
+          } else {
+            return tweet
+          }
+
+        })
+
+        this.$emit("after-click-delete-like", {
+          tweets: this.tweets
+        });
+
+
+      } catch (error) {
+        console.log(error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消愛心，請稍後再試",
+        });
+      }
+    },
 
   },
   computed: {
@@ -320,9 +439,33 @@ export default {
   word-break: break-all;
 }
 
+/* 點讚、回文按鈕 */
+.unlike-icon {
+  transform: scale(0.7);
+  margin: 0;
+}
+
+.btn-container {
+  width: auto;
+  border-radius: 50px;
+}
+
 .reply-icon,
-.like-icon {
-  margin-right: 10px;
+.like-icon,
+.unlike-icon {
+  margin-right: 5px;
+}
+
+button {
+  width: auto;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.unlike-icon:hover,
+button:hover {
+  background: #f0f0f0;
+  border-radius: 30px;
 }
 
 .likes-count,
@@ -340,26 +483,8 @@ export default {
   display: flex;
   align-content: center;
   height: 30px;
-  /* width: auto; */
   padding-right: 50px;
 }
-
-/* 按鈕滑過效果 */
-.btn-container:hover {
-  z-index: -2;
-  background-color: #e6ecf0;
-  border-radius: 30px;
-}
-
-/* 按鈕滑過效果的背景大小 */
-.btn-container {
-  padding: 0 8px;
-}
-/* 
-.reply-btn-show-model {
-  position: relative;
-  z-index: 20;
-} */
 
 /* modal-setting */
 .new-tweet-card-pack {
@@ -489,15 +614,5 @@ img {
   top: 10px;
   bottom: 10px;
   background-color: red;
-}
-
-button {
-  width: auto;
-  border: 1px solid transparent;
-  background: transparent;
-}
-button:hover {
-  background: #f0f0f0;
-  border-radius: 30px;
 }
 </style>

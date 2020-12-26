@@ -41,8 +41,10 @@
       class="btn sign-out-btn d-flex fonSize18 align-items-center"
       @click="signOut"
     >
-      <IconSignOut class="mr-3" />
-      <p>登出</p>
+      <div class="d-flex">
+        <IconSignOut class="mr-3" />
+        <p>登出</p>
+      </div>
     </button>
 
     <!-- Modal -->

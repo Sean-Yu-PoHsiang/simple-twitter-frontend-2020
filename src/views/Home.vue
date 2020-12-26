@@ -5,11 +5,14 @@
       <div class="col-auto left-container component-navbar">
         <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
-      <div class="col main-container vh100scroll">
+      <div class="col main-container main-rwd vh100scroll">
         <!-- user upload newest tweet  -->
         <NewTweet @after-create-tweet="afterCreateTweet" />
         <!-- all users newest tweet  -->
-        <Tweets :initialTweets="tweets" />
+        <Tweets
+          :initialTweets="tweets"
+          @after-click-delete-like="afterClickDeleteLike"
+        />
       </div>
       <div class="col-auto right-container">
         <!-- right component -->
@@ -87,6 +90,13 @@ export default {
         isLiked,
       });
     },
+    afterClickDeleteLike(payload) {
+
+      console.log('payload', payload)
+      // const { tweets } = payload
+
+      // this.tweets = payload
+    }
   },
 };
 </script>
