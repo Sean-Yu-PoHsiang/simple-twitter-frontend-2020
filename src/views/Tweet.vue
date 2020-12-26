@@ -108,8 +108,4 @@ export default {
 
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: row;
-}
 </style>
