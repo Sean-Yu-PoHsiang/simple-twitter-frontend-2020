@@ -14,7 +14,11 @@
         <router-link
           :to="{ name: 'user', params: { userId: userTweet.User.id } }"
         >
-          <img class="user-avator" :src="userTweet.User.avatar" alt="" />
+          <img
+            class="user-avator"
+            :src="userTweet.User.avatar || 'https://i.imgur.com/S4PE66O.png'"
+            alt=""
+          />
         </router-link>
         <span class="connect-line"></span>
         <div class="reply-detail">
@@ -101,7 +105,13 @@
           <div class="modal-body">
             <!-- 推文內容 -->
             <div class="tweet-container">
-              <img class="avator" :src="userTweet.User.avatar" alt="" />
+              <img
+                class="avator"
+                :src="
+                  userTweet.User.avatar || 'https://i.imgur.com/S4PE66O.png'
+                "
+                alt=""
+              />
               <div class="detail">
                 <div class="info">
                   <div class="name">{{ userTweet.User.name }}</div>
@@ -556,10 +566,12 @@ img {
   color: #657786;
 }
 .tweet-text {
+  width: 95%;
   font-weight: normal;
   font-size: 15px;
   line-height: 22px;
   color: #1c1c1c;
+  word-break: break-all;
 }
 .reply,
 .reply-to-user-at {

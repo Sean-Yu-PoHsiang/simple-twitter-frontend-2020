@@ -67,7 +67,10 @@
           </div>
           <div class="modal-body">
             <div class="d-flex">
-              <img :src="currentUser.avatar | emptyImage" alt="no photo" />
+              <img
+                :src="currentUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
+                alt="no photo"
+              />
               <form
                 class="d-flex flex-column w-100"
                 @submit.stop.prevent="handleSubmit"

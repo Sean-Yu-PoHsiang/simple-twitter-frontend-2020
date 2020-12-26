@@ -2,7 +2,11 @@
   <div class="replies-box">
     <div v-for="reply in tweetReplies" :key="reply.id" class="replyer">
       <router-link :to="{ name: 'user', params: { userId: reply.User.id } }">
-        <img class="replyer-avator" :src="reply.User.avatar" alt="" />
+        <img
+          class="replyer-avator"
+          :src="reply.User.avatar || 'https://i.imgur.com/S4PE66O.png'"
+          alt=""
+        />
       </router-link>
       <div class="reply-detail">
         <div class="replyer-info">
