@@ -113,6 +113,11 @@ export default {
               FollowingsCount: newFollowingsCount
             }
           }
+
+
+
+
+
           this.$emit("after-click-delete-following", {
             userProfile: this.userProfile
           });

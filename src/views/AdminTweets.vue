@@ -25,7 +25,7 @@
                     >
                     <span class="dot fonSize30">&#8901;</span>
                     <span class="tweet-create-time">
-                      {{ tweet.createdAt | fromNow }}
+                      {{ tweet.createdAt }}
                     </span>
                     <button class="btn-exit" @click="deleteTweet(tweet.id)">
                       &#10005;
