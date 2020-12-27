@@ -42,7 +42,7 @@
       </button>
     </form>
     <div class="d-flex justify-content-end w-100">
-      <router-link class="fonSize18 link-underline" to="/signin">
+      <router-link class="fonSize18 link-underline link" to="/signin">
         前台登入
       </router-link>
     </div>
@@ -159,5 +159,14 @@ input {
   border-color: transparent;
   box-shadow: 0 0 0 0.2rem transparent;
   background: transparent;
+}
+
+.link {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  color: #0099ff;
 }
 </style>

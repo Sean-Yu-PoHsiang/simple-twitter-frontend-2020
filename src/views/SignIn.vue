@@ -18,6 +18,7 @@
         />
         <div id="emailHelp" class="form-text"></div>
       </div>
+      <span class="under-line"></span>
       <div class="input-container">
         <div class="input-title">密碼</div>
 
@@ -33,6 +34,7 @@
           id="exampleInputPassword1"
           @keyup.enter="handleSubmit"
         />
+        <span class="under-line"></span>
       </div>
     </form>
     <button
@@ -141,6 +143,16 @@ export default {
   position: relative;
 }
 
+.under-line {
+  color: #657786;
+  background-color: #657786;
+  width: 600px;
+  height: 2px;
+  content: "";
+  /* position: absolute;
+  top: 10px; */
+}
+
 input {
   text-align: start;
   vertical-align: bottom;
@@ -149,9 +161,11 @@ input {
   border-style: none;
   background: #f5f8fa;
   border-radius: 4px;
-  border-bottom: 2px solid #657786;
+  /* border-bottom: 2px solid #657786; */
   padding-top: 30px;
+  position: relative;
 }
+
 .input-title {
   position: absolute;
   font-family: Noto Sans TC;
@@ -188,6 +202,14 @@ input {
 
 .link {
   text-decoration: underline;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: right;
+  text-decoration-line: underline;
+  color: #0099ff;
 }
 
 span {

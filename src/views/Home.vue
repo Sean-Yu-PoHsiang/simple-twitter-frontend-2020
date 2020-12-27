@@ -9,10 +9,7 @@
         <!-- user upload newest tweet  -->
         <NewTweet @after-create-tweet="afterCreateTweet" />
         <!-- all users newest tweet  -->
-        <Tweets
-          :initialTweets="tweets"
-          @after-click-delete-like="afterClickDeleteLike"
-        />
+        <Tweets :initialTweets="tweets" />
       </div>
       <div class="col-auto right-container">
         <!-- right component -->

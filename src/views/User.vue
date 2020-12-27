@@ -29,7 +29,11 @@
         <Tweets :initialTweets="tweets" />
       </div>
       <div class="col-auto">
-        <TopFollowersUser class="component-top-followers-user" />
+        <TopFollowersUser
+          class="component-top-followers-user"
+          :initialUserProfile="userProfile"
+          @after-click-delete-following="afterClickDeleteFollowing"
+        />
       </div>
     </div>
   </div>
@@ -63,6 +67,9 @@ export default {
     initialTweets(newValue) {
       this.tweets = newValue
     },
+    initialUserProfile(newValue) {
+      this.userProfile = newValue
+    }
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
@@ -123,6 +130,14 @@ export default {
         });
       }
     },
+    afterClickDeleteFollowing(payload) {
+
+      const {
+        userProfile,
+      } = payload
+
+      this.userProfile = { ...userProfile }//帶物件要展開再放入，不然會多一層結構
+    }
   },
 };
 </script>

@@ -257,6 +257,14 @@ input {
 
 .link {
   text-decoration: underline;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: right;
+  text-decoration-line: underline;
+  color: #0099ff;
 }
 
 span {

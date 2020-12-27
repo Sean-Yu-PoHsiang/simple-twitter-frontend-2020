@@ -51,13 +51,21 @@ import userAPI from "./../apis/user";
 import { Toast } from "./../utils/helpers";
 
 export default {
+  props: {
+    initialUserProfile: {
+      type: Object,
+      required: true,
+    }
+  },
   data() {
     return {
       topUsers: [],
+      userProfile: {},
     };
   },
   created() {
     this.fetchTopUsers();
+
   },
   methods: {
     async fetchTopUsers() {
@@ -90,6 +98,26 @@ export default {
             return user;
           }
         });
+
+
+        if (!this.userProfile) {
+          return
+        } else {
+          this.userProfile = this.initialUserProfile
+
+          if (userId !== this.userProfile) {
+            const newFollowingsCount = this.userProfile.FollowingsCount + 1
+            console.log('newFollowingsCount', newFollowingsCount)
+            this.userProfile = {
+              ...this.userProfile,
+              FollowingsCount: newFollowingsCount
+            }
+          }
+          this.$emit("after-click-delete-following", {
+            userProfile: this.userProfile
+          });
+        }
+
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -116,6 +144,30 @@ export default {
             return user;
           }
         });
+
+
+
+        this.userProfile = this.initialUserProfile
+        if (!this.userProfile) {
+          return
+        } else {
+
+          if (userId !== this.userProfile) {
+            const newFollowingsCount = this.userProfile.FollowingsCount - 1
+            console.log('newFollowingsCount', newFollowingsCount)
+            this.userProfile = {
+              ...this.userProfile,
+              FollowingsCount: newFollowingsCount
+            }
+            console.log('this.userProfile NEWcount', this.userProfile)
+
+          }
+
+          this.$emit("after-click-delete-following", {
+            userProfile: this.userProfile
+          });
+        }
+
       } catch (error) {
         Toast.fire({
           icon: "error",
