@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto left-container component-navbar">
+      <div class="col-auto component-navbar left-area-rwd">
         <Navbar />
       </div>
       <div class="col user-setting-wrapper vh100scroll">

@@ -2,10 +2,10 @@
   <div class="container">
     <div class="row">
       <!-- left component -->
-      <div class="col-auto left-container component-navbar">
+      <div class="col-auto left-container component-navbar left-area-rwd">
         <Navbar />
       </div>
-      <div class="col main-container vh100scroll">
+      <div class="col main-container main-area-rwd vh100scroll">
         <UserTweet
           :initialUserTweet="userTweet"
           @after-reply-tweet="afterReplyTweet"
@@ -16,7 +16,7 @@
           :initialUserTweet="userTweet"
         />
       </div>
-      <div class="col-auto right-container">
+      <div class="col-auto right-container right-area-rwd">
         <TopFollowersUser class="component-top-followers-user" />
       </div>
       <!-- right component -->

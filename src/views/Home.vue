@@ -2,19 +2,16 @@
   <div class="container">
     <div class="row">
       <!-- left component -->
-      <div class="col-auto left-container component-navbar">
+      <div class="col-auto left-container left-area-rwd component-navbar">
         <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
-      <div class="col main-container main-rwd vh100scroll">
+      <div class="col main-container main-area-rwd vh100scroll">
         <!-- user upload newest tweet  -->
         <NewTweet @after-create-tweet="afterCreateTweet" />
         <!-- all users newest tweet  -->
-        <Tweets
-          :initialTweets="tweets"
-          @after-click-delete-like="afterClickDeleteLike"
-        />
+        <Tweets :initialTweets="tweets" />
       </div>
-      <div class="col-auto right-container">
+      <div class="col-auto right-container right-area-rwd">
         <!-- right component -->
         <TopFollowersUser class="component-top-followers-user" />
       </div>

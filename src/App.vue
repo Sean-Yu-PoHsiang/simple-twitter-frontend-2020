@@ -39,37 +39,44 @@ button:focus {
   overflow: scroll;
 }
 
-@media (max-width: 576px) {
+@media screem and (max-width: 576px) {
   .component-top-followers-user {
     display: none;
   }
-}
-
-@media (max-width: 768px) {
-  .component-top-followers-user {
-    display: unset;
-  }
   .col {
-    min-width: auto;
+    min-width: 300px;
   }
 }
 
-@media (max-width: 992px) {
-  .component-top-followers-user {
+@media screem and (max-width: 768px) {
+  /* .component-top-followers-user {
     display: unset;
+  } */
+  .main-area-rwd {
+    min-width: 500px;
   }
-  .col {
-    min-width: auto;
+}
+
+@media screem and (max-width: 992px) {
+  /* .component-top-followers-user {
+    display: unset;
+  } */
+  .main-area-rwd {
+    width: 600px;
   }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
-@media (max-width: 1200px) {
-  .container {
-    max-width: 1200px;
-  }
-  .main-rwd {
-    min-width: 600px;
+@media screem and (max-width: 1200px) {
+  /* .container {
+    min-width: 1200px;
+  } */
+  /* 
+  .component-top-followers-user {
+    display: unset;
+  } */
+  .main-area-rwd {
+    width: 700px;
   }
 }
 </style>

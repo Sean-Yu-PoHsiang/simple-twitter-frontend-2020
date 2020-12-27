@@ -7,30 +7,36 @@
     >
       <Logo class="align-self-center m-4" />
       <h1 class="align-self-center fonSize23 mb-4">後台登入</h1>
-      <div class="form-item">
-        <label for="InputAcount" class="form-label w-100 fonSize15">帳號</label>
-        <input
-          v-model="email"
-          type="email"
-          class="form-control"
-          id="InputAcount"
-          aria-describedby="emailHelp"
-          required
-          autofocus
-        />
+      <div class="form-item input-line">
+        <div class="input-container">
+          <label for="InputAcount" class="form-label w-100 fonSize15"
+            >帳號</label
+          >
+          <input
+            v-model="email"
+            type="email"
+            class="form-control"
+            id="InputAcount"
+            aria-describedby="emailHelp"
+            required
+            autofocus
+          />
+        </div>
       </div>
-      <div class="form-item">
-        <label for="InputPassword" class="form-label w-100 fonSize15"
-          >密碼</label
-        >
-        <input
-          v-model="password"
-          type="password"
-          class="form-control"
-          id="InputPassword"
-          required
-          @keyup.enter="handleSubmit"
-        />
+      <div class="form-item input-line">
+        <div class="input-container">
+          <label for="InputPassword" class="form-label w-100 fonSize15"
+            >密碼</label
+          >
+          <input
+            v-model="password"
+            type="password"
+            class="form-control"
+            id="InputPassword"
+            required
+            @keyup.enter="handleSubmit"
+          />
+        </div>
       </div>
       <button
         type="submit"
@@ -42,7 +48,7 @@
       </button>
     </form>
     <div class="d-flex justify-content-end w-100">
-      <router-link class="fonSize18 link-underline" to="/signin">
+      <router-link class="fonSize18 link-underline link" to="/signin">
         前台登入
       </router-link>
     </div>
@@ -144,7 +150,7 @@ input {
   height: 50px;
   margin-bottom: 20px;
   border-radius: 4px;
-  border-bottom: 2px solid #657786;
+  /* border-bottom: 2px solid #657786; */
 }
 .signin-btn {
   background: #ff6600;
@@ -159,5 +165,29 @@ input {
   border-color: transparent;
   box-shadow: 0 0 0 0.2rem transparent;
   background: transparent;
+}
+
+.link {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  color: #0099ff;
+}
+.input-container {
+  position: relative;
+}
+
+/* 底線 */
+.input-container::after {
+  content: "";
+  background-color: #657786;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 </style>
