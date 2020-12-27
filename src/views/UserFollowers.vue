@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto component-navbar">
+      <div class="col-auto component-navbar left-area-rwd">
         <Navbar />
       </div>
-      <div class="col main-container vh100scroll">
+      <div class="col main-area-rwd main-container vh100scroll">
         <div class="control-area">
           <div class="previous-page">
             <div class="arrow-icon" @click="$router.push('/')">
@@ -19,7 +19,7 @@
         </div>
         <UsersFollowersList :initialFollowers="followers" />
       </div>
-      <div class="col-auto right-container">
+      <div class="col-auto right-container right-area-rwd">
         <TopFollowersUser class="component-top-followers-user" />
       </div>
     </div>
