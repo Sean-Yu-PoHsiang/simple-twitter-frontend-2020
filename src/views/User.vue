@@ -33,6 +33,7 @@
           class="component-top-followers-user"
           :initialUserProfile="userProfile"
           @after-click-delete-following="afterClickDeleteFollowing"
+          @after-click-add-following="afterClickAddFollowing"
         />
       </div>
     </div>
@@ -132,11 +133,50 @@ export default {
     },
     afterClickDeleteFollowing(payload) {
 
-      const {
-        userProfile,
-      } = payload
+      const { userId } = payload
+      // console.log('父層被點追縱的userId', userId)
+      // console.log('父層當前頁面this.userProfile.id', this.userProfile.id)
+      // console.log('currentUser', this.currentUser.id)
 
-      this.userProfile = { ...userProfile }//帶物件要展開再放入，不然會多一層結構
+      if (userId === this.userProfile.id) {
+        //被追蹤減一
+        const newFollowersCount = this.userProfile.FollowersCount - 1
+        this.userProfile = {
+          ...this.userProfile,
+          FollowersCount: newFollowersCount
+        }
+        return
+      } else if (this.userProfile.id === this.currentUser.id) {
+        //追蹤減一
+        const newFollowingCount = this.userProfile.FollowingsCount - 1
+        this.userProfile = {
+          ...this.userProfile,
+          FollowingsCount: newFollowingCount
+        }
+        return
+      }
+
+    },
+    afterClickAddFollowing(payload) {
+      const { userId } = payload
+
+      if (userId === this.userProfile.id) {
+        //被追蹤加一
+        const newFollowersCount = this.userProfile.FollowersCount + 1
+        this.userProfile = {
+          ...this.userProfile,
+          FollowersCount: newFollowersCount
+        }
+        return
+      } else if (this.userProfile.id === this.currentUser.id) {
+        //追蹤加一
+        const newFollowingCount = this.userProfile.FollowingsCount + 1
+        this.userProfile = {
+          ...this.userProfile,
+          FollowingsCount: newFollowingCount
+        }
+        return
+      }
     }
   },
 };

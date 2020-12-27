@@ -103,24 +103,11 @@ export default {
         if (!this.userProfile) {
           return
         } else {
-          this.userProfile = this.initialUserProfile
 
-          if (userId !== this.userProfile) {
-            const newFollowingsCount = this.userProfile.FollowingsCount + 1
-            console.log('newFollowingsCount', newFollowingsCount)
-            this.userProfile = {
-              ...this.userProfile,
-              FollowingsCount: newFollowingsCount
-            }
-          }
-
-
-
-
-
-          this.$emit("after-click-delete-following", {
-            userProfile: this.userProfile
+          this.$emit("after-click-add-following", {
+            userId: userId
           });
+
         }
 
       } catch (error) {
@@ -157,20 +144,10 @@ export default {
           return
         } else {
 
-          if (userId !== this.userProfile) {
-            const newFollowingsCount = this.userProfile.FollowingsCount - 1
-            console.log('newFollowingsCount', newFollowingsCount)
-            this.userProfile = {
-              ...this.userProfile,
-              FollowingsCount: newFollowingsCount
-            }
-            console.log('this.userProfile NEWcount', this.userProfile)
-
-          }
-
           this.$emit("after-click-delete-following", {
-            userProfile: this.userProfile
+            userId: userId
           });
+
         }
 
       } catch (error) {
