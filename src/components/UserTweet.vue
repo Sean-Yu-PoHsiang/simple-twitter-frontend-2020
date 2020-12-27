@@ -604,8 +604,4 @@ button {
   border: 1px solid transparent;
   background: transparent;
 }
-button:hover {
-  background: #f0f0f0;
-  border-radius: 30px;
-}
 </style>
