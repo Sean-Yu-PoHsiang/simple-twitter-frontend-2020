@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-auto component-navbar">
+      <div class="col-auto component-navbar left-area-rwd">
         <Navbar />
       </div>
-      <div class="col vh100scroll">
+      <div class="col main-area-rwd vh100scroll">
         <UserProfile :initialUserProfile="userProfile" />
         <div class="userNavbar d-flex">
           <router-link
@@ -31,7 +31,7 @@
           :initialUserProfile="userProfile"
         />
       </div>
-      <div class="col-auto">
+      <div class="col-auto right-area-rwd">
         <TopFollowersUser class="component-top-followers-user" />
       </div>
     </div>
