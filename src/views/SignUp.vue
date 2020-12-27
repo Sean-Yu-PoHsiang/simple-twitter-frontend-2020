@@ -219,7 +219,6 @@ input {
   border-style: none;
   background: #f5f8fa;
   border-radius: 4px;
-  border-bottom: 2px solid #657786;
   padding-top: 30px;
 }
 .title {
@@ -269,5 +268,17 @@ input {
 
 span {
   color: #0099ff;
+}
+
+/* 底線 */
+.input-container::after {
+  content: "";
+  background-color: #657786;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 </style>

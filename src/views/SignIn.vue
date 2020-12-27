@@ -18,7 +18,6 @@
         />
         <div id="emailHelp" class="form-text"></div>
       </div>
-      <span class="under-line"></span>
       <div class="input-container">
         <div class="input-title">密碼</div>
 
@@ -34,7 +33,6 @@
           id="exampleInputPassword1"
           @keyup.enter="handleSubmit"
         />
-        <span class="under-line"></span>
       </div>
     </form>
     <button
@@ -143,14 +141,16 @@ export default {
   position: relative;
 }
 
-.under-line {
-  color: #657786;
-  background-color: #657786;
-  width: 600px;
-  height: 2px;
+/* 底線 */
+.input-container::after {
   content: "";
-  /* position: absolute;
-  top: 10px; */
+  background-color: #657786;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 input {
@@ -161,7 +161,6 @@ input {
   border-style: none;
   background: #f5f8fa;
   border-radius: 4px;
-  /* border-bottom: 2px solid #657786; */
   padding-top: 30px;
   position: relative;
 }
