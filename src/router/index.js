@@ -69,6 +69,11 @@ const routes = [
     component: () => import('../views/UserLikes.vue')
   },
   {
+    path: '/publicChatRoom',
+    name: 'public-chat-room',
+    component: () => import('../views/PublicChatroom.vue')
+  },
+  {
     path: '/admin/signin',
     name: 'admin-sign-in',
     component: () => import('../views/AdminSignIn.vue')
