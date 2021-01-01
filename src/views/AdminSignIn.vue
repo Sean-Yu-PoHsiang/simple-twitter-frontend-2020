@@ -19,7 +19,7 @@
             id="InputAcount"
             aria-describedby="emailHelp"
             required
-            autofocus
+            v-focus
           />
         </div>
       </div>
@@ -56,9 +56,9 @@
 </template>
 
 <script>
-import Logo from "./../components/Logo"
-import authorizationAPI from './../apis/authorization'
-import { Toast } from './../utils/helpers'
+import Logo from "./../components/Logo";
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
@@ -66,55 +66,61 @@ export default {
   },
   data() {
     return {
-      email: '',
-      password: '',
-      isProcessing: false
-    }
+      email: "",
+      password: "",
+      isProcessing: false,
+    };
   },
   methods: {
     async handleSubmit() {
       try {
         if (!this.email || !this.password) {
           Toast.fire({
-            icon: 'warning',
-            title: '請填入 email 和 password'
-          })
-          return
+            icon: "warning",
+            title: "請填入 email 和 password",
+          });
+          return;
         }
 
-        this.isProcessing = true
+        this.isProcessing = true;
 
         const response = await authorizationAPI.AdminSignIn({
           email: this.email,
-          password: this.password
-        })
+          password: this.password,
+        });
 
-        const { data } = response
+        const { data } = response;
 
-        console.log(data.user)
+        console.log(data.user);
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        localStorage.setItem('token', data.token)
-        this.$store.commit('setCurrentUser', data.user)
-        this.isProcessing = false
+        localStorage.setItem("token", data.token);
+        this.$store.commit("setCurrentUser", data.user);
+        this.isProcessing = false;
 
-        this.$router.push('/admin/tweets')
-
+        this.$router.push("/admin/tweets");
       } catch (error) {
-        console.log(error)
-        this.password = ''
-        this.isProcessing = false
+        console.log(error);
+        this.password = "";
+        this.isProcessing = false;
 
         Toast.fire({
-          icon: 'warning',
-          title: '請確認您輸入了正確的帳號密碼'
-        })
+          icon: "warning",
+          title: "請確認您輸入了正確的帳號密碼",
+        });
       }
-    }
-  }
+    },
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
+    },
+  },
 };
 </script>
 

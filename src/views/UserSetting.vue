@@ -143,24 +143,29 @@ export default {
           name: this.name,
           email: this.email,
           password: this.password,
-          checkPassword: this.checkPassword
-        }
+          checkPassword: this.checkPassword,
+        };
 
-        const response = await authorizationAPI.EditUserSetting(userEditContent)
+        const response = await authorizationAPI.EditUserSetting(
+          userEditContent
+        );
 
         if (response.status === "error") {
           throw new Error(response.message);
         }
 
-        userEditContent = { ...userEditContent, password: "", checkPassword: "" }
+        userEditContent = {
+          ...userEditContent,
+          password: "",
+          checkPassword: "",
+        };
 
         Toast.fire({
-          icon: 'success',
-          title: `修改成功！`
-        })
-        this.$store.commit('setCurrentUser', userEditContent)
-        this.$router.push({ name: 'home' })
-
+          icon: "success",
+          title: `修改成功！`,
+        });
+        this.$store.commit("setCurrentUser", userEditContent);
+        this.$router.push({ name: "home" });
       } catch (error) {
         console.log("err", error);
         Toast.fire({

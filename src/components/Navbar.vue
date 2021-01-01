@@ -145,7 +145,7 @@ export default {
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
     isDescriptionOverSize() {
-      return this.description.length > 140 ? true : false
+      return this.description.length > 140 ? true : false;
     },
   },
 

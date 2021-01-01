@@ -13,7 +13,7 @@
           type="email"
           class="form-control"
           required
-          autofocus
+          v-focus
           aria-describedby="emailHelp"
         />
         <div id="emailHelp" class="form-text"></div>
@@ -55,8 +55,8 @@
 
 <script>
 import Logo from "./../components/Logo";
-import authorizationAPI from './../apis/authorization'
-import { Toast } from './../utils/helpers'
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
@@ -64,54 +64,68 @@ export default {
   },
   data() {
     return {
-      email: '',
-      password: '',
-      isProcessing: false
-    }
+      email: "",
+      password: "",
+      isProcessing: false,
+    };
   },
   methods: {
     async handleSubmit() {
       try {
         if (!this.email || !this.password) {
           Toast.fire({
-            icon: 'warning',
-            title: '請填入 email 和 password'
-          })
-          return
+            icon: "warning",
+            title: "請填入 email 和 password",
+          });
+          return;
         }
 
-        this.isProcessing = true
+        if (this.email.search("@") === -1) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填入註冊時email",
+          });
+          return;
+        }
+
+        this.isProcessing = true;
 
         const response = await authorizationAPI.SignIn({
           email: this.email,
-          password: this.password
-        })
+          password: this.password,
+        });
 
-        const { data } = response
+        const { data } = response;
 
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
 
-        localStorage.setItem('token', data.token)
-        console.log(data.user)
-        this.$store.commit('setCurrentUser', data.user)
-        this.isProcessing = false
+        localStorage.setItem("token", data.token);
+        console.log(data.user);
+        this.$store.commit("setCurrentUser", data.user);
+        this.isProcessing = false;
 
-        this.$router.push('/home')
-
+        this.$router.push("/home");
       } catch (error) {
-        console.log(error)
-        this.password = ''
-        this.isProcessing = false
+        console.log(error);
+        this.password = "";
+        this.isProcessing = false;
 
         Toast.fire({
-          icon: 'warning',
-          title: '請確認您輸入了正確的帳號密碼'
-        })
+          icon: "warning",
+          title: "請確認您輸入了正確的帳號密碼",
+        });
       }
-    }
-  }
+    },
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
+    },
+  },
 };
 </script>
 
@@ -207,7 +221,7 @@ input {
   font-size: 18px;
   line-height: 26px;
   text-align: right;
-  text-decoration-line: underline;
+  text-decoration-line: none;
   color: #0099ff;
 }
 
