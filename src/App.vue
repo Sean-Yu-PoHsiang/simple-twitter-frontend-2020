@@ -12,6 +12,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 export default {
   name: "App",
+  data() {
+    return {
+
+    }
+  },
+  created() {
+    this.$socket.close()
+  },
+  mounted() {
+
+  }
 };
 </script>
 
