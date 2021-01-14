@@ -18,6 +18,15 @@
       </div>
     </router-link>
     <router-link
+      :to="{ name: 'public-chat-room' }"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
+      <div class="d-flex">
+        <i class="far fa-envelope text-larger mr-3"></i>
+        <p>公開聊天室</p>
+      </div>
+    </router-link>
+    <router-link
       to="/setting"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
@@ -84,7 +93,6 @@
                   id="newTweet"
                   rows="6"
                   placeholder="有什麼新鮮事？"
-                  autofocus
                 ></textarea>
                 <div class="d-flex justify-content-end">
                   <div v-if="description.length">
@@ -142,6 +150,16 @@ export default {
       createdAt: "",
     };
   },
+  created() {
+
+  },
+  mounted() {
+    this.$socket.open()
+
+  },
+  destroyed() {
+    this.$socket.close()
+  },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
     isDescriptionOverSize() {
@@ -151,8 +169,8 @@ export default {
 
   methods: {
     signOut() {
-      this.$store.commit("revokeAuthentication");
-      this.$router.push("/signin");
+      this.$store.commit("revokeAuthentication")
+      this.$router.push("/signin")
     },
 
     async handleSubmit() {

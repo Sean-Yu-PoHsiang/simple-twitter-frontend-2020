@@ -4,7 +4,7 @@ import store from './../store'
 
 import NotFound from '../views/NotFound.vue'
 import SignIn from './../views/SignIn.vue'
-import Home from './../views/Home.vue'
+// import Home from './../views/Home.vue'
 
 
 Vue.use(VueRouter)
@@ -28,7 +28,7 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: () => import('../views/Home.vue')
   },
   {
     //:user/tweet/: id'
@@ -67,6 +67,11 @@ const routes = [
     path: '/users/:userId/likes',
     name: 'user-likes',
     component: () => import('../views/UserLikes.vue')
+  },
+  {
+    path: '/public-chatroom',
+    name: 'public-chat-room',
+    component: () => import('../views/PublicChatroom.vue')
   },
   {
     path: '/admin/signin',
