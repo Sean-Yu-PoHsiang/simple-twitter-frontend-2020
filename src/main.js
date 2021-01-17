@@ -13,6 +13,12 @@ Vue.use(new VueSocketIO({
   connection: SocketIO('https://merry-simple-twitter.herokuapp.com', {
     auth: {
       token: localStorage.getItem('token')
+    },
+    cors: {
+      origin: "https://merry-simple-twitter.herokuapp.com",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["my-custom-header"],
+      credentials: true
     }
   }),
 }))
