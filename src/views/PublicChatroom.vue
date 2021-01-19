@@ -127,9 +127,15 @@ export default {
     ...mapState(["currentUser"]),
   },
   sockets: {
+    // connect: function () {
+    //   console.log('socket connected')
+    //   this.$socket.emit('init-public', Date.now())
+    //   console.log('socket emit: init-public>>>>>>>>>>')
+    // },
     'init-public': function (onlineUsers) {
       this.onlineUsers = onlineUsers
       console.log('onlineUser form socekt event "init-public" >>>', onlineUsers)
+      console.log(this.$socket.id)
     },
     'public-message': function (message) {
       console.log('socket event: "public-message" server to client >>>', message)
@@ -139,6 +145,7 @@ export default {
   methods: {
     async fetchOnlineUsers() {
       await this.$socket.emit('init-public', Date.now())
+      console.log('socket emit: init-public>>>>>>>>>>')
     },
     async fetchPublicChatRoomHistory() {
       try {
@@ -147,11 +154,11 @@ export default {
         console.log('POST /api/chat/messages >>>', data)
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得上線使用者資訊，請稍後再試",
-        });
+        })
       }
     },
     async sendMessage() {
