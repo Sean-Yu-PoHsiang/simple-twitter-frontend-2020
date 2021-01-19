@@ -11,9 +11,11 @@ Vue.config.productionTip = false
 Vue.use(new VueSocketIO({
   debug: false,
   connection: SocketIO('https://merry-simple-twitter.herokuapp.com', {
+    transports: ['websocket'],
     auth: {
       token: localStorage.getItem('token')
-    }
+    },
+    reconnection: true
   }),
 }))
 
