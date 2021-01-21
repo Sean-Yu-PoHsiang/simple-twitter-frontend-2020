@@ -154,10 +154,11 @@ export default {
 
   },
   mounted() {
+    this.$socket.auth.token = localStorage.getItem('token')
     this.$socket.open()
-
   },
   destroyed() {
+    this.$socket.auth.token = ''
     this.$socket.close()
   },
   computed: {

@@ -104,7 +104,7 @@ import Navbar from '../components/Navbar.vue'
 import { mapState } from "vuex"
 import chatRoomAPI from "./../apis/chatRoom"
 import { Toast } from "./../utils/helpers"
-// import { v4 as uuidv4 } from "uuid"
+import { v4 as uuidv4 } from "uuid"
 
 export default {
   components: {
@@ -127,32 +127,27 @@ export default {
     ...mapState(["currentUser"]),
   },
   sockets: {
-    // connect: function () {
-    //   console.log('socket connected')
-    //   this.$socket.emit('init-public', Date.now())
-    //   console.log('socket emit: init-public>>>>>>>>>>')
-    // },
     'init-public': function (onlineUsers) {
       this.onlineUsers = onlineUsers
       console.log('onlineUser form socekt event "init-public" >>>', onlineUsers)
       console.log(this.$socket.id)
     },
     'public-message': function (message) {
-      console.log('socket event: "public-message" server to client >>>', message)
+      message.id = uuidv4()
+      message.UserId = message.userId
       this.messages.push(message)
+      console.log('socket event: "public-message" server to client >>>', message)
     }
   },
   methods: {
-    async fetchOnlineUsers() {
-      await this.$socket.emit('init-public', Date.now())
+    fetchOnlineUsers() {
+      this.$socket.emit('init-public', Date.now())
       console.log('socket emit: init-public>>>>>>>>>>')
     },
     async fetchPublicChatRoomHistory() {
       try {
         const { data } = await chatRoomAPI.getPublicChatRoomHistory({ userId: this.currentUser.id })
         this.messages = data
-        console.log('POST /api/chat/messages >>>', data)
-
       } catch (error) {
         console.log(error)
         Toast.fire({
