@@ -166,16 +166,16 @@
 </template>
 
 <script>
-import ArrowIcon from "./../components/ArrowIcon.vue";
-import ReplyIcon from "./../components/ReplyIcon";
-import LikeIcon from "./../components/LikeIcon";
-import IconLikeFill from "./../components/IconLikeFill";
-import moment from "moment";
-import { Toast } from "./../utils/helpers";
-import userAPI from "./../apis/user";
-import tweetAPI from "./../apis/tweet";
+import ArrowIcon from "./../components/ArrowIcon.vue"
+import ReplyIcon from "./../components/ReplyIcon"
+import LikeIcon from "./../components/LikeIcon"
+import IconLikeFill from "./../components/IconLikeFill"
+import moment from "moment"
+import { Toast } from "./../utils/helpers"
+import userAPI from "./../apis/user"
+import tweetAPI from "./../apis/tweet"
 
-import { mapState } from "vuex";
+import { mapState } from "vuex"
 
 export default {
   components: {
@@ -195,7 +195,7 @@ export default {
       userTweet: this.initialUserTweet,
       comment: "",
       createdAt: -1,
-    };
+    }
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
@@ -210,20 +210,20 @@ export default {
   },
   methods: {
     async handleReplySubmit(tweetId) {
-      this.createdAt = Date.now();
+      this.createdAt = Date.now()
 
       if (this.comment.trim() === "") {
         Toast.fire({
           icon: "error",
           title: "親愛的用戶，請勿發空空的思念。",
-        });
-        return;
+        })
+        return
       } else if (this.comment.length > 140) {
         Toast.fire({
           icon: "error",
           title: "推文字數超過140囉！",
-        });
-        return;
+        })
+        return
       }
 
       try {
@@ -250,7 +250,7 @@ export default {
         Toast.fire({
           icon: "error",
           title: "無法發送回覆，請稍後再試",
-        });
+        })
       }
     },
     async addLike(tweetId) {
@@ -265,11 +265,11 @@ export default {
         this.userTweet.isLiked = true
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法點愛心，請稍後再試",
-        });
+        })
       }
     },
     async deleteLike(tweetId) {
@@ -284,22 +284,22 @@ export default {
         this.userTweet.isLiked = false
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取消愛心，請稍後再試",
-        });
+        })
       }
     },
   },
   filters: {
     dateInMandarin(datetime) {
       if (!datetime) {
-        return "-";
+        return "-"
       }
       //日期顯示一：
-      const tweetDate = moment(datetime).calendar();
-      return tweetDate;
+      const tweetDate = moment(datetime).calendar()
+      return tweetDate
 
       //日期顯示二：
       //可以回傳中文日期，但是下方程式僅限很久之前的文，才可以正常顯示。
@@ -314,13 +314,13 @@ export default {
 
     fromNow(datetime) {
       if (!datetime) {
-        return "-";
+        return "-"
       }
       // 使用 moment 提供的 fromNow 方法
-      return moment(datetime).fromNow();
+      return moment(datetime).fromNow()
     },
   },
-};
+}
 </script>
 
 

@@ -1,84 +1,74 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-auto component-navbar left-area-rwd">
-        <Navbar />
-      </div>
-      <div class="col user-setting-wrapper vh100scroll">
-        <div class="title">帳戶設定</div>
+  <div class="col user-setting-wrapper vh100scroll">
+    <div class="title">帳戶設定</div>
 
-        <form class="input-forms" @submit.stop.prevent="handleSubmit">
-          <div class="input-container">
-            <div class="input-title">帳號</div>
-            <label class="form-label"></label>
-            <input v-model="account" type="text" class="form-control" />
-          </div>
-          <div class="input-container">
-            <div class="input-title">名稱</div>
-            <label class="form-label"></label>
-            <input v-model="name" type="text" class="form-control" />
-          </div>
-          <div class="input-container">
-            <div class="input-title">email</div>
-            <label for="inputEmail" class="form-label"></label>
-            <input
-              v-model="email"
-              type="email"
-              class="form-control"
-              id="inputEmail"
-              aria-describedby="emailHelp"
-            />
-            <div id="emailHelp" class="form-text"></div>
-          </div>
-          <div class="input-container">
-            <div class="input-title">密碼</div>
-            <label
-              for="password"
-              class="form-label"
-              aria-placeholder="密碼"
-            ></label>
-            <input
-              v-model="password"
-              type="password"
-              class="form-control"
-              id="password"
-            />
-          </div>
-          <div class="input-container">
-            <div class="input-title">密碼確認</div>
-            <label
-              for="password-confirm"
-              class="form-label"
-              aria-placeholder="密碼確認"
-            ></label>
-            <input
-              v-model="checkPassword"
-              type="password"
-              class="form-control"
-              id="password-confirm"
-            />
-          </div>
-          <div class="flex-end">
-            <button type="submit" class="btn btn-submit" id="btn-submit">
-              儲存
-            </button>
-          </div>
-        </form>
+    <form class="input-forms" @submit.stop.prevent="handleSubmit">
+      <div class="input-container">
+        <div class="input-title">帳號</div>
+        <label class="form-label"></label>
+        <input v-model="account" type="text" class="form-control" />
       </div>
-    </div>
+      <div class="input-container">
+        <div class="input-title">名稱</div>
+        <label class="form-label"></label>
+        <input v-model="name" type="text" class="form-control" />
+      </div>
+      <div class="input-container">
+        <div class="input-title">email</div>
+        <label for="inputEmail" class="form-label"></label>
+        <input
+          v-model="email"
+          type="email"
+          class="form-control"
+          id="inputEmail"
+          aria-describedby="emailHelp"
+        />
+        <div id="emailHelp" class="form-text"></div>
+      </div>
+      <div class="input-container">
+        <div class="input-title">密碼</div>
+        <label
+          for="password"
+          class="form-label"
+          aria-placeholder="密碼"
+        ></label>
+        <input
+          v-model="password"
+          type="password"
+          class="form-control"
+          id="password"
+        />
+      </div>
+      <div class="input-container">
+        <div class="input-title">密碼確認</div>
+        <label
+          for="password-confirm"
+          class="form-label"
+          aria-placeholder="密碼確認"
+        ></label>
+        <input
+          v-model="checkPassword"
+          type="password"
+          class="form-control"
+          id="password-confirm"
+        />
+      </div>
+      <div class="flex-end">
+        <button type="submit" class="btn btn-submit" id="btn-submit">
+          儲存
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import Navbar from "./../components/Navbar.vue";
-import { mapState } from "vuex";
-import authorizationAPI from "./../apis/authorization";
-import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex"
+import authorizationAPI from "./../apis/authorization"
+import { Toast } from "./../utils/helpers"
 
 export default {
-  components: {
-    Navbar,
-  },
+  components: {},
   data() {
     return {
       account: "",
@@ -86,12 +76,12 @@ export default {
       email: "",
       password: "",
       checkPassword: "",
-    };
+    }
   },
   created() {
-    this.account = this.currentUser.account;
-    this.name = this.currentUser.name;
-    this.email = this.currentUser.email;
+    this.account = this.currentUser.account
+    this.name = this.currentUser.name
+    this.email = this.currentUser.email
   },
   computed: {
     ...mapState(["currentUser"]),
@@ -102,38 +92,38 @@ export default {
         Toast.fire({
           icon: "warning",
           title: "請填寫名稱",
-        });
-        return;
+        })
+        return
       } else if (!this.account) {
         Toast.fire({
           icon: "warning",
           title: "請填寫帳號",
-        });
-        return;
+        })
+        return
       } else if (!this.email) {
         Toast.fire({
           icon: "warning",
           title: "請填寫Email",
-        });
-        return;
+        })
+        return
       } else if (!this.password) {
         Toast.fire({
           icon: "warning",
           title: "請填寫密碼",
-        });
-        return;
+        })
+        return
       } else if (!this.checkPassword) {
         Toast.fire({
           icon: "warning",
           title: "請填寫密碼確認",
-        });
-        return;
+        })
+        return
       } else if (this.checkPassword !== this.password) {
         Toast.fire({
           icon: "warning",
           title: "密碼與密碼確認不符",
-        });
-        return;
+        })
+        return
       }
 
       try {
@@ -149,7 +139,7 @@ export default {
         const response = await authorizationAPI.EditUserSetting(userEditContent)
 
         if (response.status === "error") {
-          throw new Error(response.message);
+          throw new Error(response.message)
         }
 
         userEditContent = { ...userEditContent, password: "", checkPassword: "" }
@@ -162,15 +152,15 @@ export default {
         this.$router.push({ name: 'home' })
 
       } catch (error) {
-        console.log("err", error);
+        console.log("err", error)
         Toast.fire({
           icon: "error",
           title: `無法儲存設定，${error}`,
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>

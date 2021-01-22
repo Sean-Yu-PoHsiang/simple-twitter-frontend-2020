@@ -1,58 +1,37 @@
 <template>
-  <div class="container user-follows">
-    <div class="row">
-      <div class="col-auto left-container component-navbar left-area-rwd">
-        <Navbar />
-      </div>
-      <div class="col main-area-rwd main-container vh100scroll">
-        <div class="control-area">
-          <div class="previous-page">
-            <div class="arrow-icon">
-              <ArrowIcon />
-            </div>
-            <div class="user-detail">
-              <div class="user-name">John Doe</div>
-              <div class="tweet-count">25 推文</div>
-            </div>
-          </div>
-          <NavTabs />
+  <div class="col main-area-rwd main-container vh100scroll">
+    <div class="control-area">
+      <div class="previous-page">
+        <div class="arrow-icon">
+          <ArrowIcon />
         </div>
-        <UsersFollowersList />
+        <div class="user-detail">
+          <div class="user-name">John Doe</div>
+          <div class="tweet-count">25 推文</div>
+        </div>
       </div>
-
-      <div class="col-auto right-container right-area-rwd">
-        <TopFollowersUser class="component-top-followers-user" />
-      </div>
+      <NavTabs />
     </div>
+    <UsersFollowersList />
   </div>
 </template>
 
 
 <script>
-import Navbar from "./../components/Navbar.vue";
-import NavTabs from "./../components/NavTabs";
-import TopFollowersUser from "./../components/TopFollowersUser.vue";
-import ArrowIcon from "./../components/ArrowIcon.vue";
-// UserFollowsList 載入跟隨使用者的清單
-import UsersFollowersList from "./../components/UsersFollowersList.vue";
+import NavTabs from "./../components/NavTabs"
+import ArrowIcon from "./../components/ArrowIcon.vue"
+import UsersFollowersList from "./../components/UsersFollowersList.vue"
 
 export default {
   components: {
-    Navbar,
     NavTabs,
-    TopFollowersUser,
     ArrowIcon,
     UsersFollowersList,
   },
-};
+}
 </script>
 
 <style scoped>
-/* 最外層整個網頁大方向排版 */
-.user-follows {
-  display: flex;
-}
-
 /* 中間區塊排版 */
 .main-container {
   display: flex;

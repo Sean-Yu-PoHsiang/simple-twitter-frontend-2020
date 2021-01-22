@@ -1,47 +1,35 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-auto component-navbar left-area-rwd">
-        <Navbar />
-      </div>
-      <div class="col main-area-rwd main-container vh100scroll">
-        <div class="control-area">
-          <div class="previous-page">
-            <div class="arrow-icon" @click="$router.push('/')">
-              <ArrowIcon />
-            </div>
-            <div class="user-detail">
-              <div class="user-name">{{ userProfile.name }}</div>
-              <div class="tweet-count">{{ userProfile.tweetsCount }} 推文</div>
-            </div>
-          </div>
-          <NavTabs :initialUserId="userProfile.id" />
+  <div class="col main-area-rwd main-container vh100scroll">
+    <div class="control-area">
+      <div class="previous-page">
+        <div class="arrow-icon" @click="$router.push('/')">
+          <ArrowIcon />
         </div>
-        <UsersFollowingsList :initialFollowings="followings" />
+        <div class="user-detail">
+          <div class="user-name">{{ userProfile.name }}</div>
+          <div class="tweet-count">{{ userProfile.tweetsCount }} 推文</div>
+        </div>
       </div>
-      <div class="col-auto right-container right-area-rwd">
-        <TopFollowersUser class="component-top-followers-user" />
-      </div>
+      <NavTabs :initialUserId="userProfile.id" />
     </div>
+    <UsersFollowingsList :initialFollowings="followings" />
   </div>
 </template>
 
 
 <script>
-import Navbar from "./../components/Navbar.vue";
-import NavTabs from "./../components/NavTabs";
-import TopFollowersUser from "./../components/TopFollowersUser.vue";
-import ArrowIcon from "./../components/ArrowIcon.vue";
-import UsersFollowingsList from "./../components/UsersFollowingsList";
+import NavTabs from "./../components/NavTabs"
+import ArrowIcon from "./../components/ArrowIcon.vue"
+import UsersFollowingsList from "./../components/UsersFollowingsList"
 
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
 
 export default {
   components: {
-    Navbar,
+    // Navbar,
     NavTabs,
-    TopFollowersUser,
+    // TopFollowersUser,
     ArrowIcon,
     UsersFollowingsList,
   },
@@ -49,60 +37,60 @@ export default {
     return {
       userProfile: { id: -1 },
       followings: [],
-    };
+    }
   },
   created() {
-    const { userId: userId } = this.$route.params;
-    this.fetchUserProfile(userId);
-    this.fetchUserFollowings(userId);
+    const { userId: userId } = this.$route.params
+    this.fetchUserProfile(userId)
+    this.fetchUserFollowings(userId)
   },
   beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId;
-    this.fetchUserProfile(userId);
-    this.fetchUserFollowings(userId);
-    next();
+    const userId = to.params.userId
+    this.fetchUserProfile(userId)
+    this.fetchUserFollowings(userId)
+    next()
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const response = await userAPI.getUserProfile({ userId });
+        const response = await userAPI.getUserProfile({ userId })
 
         this.userProfile = {
           ...this.userProfile,
           ...response.data,
-        };
+        }
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
+        })
       }
     },
     async fetchUserFollowings(userId) {
       try {
-        const response = await userAPI.getUserFollowings({ userId });
-        console.log(response);
+        const response = await userAPI.getUserFollowings({ userId })
+        console.log(response)
 
-        this.followings = response.data;
+        this.followings = response.data
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得正在跟隨資料，請稍後再試",
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 
 

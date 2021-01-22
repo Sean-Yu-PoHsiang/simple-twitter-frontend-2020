@@ -132,7 +132,7 @@ export default {
     }
   },
   mixins: [emptyImageFilter, contentLengthFilter],
-};
+}
 </script>
 
 <style scoped>

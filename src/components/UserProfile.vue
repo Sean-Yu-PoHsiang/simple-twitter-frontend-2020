@@ -240,7 +240,7 @@ export default {
       userProfile: this.initialUserProfile,
       tempUserProfile: this.initialUserProfile,
       isProcessing: false,
-    };
+    }
   },
   computed: {
     isNameOverSize() {
@@ -264,11 +264,11 @@ export default {
       this.userProfile = {
         ...this.userProfile,
         ...newValue,
-      };
+      }
       this.tempUserProfile = {
         ...this.tempUserProfile,
         ...newValue,
-      };
+      }
     },
   },
   methods: {
@@ -280,13 +280,13 @@ export default {
           throw new Error(data.message)
         }
 
-        this.userProfile.isFollowed = true;
+        this.userProfile.isFollowed = true
         this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法跟隨，請稍後再試",
-        });
+        })
         console.log("error", error)
       }
     },
@@ -300,14 +300,14 @@ export default {
           throw new Error(data.message)
         }
 
-        this.userProfile.isFollowed = false;
-        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1;
+        this.userProfile.isFollowed = false
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法取消跟隨，請稍後再試",
-        });
-        console.log("error", error);
+        })
+        console.log("error", error)
       }
     },
     handleCoverImageChange(e) {
@@ -321,7 +321,7 @@ export default {
       }
     },
     handleAvatarImageChange(e) {
-      const { files } = e.target;
+      const { files } = e.target
 
       if (files.length === 0) {
         this.tempUserProfile.avatar = this.currentUser.avatar
@@ -391,7 +391,7 @@ export default {
     },
   },
   mixins: [emptyImageFilter, emptyCoverFilter],
-};
+}
 </script>
 
 <style scoped>

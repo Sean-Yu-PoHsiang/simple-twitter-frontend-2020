@@ -1,47 +1,32 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-auto component-navbar left-area-rwd">
-        <Navbar />
-      </div>
-      <div class="col main-area-rwd main-container vh100scroll">
-        <div class="control-area">
-          <div class="previous-page">
-            <div class="arrow-icon" @click="$router.push('/')">
-              <ArrowIcon />
-            </div>
-            <div class="user-detail">
-              <div class="user-name">{{ userProfile.name }}</div>
-              <div class="tweet-count">{{ userProfile.tweetsCount }} 推文</div>
-            </div>
-          </div>
-          <NavTabs :initialUserId="userProfile.id" />
+  <div class="col main-area-rwd main-container vh100scroll">
+    <div class="control-area">
+      <div class="previous-page">
+        <div class="arrow-icon" @click="$router.push('/')">
+          <ArrowIcon />
         </div>
-        <UsersFollowersList :initialFollowers="followers" />
+        <div class="user-detail">
+          <div class="user-name">{{ userProfile.name }}</div>
+          <div class="tweet-count">{{ userProfile.tweetsCount }} 推文</div>
+        </div>
       </div>
-      <div class="col-auto right-container right-area-rwd">
-        <TopFollowersUser class="component-top-followers-user" />
-      </div>
+      <NavTabs :initialUserId="userProfile.id" />
     </div>
+    <UsersFollowersList :initialFollowers="followers" />
   </div>
 </template>
 
 
 <script>
-import Navbar from "./../components/Navbar.vue";
-import NavTabs from "./../components/NavTabs";
-import TopFollowersUser from "./../components/TopFollowersUser.vue";
-import ArrowIcon from "./../components/ArrowIcon.vue";
-import UsersFollowersList from "./../components/UsersFollowersList.vue";
-
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
+import NavTabs from "./../components/NavTabs"
+import ArrowIcon from "./../components/ArrowIcon.vue"
+import UsersFollowersList from "./../components/UsersFollowersList.vue"
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
 
 export default {
   components: {
-    Navbar,
     NavTabs,
-    TopFollowersUser,
     ArrowIcon,
     UsersFollowersList,
   },
@@ -49,7 +34,7 @@ export default {
     return {
       userProfile: { id: -1 },
       followers: [],
-    };
+    }
   },
   created() {
     const { userId: userId } = this.$route.params
@@ -70,7 +55,7 @@ export default {
         this.userProfile = {
           ...this.userProfile,
           ...response.data,
-        };
+        }
 
         if (response.status !== 200) {
           throw new Error(response)
@@ -80,7 +65,7 @@ export default {
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
+        })
       }
     },
     async fetchUserFollowers(userId) {
@@ -98,11 +83,11 @@ export default {
         Toast.fire({
           icon: "error",
           title: "無法取得跟隨者資料，請稍後再試",
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>

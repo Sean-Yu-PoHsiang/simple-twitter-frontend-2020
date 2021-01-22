@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
+  <div class="col">
     <div class="row">
-      <div class="col-auto">
-        <Navbar />
-      </div>
-
       <div class="col-auto no-gutters center-column p-0">
         <div class="title-wrapper px-3 d-flex align-items-center">
           <h1 class="title">上線使用者({{ onlineUsers.length || 0 }})</h1>
@@ -100,16 +96,13 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue'
 import { mapState } from "vuex"
 import chatRoomAPI from "./../apis/chatRoom"
 import { Toast } from "./../utils/helpers"
 import { v4 as uuidv4 } from "uuid"
 
 export default {
-  components: {
-    Navbar
-  },
+  components: {},
   data() {
     return {
       onlineUsers: [],

@@ -20,6 +20,8 @@ Vue.use(new VueSocketIO({
   }),
 }))
 
+console.log('test one')
+
 new Vue({
   router,
   store,

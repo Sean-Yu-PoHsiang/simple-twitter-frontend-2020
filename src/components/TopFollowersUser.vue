@@ -1,5 +1,5 @@
 <template>
-  <div class="top-followers">
+  <div v-show="isShow" class="top-followers">
     <div class="title">跟隨誰</div>
     <div class="user-list list-scroll">
       <div v-for="user in topUsers" :key="user.id" class="user">
@@ -45,10 +45,9 @@
 </template>
 
 <script>
-import topUsersAPI from "./../apis/user";
-import userAPI from "./../apis/user";
-
-import { Toast } from "./../utils/helpers";
+import topUsersAPI from "./../apis/user"
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
 
 export default {
   props: {
@@ -60,32 +59,41 @@ export default {
   data() {
     return {
       topUsers: [],
-      userProfile: {},
-    };
+      userProfile: {}
+    }
   },
   created() {
-    this.fetchTopUsers();
+    this.fetchTopUsers()
 
+  },
+  destroyed() {
+    console.log('>>>>>>topUser component destroyed')
+  },
+  computed: {
+    isShow() {
+      const nonShowingPage = ['/setting', '/public-chatroom']
+      return !nonShowingPage.includes(this.$route.path)
+    }
   },
   methods: {
     async fetchTopUsers() {
       try {
-        const { data } = await topUsersAPI.getTopFollowersUser();
-        this.topUsers = data;
+        const { data } = await topUsersAPI.getTopFollowersUser()
+        this.topUsers = data
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得追蹤用戶資料，請稍後再試",
-        });
+        })
       }
     },
     async addFollowing(userId) {
       try {
-        const { data } = await userAPI.addFollowing({ id: userId });
+        const { data } = await userAPI.addFollowing({ id: userId })
 
         if (data.status !== "success") {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
 
         this.topUsers = this.topUsers.map((user) => {
@@ -93,12 +101,11 @@ export default {
             return {
               ...user,
               isFollowed: true,
-            };
+            }
           } else {
-            return user;
+            return user
           }
-        });
-
+        })
 
         if (!this.userProfile) {
           return
@@ -106,7 +113,7 @@ export default {
 
           this.$emit("after-click-add-following", {
             userId: userId
-          });
+          })
 
         }
 
@@ -114,16 +121,16 @@ export default {
         Toast.fire({
           icon: "error",
           title: "無法跟隨，請稍後再試",
-        });
-        console.log("error", error);
+        })
+        console.log("error", error)
       }
     },
     async deleteFollowing(userId) {
       try {
-        const { data } = await userAPI.deleteFollowing({ userId });
+        const { data } = await userAPI.deleteFollowing({ userId })
 
         if (data.status !== "success") {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
 
         this.topUsers = this.topUsers.map((user) => {
@@ -131,13 +138,11 @@ export default {
             return {
               ...user,
               isFollowed: false,
-            };
+            }
           } else {
-            return user;
+            return user
           }
-        });
-
-
+        })
 
         this.userProfile = this.initialUserProfile
         if (!this.userProfile) {
@@ -146,7 +151,7 @@ export default {
 
           this.$emit("after-click-delete-following", {
             userId: userId
-          });
+          })
 
         }
 
@@ -154,15 +159,13 @@ export default {
         Toast.fire({
           icon: "error",
           title: "無法取消跟隨，請稍後再試",
-        });
-        console.log("error", error);
+        })
+        console.log("error", error)
       }
     },
   },
-};
+}
 </script>
-
-
 
 <style scoped>
 .top-followers {
@@ -175,7 +178,6 @@ export default {
   max-height: 83vh;
   overflow: scroll;
 }
-
 .title {
   padding: 10px 15px;
   font-family: Noto Sans TC;
@@ -202,7 +204,6 @@ export default {
   justify-content: space-between;
   border-top: 1px solid #e6ecf0;
 }
-
 .user-name {
   font-family: Noto Sans TC;
   font-style: normal;
@@ -235,13 +236,11 @@ export default {
   line-height: 15px;
   color: #ff6600;
 }
-
 #btn-is-following {
   width: auto;
   color: #ffffff;
   background: #ff6600;
 }
-
 .show-more-btn {
   margin: 10px 15px;
   font-family: Noto Sans TC;
