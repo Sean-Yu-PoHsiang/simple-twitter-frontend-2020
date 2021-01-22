@@ -242,6 +242,12 @@ export default {
       isProcessing: false,
     }
   },
+  created() {
+    console.log('user profile create????????????????')
+  },
+  destroyed() {
+    console.log('user profile destroy?????????????')
+  },
   computed: {
     isNameOverSize() {
       return this.tempUserProfile.name.length > 40 ? true : false

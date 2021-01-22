@@ -59,18 +59,21 @@ const routes = [
       {
         path: 'users/:userId',
         name: 'user',
-        component: () => import('../views/User.vue')
+        component: () => import('../views/User.vue'),
+        children: [
+          {
+            path: 'with_replies',
+            name: 'user-with-replies',
+            component: () => import('../views/UserWithReplies.vue')
+          },
+          {
+            path: 'likes',
+            name: 'user-likes',
+            component: () => import('../views/UserLikes.vue')
+          },
+        ]
       },
-      {
-        path: 'users/:userId/with_replies',
-        name: 'user-with-replies',
-        component: () => import('../views/UserWithReplies.vue')
-      },
-      {
-        path: 'users/:userId/likes',
-        name: 'user-likes',
-        component: () => import('../views/UserLikes.vue')
-      },
+
     ]
   },
   // {
