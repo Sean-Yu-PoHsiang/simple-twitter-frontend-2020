@@ -1,32 +1,8 @@
 <template>
-  <div class="col main-area-rwd vh100scroll">
-    <UserProfile :initialUserProfile="userProfile" />
-    <div class="userNavbar d-flex">
-      <router-link
-        class="user-nav-link d-block"
-        :to="{ name: 'user', params: { userId: userProfile.id } }"
-        >推文</router-link
-      >
-      <router-link
-        class="user-nav-link d-block"
-        :to="{
-          name: 'user-with-replies',
-          params: { userId: userProfile.id },
-        }"
-        >推文與回覆</router-link
-      >
-      <router-link
-        :to="{ name: 'user-likes', params: { userId: userProfile.id } }"
-        class="user-nav-link d-block"
-        >喜歡的內容</router-link
-      >
-    </div>
-    <Tweets :initialTweets="tweetsLikes" />
-  </div>
+  <Tweets :initialTweets="tweetsLikes" />
 </template>
 
 <script>
-import UserProfile from "./../components/UserProfile"
 import Tweets from "./../components/Tweets.vue"
 import userAPI from "./../apis/user"
 import { Toast } from "./../utils/helpers"
@@ -34,23 +10,19 @@ import { mapState } from "vuex"
 
 export default {
   components: {
-    UserProfile,
     Tweets,
   },
   data() {
     return {
-      userProfile: {},
       tweetsLikes: [],
     }
   },
   async created() {
     const { userId: userId } = this.$route.params
-    await this.fetchUserProfile(userId)
     this.fetchUserTweetsLikes(userId)
   },
   async beforeRouteUpdate(to, from, next) {
     const userId = to.params.userId
-    await this.fetchUserProfile(userId)
     this.fetchUserTweetsLikes(userId)
     next()
   },
@@ -58,22 +30,6 @@ export default {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   methods: {
-    async fetchUserProfile(userId) {
-      try {
-        const { data } = await userAPI.getUserProfile({ userId })
-        this.userProfile = data
-        this.userProfile = {
-          ...this.userProfile,
-          ...data,
-        };
-      } catch (error) {
-        console.log(error)
-        Toast.fire({
-          icon: "error",
-          title: "無法取得使用者資料，請稍後再試",
-        })
-      }
-    },
     async fetchUserTweetsLikes(userId) {
       try {
         const { data } = await userAPI.getUserTweetsLikes({ userId })

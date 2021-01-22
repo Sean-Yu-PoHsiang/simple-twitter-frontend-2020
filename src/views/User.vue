@@ -21,7 +21,8 @@
         >喜歡的內容</router-link
       >
     </div>
-    <Tweets :initialTweets="tweets" />
+    <Tweets v-if="$route.name === 'user'" :initialTweets="tweets" />
+    <router-view />
   </div>
 </template> 
 
@@ -54,14 +55,14 @@ export default {
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
-  async created() {
+  created() {
     const { userId: userId } = this.$route.params
-    await this.fetchUserProfile(userId)
+    this.fetchUserProfile(userId)
     this.fetchUserTweets(userId)
   },
-  async beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate(to, from, next) {
     const userId = to.params.userId
-    await this.fetchUserProfile(userId)
+    this.fetchUserProfile(userId)
     this.fetchUserTweets(userId)
     next()
   },
@@ -89,7 +90,6 @@ export default {
     async fetchUserTweets(userId) {
       try {
         const response = await userAPI.getUserTweets({ userId })
-        console.log(response)
 
         this.tweets = response.data
         this.tweets = this.tweets.map((tweet) => {

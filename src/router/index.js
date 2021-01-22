@@ -4,8 +4,6 @@ import store from './../store'
 
 import NotFound from '../views/NotFound.vue'
 import SignIn from './../views/SignIn.vue'
-// import Home from './../views/Home.vue'
-
 
 Vue.use(VueRouter)
 
@@ -73,54 +71,8 @@ const routes = [
           },
         ]
       },
-
     ]
   },
-  // {
-  //   path: '/home',
-  //   name: 'home',
-  //   component: () => import('../views/Home.vue')
-  // },
-  // {
-  //   path: '/tweets/:tweetId',
-  //   name: 'tweet',
-  //   component: () => import('../views/Tweet.vue')
-  // },
-  // {
-  //   path: '/setting',
-  //   name: 'user-setting',
-  //   component: () => import('../views/UserSetting.vue')
-  // },
-  // {
-  //   path: '/users/:userId/followers',
-  //   name: 'user-followers',
-  //   component: () => import('../views/UserFollowers.vue')
-  // },
-  // {
-  //   path: '/users/:userId/followings',
-  //   name: 'user-followings',
-  //   component: () => import('../views/UserFollowings.vue')
-  // },
-  // {
-  //   path: '/users/:userId',
-  //   name: 'user',
-  //   component: () => import('../views/User.vue')
-  // },
-  // {
-  //   path: '/users/:userId/with_replies',
-  //   name: 'user-with-replies',
-  //   component: () => import('../views/UserWithReplies.vue')
-  // },
-  // {
-  //   path: '/users/:userId/likes',
-  //   name: 'user-likes',
-  //   component: () => import('../views/UserLikes.vue')
-  // },
-  // {
-  //   path: '/public-chatroom',
-  //   name: 'public-chat-room',
-  //   component: () => import('../views/PublicChatroom.vue')
-  // },
   {
     path: '/admin/signin',
     name: 'admin-sign-in',
@@ -150,7 +102,6 @@ const routes = [
 //     next('/404')
 //     return
 //   }
-
 //   next()
 // }
 

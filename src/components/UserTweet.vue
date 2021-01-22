@@ -154,7 +154,7 @@
                   data-dismiss="modal"
                   @click="handleReplySubmit(userTweet.id)"
                 >
-                  推文
+                  回覆
                 </button>
               </form>
             </div>

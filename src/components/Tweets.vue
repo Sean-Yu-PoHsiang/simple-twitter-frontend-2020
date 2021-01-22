@@ -160,7 +160,7 @@
                   data-dismiss="modal"
                   @click="handleReplySubmit(tweetDataForModel.id)"
                 >
-                  推文
+                  回覆
                 </button>
               </form>
             </div>
@@ -387,7 +387,7 @@ export default {
 
 .avator-and-tweet {
   border-bottom: 1px solid #e6ecf0;
-  padding: 10px 0;
+  padding: 10px 0 5px 0;
 }
 
 .user-avator {
@@ -474,6 +474,7 @@ button:hover {
   font-weight: 500;
   font-size: 13px;
   color: #657786;
+  margin: 0;
 }
 
 .like-container,

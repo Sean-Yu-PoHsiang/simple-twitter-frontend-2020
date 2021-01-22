@@ -1,35 +1,11 @@
 <template>
-  <div class="col main-area-rwd vh100scroll">
-    <UserProfile :initialUserProfile="userProfile" />
-    <div class="userNavbar d-flex">
-      <router-link
-        class="user-nav-link d-block"
-        :to="{ name: 'user', params: { userId: userProfile.id } }"
-        >推文</router-link
-      >
-      <router-link
-        class="user-nav-link d-block"
-        :to="{
-          name: 'user-with-replies',
-          params: { userId: userProfile.id },
-        }"
-        >推文與回覆</router-link
-      >
-      <router-link
-        :to="{ name: 'user-likes', params: { userId: userProfile.id } }"
-        class="user-nav-link d-block"
-        >喜歡的內容</router-link
-      >
-    </div>
-    <TweetsAndReplies
-      :initialTweetsAndReplies="tweetsWithReplies"
-      :initialUserProfile="userProfile"
-    />
-  </div>
+  <TweetsAndReplies
+    :initialTweetsAndReplies="tweetsWithReplies"
+    :initialUserProfile="userProfile"
+  />
 </template>
 
 <script>
-import UserProfile from "./../components/UserProfile"
 import TweetsAndReplies from "./../components/TweetsAndReplies.vue"
 
 import userAPI from "./../apis/user"
@@ -38,7 +14,6 @@ import { mapState } from "vuex"
 
 export default {
   components: {
-    UserProfile,
     TweetsAndReplies,
   },
   data() {
