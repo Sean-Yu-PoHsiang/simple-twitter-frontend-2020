@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import Logo from "./../components/Logo";
+import Logo from "./../components/Logo"
 import authorizationAPI from './../apis/authorization'
 import { Toast } from './../utils/helpers'
 
@@ -107,7 +107,7 @@ export default {
       password: "",
       checkPassword: "",
       isProcessing: false
-    };
+    }
   },
   methods: {
     async handleSubmit() {
@@ -181,7 +181,7 @@ export default {
 
     },
   },
-};
+}
 </script>
 
 <style scoped>

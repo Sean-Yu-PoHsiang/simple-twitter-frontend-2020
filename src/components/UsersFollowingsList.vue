@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/mixins";
-import { contentLengthFilter } from "../utils/mixins";
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
+import { emptyImageFilter } from "../utils/mixins"
+import { contentLengthFilter } from "../utils/mixins"
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
 import { mapState } from "vuex"
 
 export default {
@@ -72,16 +72,16 @@ export default {
   },
   watch: {
     initialFollowings(newValue) {
-      this.followings = newValue;
+      this.followings = newValue
     },
   },
   methods: {
     async addFollowing(userId) {
       try {
-        const { data } = await userAPI.addFollowing({ id: userId });
+        const { data } = await userAPI.addFollowing({ id: userId })
 
         if (data.status !== "success") {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
 
         this.followings = this.followings.map((following) => {
@@ -89,25 +89,25 @@ export default {
             return {
               ...following,
               isFollowed: true,
-            };
+            }
           } else {
-            return following;
+            return following
           }
-        });
+        })
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法跟隨，請稍後再試",
-        });
-        console.log("error", error);
+        })
+        console.log("error", error)
       }
     },
     async deleteFollowing(userId) {
       try {
-        const { data } = await userAPI.deleteFollowing({ userId });
+        const { data } = await userAPI.deleteFollowing({ userId })
 
         if (data.status !== "success") {
-          throw new Error(data.message);
+          throw new Error(data.message)
         }
 
         this.followings = this.followings.map((following) => {
@@ -115,22 +115,22 @@ export default {
             return {
               ...following,
               isFollowed: false,
-            };
+            }
           } else {
-            return following;
+            return following
           }
-        });
+        })
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法取消跟隨，請稍後再試",
-        });
-        console.log("error", error);
+        })
+        console.log("error", error)
       }
     },
   },
   mixins: [emptyImageFilter, contentLengthFilter],
-};
+}
 </script>
 
 <style scoped>

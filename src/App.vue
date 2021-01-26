@@ -13,17 +13,13 @@ import "bootstrap/dist/css/bootstrap.min.css"
 export default {
   name: "App",
   data() {
-    return {
-
-    }
+    return {}
   },
   created() {
     this.$socket.close()
   },
-  mounted() {
-
-  }
-};
+  mounted() { }
+}
 </script>
 
 <style>

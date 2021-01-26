@@ -121,18 +121,18 @@
 </template>
 
 <script>
-import Logo from "./Logo";
-import IconHome from "./IconHome";
-import IconSetting from "./IconSetting";
-import IconUserProfile from "./IconUserProfile";
-import IconSignOut from "./IconSignOut";
-import { emptyImageFilter } from "../utils/mixins";
+import Logo from "./Logo"
+import IconHome from "./IconHome"
+import IconSetting from "./IconSetting"
+import IconUserProfile from "./IconUserProfile"
+import IconSignOut from "./IconSignOut"
+import { emptyImageFilter } from "../utils/mixins"
 
-import userAPI from "./../apis/user";
-import { v4 as uuidv4 } from "uuid";
-import { Toast } from "./../utils/helpers";
+import userAPI from "./../apis/user"
+import { v4 as uuidv4 } from "uuid"
+import { Toast } from "./../utils/helpers"
 
-import { mapState } from "vuex";
+import { mapState } from "vuex"
 
 export default {
   components: {
@@ -148,10 +148,10 @@ export default {
       id: -1,
       description: "",
       createdAt: "",
-    };
+    }
   },
   created() {
-
+    console.log('>>>>>>>>> navbar created')
   },
   mounted() {
     this.$socket.auth.token = localStorage.getItem('token')
@@ -160,6 +160,7 @@ export default {
   destroyed() {
     this.$socket.auth.token = ''
     this.$socket.close()
+    console.log('>>>>>>>>> navbar destroyed')
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
@@ -179,25 +180,25 @@ export default {
         Toast.fire({
           icon: "error",
           title: "親愛的用戶，請勿發空空的思念。",
-        });
-        return;
+        })
+        return
       } else if (this.description.length > 140) {
         Toast.fire({
           icon: "error",
           title: "推文字數超過140囉！",
-        });
-        return;
+        })
+        return
       }
 
       try {
-        this.createdAt = Date.now();
+        this.createdAt = Date.now()
         const response = await userAPI.addUserNewTweet({
           description: this.description,
           createdAt: this.createdAt,
-        });
+        })
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
 
         this.$emit("after-create-tweet", {
@@ -214,19 +215,19 @@ export default {
           repliesCount: 0,
           likesCount: 0,
           isLiked: false,
-        });
-        this.description = "";
+        })
+        this.description = ""
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
+        })
       }
     },
   },
   mixins: [emptyImageFilter],
-};
+}
 </script>
 
 <style scoped>

@@ -4,17 +4,10 @@ import store from './../store'
 
 import NotFound from '../views/NotFound.vue'
 import SignIn from './../views/SignIn.vue'
-// import Home from './../views/Home.vue'
-
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'root',
-    redirect: '/home'
-  },
   {
     path: '/signin',
     name: 'sign-in',
@@ -26,52 +19,59 @@ const routes = [
     component: () => import('../views/SignUp.vue')
   },
   {
-    path: '/home',
-    name: 'home',
-    component: () => import('../views/Home.vue')
-  },
-  {
-    //:user/tweet/: id'
-    path: '/tweets/:tweetId',
-    name: 'tweet',
-    component: () => import('../views/Tweet.vue')
-  },
-  {
-    path: '/setting',
-    name: 'user-setting',
-    component: () => import('../views/UserSetting.vue')
-  },
-  {
-    //:user/follows
-    path: '/users/:userId/followers',
-    name: 'user-followers',
-    component: () => import('../views/UserFollowers.vue')
-  },
-  {
-    //:user/follows
-    path: '/users/:userId/followings',
-    name: 'user-followings',
-    component: () => import('../views/UserFollowings.vue')
-  },
-  {
-    path: '/users/:userId',
-    name: 'user',
-    component: () => import('../views/User.vue')
-  },
-  {
-    path: '/users/:userId/with_replies',
-    name: 'user-with-replies',
-    component: () => import('../views/UserWithReplies.vue')
-  },
-  {
-    path: '/users/:userId/likes',
-    name: 'user-likes',
-    component: () => import('../views/UserLikes.vue')
-  },
-  {
-    path: '/public-chatroom',
-    name: 'public-chat-room',
-    component: () => import('../views/PublicChatroom.vue')
+    path: '/',
+    name: 'root',
+    component: () => import('../views/Layout.vue'),
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: () => import('../views/Home.vue')
+      },
+      {
+        path: 'public-chatroom',
+        name: 'public-chat-room',
+        component: () => import('../views/PublicChatroom.vue')
+      },
+      {
+        path: 'tweets/:tweetId',
+        name: 'tweet',
+        component: () => import('../views/Tweet.vue')
+      },
+      {
+        path: 'setting',
+        name: 'user-setting',
+        component: () => import('../views/UserSetting.vue')
+      },
+      {
+        path: 'users/:userId/followers',
+        name: 'user-followers',
+        component: () => import('../views/UserFollowers.vue')
+      },
+      {
+        path: 'users/:userId/followings',
+        name: 'user-followings',
+        component: () => import('../views/UserFollowings.vue')
+      },
+      {
+        path: 'users/:userId',
+        name: 'user',
+        component: () => import('../views/User.vue'),
+        children: [
+          {
+            path: 'with_replies',
+            name: 'user-with-replies',
+            component: () => import('../views/UserWithReplies.vue')
+          },
+          {
+            path: 'likes',
+            name: 'user-likes',
+            component: () => import('../views/UserLikes.vue')
+          },
+        ]
+      },
+    ]
   },
   {
     path: '/admin/signin',
@@ -102,7 +102,6 @@ const routes = [
 //     next('/404')
 //     return
 //   }
-
 //   next()
 // }
 

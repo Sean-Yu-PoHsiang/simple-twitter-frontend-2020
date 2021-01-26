@@ -160,7 +160,7 @@
                   data-dismiss="modal"
                   @click="handleReplySubmit(tweetDataForModel.id)"
                 >
-                  推文
+                  回覆
                 </button>
               </form>
             </div>
@@ -173,17 +173,17 @@
 
 
 <script>
-import ReplyIcon from "./../components/ReplyIcon";
-import LikeIcon from "./../components/LikeIcon";
-import moment from "moment";
-import tweetAPI from "../apis/tweet";
-import userAPI from "./../apis/user";
-import IconLikeFill from "./../components/IconLikeFill";
+import ReplyIcon from "./../components/ReplyIcon"
+import LikeIcon from "./../components/LikeIcon"
+import moment from "moment"
+import tweetAPI from "../apis/tweet"
+import userAPI from "./../apis/user"
+import IconLikeFill from "./../components/IconLikeFill"
 
 
-import { Toast } from "./../utils/helpers";
+import { Toast } from "./../utils/helpers"
 
-import { mapState } from "vuex";
+import { mapState } from "vuex"
 
 export default {
   components: {
@@ -215,7 +215,7 @@ export default {
         description: "",
         id: -1
       },
-    };
+    }
   },
   methods: {
     async getTweetForModel(tweetId) {
@@ -226,29 +226,29 @@ export default {
         console.log('this.tweetDataForModel ', this.tweetDataForModel)
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法發送回覆，請稍後再試",
-        });
+        })
       }
     },
     async handleReplySubmit(tweetId) {
       try {
-        this.createdAt = Date.now();
+        this.createdAt = Date.now()
 
         if (this.comment.trim() === "") {
           Toast.fire({
             icon: "error",
             title: "親愛的用戶，請勿發空空的思念。",
-          });
-          return;
+          })
+          return
         } else if (this.comment.length > 140) {
           Toast.fire({
             icon: "error",
             title: "推文字數超過140囉！",
-          });
-          return;
+          })
+          return
         }
 
         const response = await userAPI.addUserReply({
@@ -259,9 +259,9 @@ export default {
         })
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
-        this.comment = "";
+        this.comment = ""
 
         this.tweets = this.tweets.map((tweet) => {
           if (tweet.id === tweetId) {
@@ -277,11 +277,11 @@ export default {
         })
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法發送回覆，請稍後再試",
-        });
+        })
       }
     },
     async addLike(tweetId) {
@@ -309,11 +309,11 @@ export default {
         })
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法點愛心，請稍後再試",
-        });
+        })
       }
     },
     async deleteLike(tweetId) {
@@ -344,15 +344,15 @@ export default {
 
         this.$emit("after-click-delete-like", {
           tweets: this.tweets
-        });
+        })
 
 
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取消愛心，請稍後再試",
-        });
+        })
       }
     },
 
@@ -365,19 +365,17 @@ export default {
       this.tweets = newValue
     },
   },
-  created() {
-    // console.log("initial", this.initialTweets);
-  },
+  created() { },
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return "-";
+        return "-"
       }
       // 使用 moment 提供的 fromNow 方法
-      return moment(datetime).fromNow();
+      return moment(datetime).fromNow()
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -389,7 +387,7 @@ export default {
 
 .avator-and-tweet {
   border-bottom: 1px solid #e6ecf0;
-  padding: 10px 0;
+  padding: 10px 0 5px 0;
 }
 
 .user-avator {
@@ -476,6 +474,7 @@ button:hover {
   font-weight: 500;
   font-size: 13px;
   color: #657786;
+  margin: 0;
 }
 
 .like-container,

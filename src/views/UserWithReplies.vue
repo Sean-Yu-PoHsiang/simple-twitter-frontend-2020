@@ -1,118 +1,75 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-auto component-navbar left-area-rwd">
-        <Navbar />
-      </div>
-      <div class="col main-area-rwd vh100scroll">
-        <UserProfile :initialUserProfile="userProfile" />
-        <div class="userNavbar d-flex">
-          <router-link
-            class="user-nav-link d-block"
-            :to="{ name: 'user', params: { userId: userProfile.id } }"
-            >推文</router-link
-          >
-          <router-link
-            class="user-nav-link d-block"
-            :to="{
-              name: 'user-with-replies',
-              params: { userId: userProfile.id },
-            }"
-            >推文與回覆</router-link
-          >
-          <router-link
-            :to="{ name: 'user-likes', params: { userId: userProfile.id } }"
-            class="user-nav-link d-block"
-            >喜歡的內容</router-link
-          >
-        </div>
-        <TweetsAndReplies
-          :initialTweetsAndReplies="tweetsWithReplies"
-          :initialUserProfile="userProfile"
-        />
-      </div>
-      <div class="col-auto right-area-rwd">
-        <TopFollowersUser class="component-top-followers-user" />
-      </div>
-    </div>
-  </div>
+  <TweetsAndReplies
+    :initialTweetsAndReplies="tweetsWithReplies"
+    :initialUserProfile="userProfile"
+  />
 </template>
 
 <script>
-import Navbar from "./../components/Navbar";
-import TopFollowersUser from "./../components/TopFollowersUser";
-import UserProfile from "./../components/UserProfile";
-import TweetsAndReplies from "./../components/TweetsAndReplies.vue";
+import TweetsAndReplies from "./../components/TweetsAndReplies.vue"
 
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
-import { mapState } from "vuex";
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
+import { mapState } from "vuex"
 
 export default {
   components: {
-    Navbar,
-    TopFollowersUser,
-    UserProfile,
     TweetsAndReplies,
   },
   data() {
     return {
       userProfile: {},
       tweetsWithReplies: [],
-    };
+    }
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   async created() {
-    const { userId: userId } = this.$route.params;
-    await this.fetchUserProfile(userId);
-    this.fetchUserTweetsWithReplies(userId);
+    const { userId: userId } = this.$route.params
+    await this.fetchUserProfile(userId)
+    this.fetchUserTweetsWithReplies(userId)
   },
   async beforeRouteUpdate(to, from, next) {
-    const userId = to.params.userId;
-    await this.fetchUserProfile(userId);
-    this.fetchUserTweetsWithReplies(userId);
-    next();
+    const userId = to.params.userId
+    await this.fetchUserProfile(userId)
+    this.fetchUserTweetsWithReplies(userId)
+    next()
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const { data } = await userAPI.getUserProfile({ userId });
-        this.userProfile = data;
+        const { data } = await userAPI.getUserProfile({ userId })
+        this.userProfile = data
         this.userProfile = {
           ...this.userProfile,
           ...data,
-        };
+        }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
+        })
       }
     },
     async fetchUserTweetsWithReplies(userId) {
       try {
-        const { data } = await userAPI.getUserTweetsWithReplies({ userId });
-        console.log(data);
+        const { data } = await userAPI.getUserTweetsWithReplies({ userId })
+        // console.log(data)
 
         this.tweetsWithReplies = data
 
-        // this.tweetsWithReplies = data.map((tweet) => {
-        //   return tweet.Tweet;
-        // });
-
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得推文，請稍後再試",
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -120,7 +77,6 @@ export default {
   text-align: center;
   padding: 15px 0;
   color: #657786;
-  /* padding: 15px 40px; */
   width: 120px;
   font-size: 15px;
   font-weight: 700;

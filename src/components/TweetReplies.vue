@@ -33,7 +33,7 @@
 
 
 <script>
-import moment from "moment";
+import moment from "moment"
 
 export default {
   props: {
@@ -50,26 +50,26 @@ export default {
     return {
       tweetReplies: this.initialTweetReplies,
       userTweet: this.initialUserTweet,
-    };
+    }
   },
   watch: {
     initialTweetReplies(newValue) {
-      this.tweetReplies = newValue;
+      this.tweetReplies = newValue
     },
     initialUserTweet(newValue) {
-      this.userTweet = newValue;
+      this.userTweet = newValue
     },
   },
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return "-";
+        return "-"
       }
       // 使用 moment 提供的 fromNow 方法
-      return moment(datetime).fromNow();
+      return moment(datetime).fromNow()
     },
   },
-};
+}
 </script>
 
 <style scoped>

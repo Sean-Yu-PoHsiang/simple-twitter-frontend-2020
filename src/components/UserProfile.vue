@@ -240,22 +240,41 @@ export default {
       userProfile: this.initialUserProfile,
       tempUserProfile: this.initialUserProfile,
       isProcessing: false,
-    };
+    }
+  },
+  created() {
+    console.log('user profile create>>>>>>>>>>>>>')
+  },
+  destroyed() {
+    console.log('user profile destroy>>>>>>>>>>>>>')
   },
   computed: {
     isNameOverSize() {
-      return this.tempUserProfile.name.length > 40 ? true : false
+      if (this.tempUserProfile.name === null || this.tempUserProfile.name === undefined) {
+        return false
+      } else {
+        return this.tempUserProfile.name.length > 40 ? true : false
+      }
     },
     isIntroductionOverSize() {
-      if (this.tempUserProfile.introduction === null) { return false }
+      if (this.tempUserProfile.introduction === null || this.tempUserProfile.introduction === undefined) {
+        return false
+      }
       return this.tempUserProfile.introduction.length > 160 ? true : false
     },
     nameInputLength() {
-      return this.tempUserProfile.name.length
+      if (this.tempUserProfile.name === null || this.tempUserProfile.name === undefined) {
+        return 0
+      } else {
+        return this.tempUserProfile.name.length
+      }
     },
     introductionInputLength() {
-      if (this.tempUserProfile.introduction === null) { return 0 }
-      return this.tempUserProfile.introduction.length
+      if (this.tempUserProfile.introduction === null || this.tempUserProfile.introduction === undefined) {
+        return 0
+      } else {
+        return this.tempUserProfile.introduction.length
+      }
     },
     ...mapState(["currentUser"]),
   },
@@ -264,11 +283,11 @@ export default {
       this.userProfile = {
         ...this.userProfile,
         ...newValue,
-      };
+      }
       this.tempUserProfile = {
         ...this.tempUserProfile,
         ...newValue,
-      };
+      }
     },
   },
   methods: {
@@ -280,13 +299,13 @@ export default {
           throw new Error(data.message)
         }
 
-        this.userProfile.isFollowed = true;
+        this.userProfile.isFollowed = true
         this.userProfile.FollowersCount = this.userProfile.FollowersCount + 1
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法跟隨，請稍後再試",
-        });
+        })
         console.log("error", error)
       }
     },
@@ -300,14 +319,14 @@ export default {
           throw new Error(data.message)
         }
 
-        this.userProfile.isFollowed = false;
-        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1;
+        this.userProfile.isFollowed = false
+        this.userProfile.FollowersCount = this.userProfile.FollowersCount - 1
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法取消跟隨，請稍後再試",
-        });
-        console.log("error", error);
+        })
+        console.log("error", error)
       }
     },
     handleCoverImageChange(e) {
@@ -321,7 +340,7 @@ export default {
       }
     },
     handleAvatarImageChange(e) {
-      const { files } = e.target;
+      const { files } = e.target
 
       if (files.length === 0) {
         this.tempUserProfile.avatar = this.currentUser.avatar
@@ -391,7 +410,7 @@ export default {
     },
   },
   mixins: [emptyImageFilter, emptyCoverFilter],
-};
+}
 </script>
 
 <style scoped>
