@@ -38,6 +38,20 @@ export default {
     UserProfile,
     Tweets,
   },
+  props: {
+    newTweetsPayload: {
+      type: Object,
+      required: true,
+    },
+    addFollowingPayload: {
+      type: Object,
+      required: true,
+    },
+    deleteFollowingPayload: {
+      type: Object,
+      required: true,
+    }
+  },
   data() {
     return {
       userProfile: {},
@@ -45,11 +59,20 @@ export default {
     }
   },
   watch: {
+    newTweetsPayload(newValue) {
+      this.afterCreateTweet(newValue)
+    },
     initialTweets(newValue) {
       this.tweets = newValue
     },
     initialUserProfile(newValue) {
       this.userProfile = newValue
+    },
+    addFollowingPayload(newValue) {
+      this.afterClickAddFollowing(newValue)
+    },
+    deleteFollowingPayload(newValue) {
+      this.afterClickDeleteFollowing(newValue)
     }
   },
   computed: {
@@ -109,6 +132,28 @@ export default {
           title: "無法取得推文，請稍後再試",
         })
       }
+    },
+    afterCreateTweet(payload) {
+      const {
+        User,
+        id,
+        name,
+        description,
+        createdAt,
+        repliesCount,
+        likesCount,
+        isLiked,
+      } = payload
+      this.tweets.unshift({
+        User,
+        id,
+        name,
+        description,
+        createdAt,
+        repliesCount,
+        likesCount,
+        isLiked,
+      })
     },
     afterClickDeleteFollowing(payload) {
       const { userId } = payload

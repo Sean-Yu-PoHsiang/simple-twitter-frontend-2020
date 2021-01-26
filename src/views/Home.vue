@@ -18,9 +18,20 @@ export default {
     NewTweet,
     Tweets,
   },
+  props: {
+    newTweetsPayload: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       tweets: [],
+    }
+  },
+  watch: {
+    newTweetsPayload(newValue) {
+      this.afterCreateTweet(newValue)
     }
   },
   created() {

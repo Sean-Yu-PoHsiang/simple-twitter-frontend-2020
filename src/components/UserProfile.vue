@@ -243,25 +243,38 @@ export default {
     }
   },
   created() {
-    console.log('user profile create????????????????')
+    console.log('user profile create>>>>>>>>>>>>>')
   },
   destroyed() {
-    console.log('user profile destroy?????????????')
+    console.log('user profile destroy>>>>>>>>>>>>>')
   },
   computed: {
     isNameOverSize() {
-      return this.tempUserProfile.name.length > 40 ? true : false
+      if (this.tempUserProfile.name === null || this.tempUserProfile.name === undefined) {
+        return false
+      } else {
+        return this.tempUserProfile.name.length > 40 ? true : false
+      }
     },
     isIntroductionOverSize() {
-      if (this.tempUserProfile.introduction === null) { return false }
+      if (this.tempUserProfile.introduction === null || this.tempUserProfile.introduction === undefined) {
+        return false
+      }
       return this.tempUserProfile.introduction.length > 160 ? true : false
     },
     nameInputLength() {
-      return this.tempUserProfile.name.length
+      if (this.tempUserProfile.name === null || this.tempUserProfile.name === undefined) {
+        return 0
+      } else {
+        return this.tempUserProfile.name.length
+      }
     },
     introductionInputLength() {
-      if (this.tempUserProfile.introduction === null) { return 0 }
-      return this.tempUserProfile.introduction.length
+      if (this.tempUserProfile.introduction === null || this.tempUserProfile.introduction === undefined) {
+        return 0
+      } else {
+        return this.tempUserProfile.introduction.length
+      }
     },
     ...mapState(["currentUser"]),
   },

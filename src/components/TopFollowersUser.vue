@@ -48,24 +48,28 @@
 import topUsersAPI from "./../apis/user"
 import userAPI from "./../apis/user"
 import { Toast } from "./../utils/helpers"
+import { mapState } from "vuex"
 
 export default {
   props: {
-    initialUserProfile: {
-      type: Object,
-      required: true,
-    }
+    // initialUserProfile: {
+    //   type: Object,
+    //   required: true,
+    // }
   },
   data() {
     return {
       topUsers: [],
-      userProfile: {}
+      // userProfile: {}
     }
   },
   created() {
     this.fetchTopUsers()
-
   },
+  // beforeUpdate(to, from, next) {
+  //   console.log(this.$route)
+  //   next()
+  // },
   destroyed() {
     console.log('>>>>>>topUser component destroyed')
   },
@@ -73,7 +77,8 @@ export default {
     isShow() {
       const nonShowingPage = ['/setting', '/public-chatroom']
       return !nonShowingPage.includes(this.$route.path)
-    }
+    },
+    ...mapState(["currentUser"])
   },
   methods: {
     async fetchTopUsers() {
@@ -107,14 +112,12 @@ export default {
           }
         })
 
-        if (!this.userProfile) {
+        if (Number(this.$route.params.userId) !== this.currentUser.id) {
           return
         } else {
-
           this.$emit("after-click-add-following", {
             userId: userId
           })
-
         }
 
       } catch (error) {
@@ -144,11 +147,9 @@ export default {
           }
         })
 
-        this.userProfile = this.initialUserProfile
-        if (!this.userProfile) {
+        if (Number(this.$route.params.userId) !== this.currentUser.id) {
           return
         } else {
-
           this.$emit("after-click-delete-following", {
             userId: userId
           })

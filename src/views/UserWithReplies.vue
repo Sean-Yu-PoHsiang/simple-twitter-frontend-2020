@@ -56,7 +56,7 @@ export default {
     async fetchUserTweetsWithReplies(userId) {
       try {
         const { data } = await userAPI.getUserTweetsWithReplies({ userId })
-        console.log(data)
+        // console.log(data)
 
         this.tweetsWithReplies = data
 

@@ -5,10 +5,18 @@
         <Navbar @after-create-tweet="afterCreateTweet" />
       </div>
 
-      <router-view />
+      <router-view
+        :newTweetsPayload="newTweetsPayload"
+        :addFollowingPayload="addFollowingPayload"
+        :deleteFollowingPayload="deleteFollowingPayload"
+      />
 
       <div class="col-auto right-container right-area-rwd">
-        <TopFollowersUser class="component-top-followers-user" />
+        <TopFollowersUser
+          class="component-top-followers-user"
+          @after-click-add-following="afterClickAddFollowingPayload"
+          @after-click-delete-following="afterClickDeleteFollowingPayload"
+        />
       </div>
     </div>
   </div>
@@ -24,10 +32,25 @@ export default {
     Navbar,
   },
   data() {
-    return {}
+    return {
+      newTweetsPayload: {},
+      addFollowingPayload: {},
+      deleteFollowingPayload: {}
+    }
   },
   created() { },
-  mounted() { }
+  mounted() { },
+  methods: {
+    afterCreateTweet(payload) {
+      this.newTweetsPayload = payload
+    },
+    afterClickAddFollowingPayload(payload) {
+      this.addFollowingPayload = payload
+    },
+    afterClickDeleteFollowingPayload(payload) {
+      this.deleteFollowingPayload = payload
+    }
+  }
 }
 </script>
 
