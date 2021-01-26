@@ -42,10 +42,10 @@
 
 
 <script>
-import userAPI from "./../apis/user";
-import { Toast } from "./../utils/helpers";
-import { v4 as uuidv4 } from "uuid";
-import { mapState } from "vuex";
+import userAPI from "./../apis/user"
+import { Toast } from "./../utils/helpers"
+import { v4 as uuidv4 } from "uuid"
+import { mapState } from "vuex"
 
 export default {
   data() {
@@ -55,7 +55,7 @@ export default {
       id: -1,
       description: "",
       createdAt: "",
-    };
+    }
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
@@ -64,28 +64,28 @@ export default {
     },
   },
   created() {
-    const userId = this.currentUser.id;
-    this.fetchUserProfile(userId);
+    const userId = this.currentUser.id
+    this.fetchUserProfile(userId)
   },
   methods: {
     async fetchUserProfile(userId) {
       try {
-        const response = await userAPI.getUserProfile({ userId });
+        const response = await userAPI.getUserProfile({ userId })
 
         this.userProfile = {
           ...this.userProfile,
           ...response.data,
-        };
+        }
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
+        })
       }
     },
     async handleSubmit() {
@@ -93,25 +93,25 @@ export default {
         Toast.fire({
           icon: "error",
           title: "親愛的用戶，請勿發空空的思念。",
-        });
-        return;
+        })
+        return
       } else if (this.description.length > 140) {
         Toast.fire({
           icon: "error",
           title: "推文字數超過140囉！",
-        });
-        return;
+        })
+        return
       }
 
       try {
-        this.createdAt = Date.now();
+        this.createdAt = Date.now()
         const response = await userAPI.addUserNewTweet({
           description: this.description,
           createdAt: this.createdAt,
-        });
+        })
 
         if (response.status !== 200) {
-          throw new Error(response);
+          throw new Error(response)
         }
 
         this.$emit("after-create-tweet", {
@@ -128,18 +128,18 @@ export default {
           repliesCount: 0,
           likesCount: 0,
           isLiked: false,
-        });
-        this.description = "";
+        })
+        this.description = ""
       } catch (error) {
-        console.log(error);
+        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>

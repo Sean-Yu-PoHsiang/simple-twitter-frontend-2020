@@ -95,16 +95,11 @@
 
 
 <script>
-// import ReplyIcon from "./../components/ReplyIcon";
-// import LikeIcon from "./../components/LikeIcon";
-import moment from "moment";
-import { mapState } from "vuex";
+import moment from "moment"
+import { mapState } from "vuex"
 
 export default {
-  components: {
-    // ReplyIcon,
-    // LikeIcon,
-  },
+  components: {},
   props: {
     initialTweetsAndReplies: {
       type: Array,
@@ -135,13 +130,13 @@ export default {
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return "-";
+        return "-"
       }
       // 使用 moment 提供的 fromNow 方法
-      return moment(datetime).fromNow();
+      return moment(datetime).fromNow()
     },
   },
-};
+}
 </script>
 
 <style scoped>
