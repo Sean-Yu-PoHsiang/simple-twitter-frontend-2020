@@ -10,7 +10,7 @@
       <div class="form-item input-line">
         <div class="input-container">
           <label for="InputAcount" class="form-label w-100 fonSize15"
-            >帳號</label
+            >Email</label
           >
           <input
             v-model="email"

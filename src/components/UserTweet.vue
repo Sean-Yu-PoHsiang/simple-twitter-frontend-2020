@@ -192,7 +192,11 @@ export default {
   },
   data() {
     return {
-      userTweet: this.initialUserTweet,
+      userTweet: {
+        User: {
+          id: -1,
+        }
+      },
       comment: "",
       createdAt: -1,
     }
@@ -200,9 +204,7 @@ export default {
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
-  created() {
-
-  },
+  created() { },
   watch: {
     initialUserTweet(newValue) {
       this.userTweet = newValue

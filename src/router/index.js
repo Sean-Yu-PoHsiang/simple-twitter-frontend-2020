@@ -22,6 +22,14 @@ const routes = [
     path: '/',
     name: 'root',
     component: () => import('../views/Layout.vue'),
+    beforeEnter: (to, from, next) => {
+      const currentUser = store.state.currentUser
+      if (currentUser.role === "admin") {
+        next('/admin/tweets')
+        return
+      }
+      next()
+    },
     redirect: '/home',
     children: [
       {
@@ -81,29 +89,35 @@ const routes = [
   {
     path: '/admin/tweets',
     name: 'admin-tweets',
-    component: () => import('../views/AdminTweets.vue')
+    component: () => import('../views/AdminTweets.vue'),
+    beforeEnter: (to, from, next) => {
+      const currentUser = store.state.currentUser
+      if (currentUser.role !== "admin") {
+        next('/404')
+        return
+      }
+      next()
+    }
   },
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: () => import('../views/AdminUsers.vue')
+    component: () => import('../views/AdminUsers.vue'),
+    beforeEnter: (to, from, next) => {
+      const currentUser = store.state.currentUser
+      if (currentUser.role !== "admin") {
+        next('/404')
+        return
+      }
+      next()
+    }
   },
   {
     path: '*',
     name: 'not-found',
     component: NotFound,
   },
-
 ]
-
-// const authorizeIsAdmin = (to, from, next) => {
-//   const currentUser = store.state.currentUser
-//   if (currentUser && !currentUser.isAdmin) {
-//     next('/404')
-//     return
-//   }
-//   next()
-// }
 
 const router = new VueRouter({
   linkExactActiveClass: 'active',
