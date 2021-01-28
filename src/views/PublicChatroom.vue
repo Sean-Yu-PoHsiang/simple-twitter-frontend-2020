@@ -21,12 +21,16 @@
         </div>
       </div>
 
-      <div class="col right-column no-gutters p-0">
+      <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
           <h1 class="title">公開聊天室</h1>
         </div>
-        <div class="message-board">
-          <div v-for="message in messages" :key="message.id">
+        <div @scroll="isToBelow" class="message-board" id="message-board">
+          <div
+            class="message-box"
+            v-for="message in messages"
+            :key="message.id"
+          >
             <!-- 自己發的訊息 -->
             <div
               v-if="message.UserId === currentUser.id"
@@ -71,6 +75,13 @@
               </div>
             </div>
           </div>
+          <button
+            v-show="!scrollToBottom"
+            class="to-bot-btn btn"
+            @click="scrollToBottom = true"
+          >
+            <i class="fas fa-arrow-down"></i>
+          </button>
         </div>
         <!-- 訊息輸入表單 -->
         <form action="" class="message-form" @submit.stop.prevent>
@@ -107,7 +118,10 @@ export default {
     return {
       onlineUsers: [],
       messages: [],
-      newMessage: ''
+      newMessage: '',
+      scrollModel: '',
+      scrollPosition: 0,
+      scrollToBottom: true
     }
   },
   created() {
@@ -115,27 +129,29 @@ export default {
   },
   mounted() {
     this.fetchOnlineUsers()
+    this.scrollModel = document.getElementById("message-board")
+  },
+  updated() {
+    if (this.scrollToBottom === true) {
+      this.scrollModel.scrollTop = this.scrollModel.scrollHeight
+    }
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser"])
   },
   sockets: {
     'init-public': function (onlineUsers) {
       this.onlineUsers = onlineUsers
-      console.log('onlineUser form socekt event "init-public" >>>', onlineUsers)
-      console.log(this.$socket.id)
     },
     'public-message': function (message) {
       message.id = uuidv4()
       message.UserId = message.userId
       this.messages.push(message)
-      console.log('socket event: "public-message" server to client >>>', message)
     }
   },
   methods: {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
-      console.log('socket emit: init-public>>>>>>>>>>')
     },
     async fetchPublicChatRoomHistory() {
       try {
@@ -150,6 +166,7 @@ export default {
       }
     },
     async sendMessage() {
+      if (this.newMessage.trim().length === 0) { return }
       await this.$socket.emit('public-message', {
         account: this.currentUser.account,
         avatar: this.currentUser.avatar,
@@ -158,21 +175,25 @@ export default {
         message: this.newMessage,
         time: Date.now()
       })
-      console.log('socket event: "public-message" client to server >>>', {
-        account: this.currentUser.account,
-        avatar: this.currentUser.avatar,
-        UserId: this.currentUser.id,
-        name: this.currentUser.name,
-        message: this.newMessage,
-        time: Date.now()
-      })
       this.newMessage = ''
+      this.scrollToBottom = true
+    },
+    isToBelow() {
+      this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
+      if (this.scrollPosition < this.scrollModel.scrollHeight) {
+        this.scrollToBottom = false
+      } else {
+        this.scrollToBottom = true
+      }
     }
   }
 }
 </script>
 
 <style>
+.main-panel {
+  position: relative;
+}
 .message-input:focus {
   background: #e6ecf0;
   outline: none;
@@ -235,7 +256,14 @@ export default {
 .message-board {
   height: calc(100vh - 55px - 61px);
   overflow-y: auto;
+  /* transform: rotate(180deg);
+  direction: rtl; */
 }
+
+/* .message-box {
+  transform: rotate(180deg);
+  direction: ltr;
+} */
 
 .message-board .badge-pill {
   font-size: 0.8rem;
@@ -322,5 +350,17 @@ export default {
 
 a {
   color: inherit;
+}
+
+.to-bot-btn {
+  border: 1px solid #666666;
+  font-size: 20px;
+  background: white;
+  color: #666666;
+  line-height: 30px;
+  padding: 4px 10px;
+  position: absolute;
+  bottom: 74px;
+  right: 24px;
 }
 </style>
