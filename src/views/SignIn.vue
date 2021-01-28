@@ -6,7 +6,7 @@
     </div>
     <form @submit.stop.prevent>
       <div class="input-container">
-        <div class="input-title">帳號</div>
+        <div class="input-title">Email</div>
         <label for="Email" class="form-label"></label>
         <input
           v-model="email"
@@ -94,7 +94,6 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
-        console.log(data.user)
         this.$store.commit('setCurrentUser', data.user)
         this.isProcessing = false
 

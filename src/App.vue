@@ -24,7 +24,7 @@ export default {
 
 <style>
 body {
-  font-family: Noto Sans TC;
+  font-family: "Noto Sans TC", sans-serif;
 }
 .active .svg-fill {
   fill: #ff6600;

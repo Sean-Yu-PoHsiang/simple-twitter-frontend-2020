@@ -21,15 +21,22 @@
         </div>
       </div>
 
-      <div class="col right-column no-gutters p-0">
+      <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
           <h1 class="title">公開聊天室</h1>
         </div>
-        <div class="message-board">
-          <div v-for="message in messages" :key="message.id">
+        <div @scroll="isToBelow" class="message-board" id="message-board">
+          <div
+            class="message-box"
+            v-for="message in messages"
+            :key="message.id"
+          >
             <!-- 自己發的訊息 -->
             <div
-              v-if="message.UserId === currentUser.id"
+              v-if="
+                message.stasus === undefined &&
+                message.UserId === currentUser.id
+              "
               class="my-message-wrapper d-flex justify-content-end px-3 py-1"
             >
               <div class="message">
@@ -45,7 +52,10 @@
             </div>
             <!-- 他人發的訊息 -->
             <div
-              v-else
+              v-if="
+                message.stasus === undefined &&
+                message.UserId !== currentUser.id
+              "
               class="message-wrapper d-flex align-items-end px-3 py-2"
             >
               <img class="message-avatar mr-2" :src="message.avatar" alt="" />
@@ -61,16 +71,37 @@
             </div>
             <!-- 使用者上下線訊息 -->
             <div
-              v-if="false"
+              v-if="
+                message.stasus === 'on' && message.userId !== currentUser.id
+              "
               class="user-status-wrapper d-flex justify-content-center py-2"
             >
               <div
                 class="user-status badge badge-pill bg-gray font-weight-bold text-gray px-3"
               >
-                Kelly 上線
+                {{ message.userName }} 上線
+              </div>
+            </div>
+            <div
+              v-if="
+                message.stasus === 'off' && message.userId !== currentUser.id
+              "
+              class="user-status-wrapper d-flex justify-content-center py-2"
+            >
+              <div
+                class="user-status badge badge-pill bg-gray font-weight-bold text-gray px-3"
+              >
+                {{ message.userName }} 下線
               </div>
             </div>
           </div>
+          <button
+            v-show="!scrollToBottom"
+            class="to-bot-btn btn"
+            @click="scrollToBottom = true"
+          >
+            <i class="fas fa-arrow-down"></i>
+          </button>
         </div>
         <!-- 訊息輸入表單 -->
         <form action="" class="message-form" @submit.stop.prevent>
@@ -107,7 +138,10 @@ export default {
     return {
       onlineUsers: [],
       messages: [],
-      newMessage: ''
+      newMessage: '',
+      scrollModel: '',
+      scrollPosition: 0,
+      scrollToBottom: true
     }
   },
   created() {
@@ -115,27 +149,52 @@ export default {
   },
   mounted() {
     this.fetchOnlineUsers()
+    this.scrollModel = document.getElementById("message-board")
+  },
+  updated() {
+    if (this.scrollToBottom === true) {
+      this.scrollModel.scrollTop = this.scrollModel.scrollHeight
+    }
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser"])
   },
   sockets: {
     'init-public': function (onlineUsers) {
       this.onlineUsers = onlineUsers
-      console.log('onlineUser form socekt event "init-public" >>>', onlineUsers)
-      console.log(this.$socket.id)
     },
     'public-message': function (message) {
       message.id = uuidv4()
       message.UserId = message.userId
       this.messages.push(message)
-      console.log('socket event: "public-message" server to client >>>', message)
+    },
+    'user-on-off-line': function (userOnOff) {
+      if (userOnOff.id === this.currentUser.id) {
+        return
+      }
+
+      let userStasus = {
+        stasus: userOnOff.status,
+        userId: userOnOff.id,
+        id: uuidv4(),
+        userName: userOnOff.name
+      }
+      let nowOnlineUser = {
+        status: userOnOff.status,
+        account: userOnOff.account,
+        avatar: userOnOff.avatar,
+        id: userOnOff.id,
+        name: userOnOff.name
+      }
+      this.messages.push(userStasus)
+      if (nowOnlineUser.status === 'on') {
+        this.onlineUsers.push(nowOnlineUser)
+      }
     }
   },
   methods: {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
-      console.log('socket emit: init-public>>>>>>>>>>')
     },
     async fetchPublicChatRoomHistory() {
       try {
@@ -150,6 +209,7 @@ export default {
       }
     },
     async sendMessage() {
+      if (this.newMessage.trim().length === 0) { return }
       await this.$socket.emit('public-message', {
         account: this.currentUser.account,
         avatar: this.currentUser.avatar,
@@ -158,21 +218,25 @@ export default {
         message: this.newMessage,
         time: Date.now()
       })
-      console.log('socket event: "public-message" client to server >>>', {
-        account: this.currentUser.account,
-        avatar: this.currentUser.avatar,
-        UserId: this.currentUser.id,
-        name: this.currentUser.name,
-        message: this.newMessage,
-        time: Date.now()
-      })
       this.newMessage = ''
+      this.scrollToBottom = true
+    },
+    isToBelow() {
+      this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
+      if (this.scrollPosition < this.scrollModel.scrollHeight) {
+        this.scrollToBottom = false
+      } else {
+        this.scrollToBottom = true
+      }
     }
   }
 }
 </script>
 
 <style>
+.main-panel {
+  position: relative;
+}
 .message-input:focus {
   background: #e6ecf0;
   outline: none;
@@ -235,7 +299,14 @@ export default {
 .message-board {
   height: calc(100vh - 55px - 61px);
   overflow-y: auto;
+  /* transform: rotate(180deg);
+  direction: rtl; */
 }
+
+/* .message-box {
+  transform: rotate(180deg);
+  direction: ltr;
+} */
 
 .message-board .badge-pill {
   font-size: 0.8rem;
@@ -322,5 +393,17 @@ export default {
 
 a {
   color: inherit;
+}
+
+.to-bot-btn {
+  /* border: 1px solid #a79b9b; */
+  font-size: 20px;
+  background: #eeeeee;
+  color: #666666;
+  line-height: 30px;
+  padding: 4px 10px;
+  position: absolute;
+  bottom: 74px;
+  right: 24px;
 }
 </style>
