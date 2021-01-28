@@ -94,7 +94,6 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
-        console.log(data.user)
         this.$store.commit('setCurrentUser', data.user)
         this.isProcessing = false
 

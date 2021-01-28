@@ -33,7 +33,10 @@
           >
             <!-- 自己發的訊息 -->
             <div
-              v-if="message.UserId === currentUser.id"
+              v-if="
+                message.stasus === undefined &&
+                message.UserId === currentUser.id
+              "
               class="my-message-wrapper d-flex justify-content-end px-3 py-1"
             >
               <div class="message">
@@ -49,7 +52,10 @@
             </div>
             <!-- 他人發的訊息 -->
             <div
-              v-else
+              v-if="
+                message.stasus === undefined &&
+                message.UserId !== currentUser.id
+              "
               class="message-wrapper d-flex align-items-end px-3 py-2"
             >
               <img class="message-avatar mr-2" :src="message.avatar" alt="" />
@@ -65,13 +71,27 @@
             </div>
             <!-- 使用者上下線訊息 -->
             <div
-              v-if="false"
+              v-if="
+                message.stasus === 'on' && message.userId !== currentUser.id
+              "
               class="user-status-wrapper d-flex justify-content-center py-2"
             >
               <div
                 class="user-status badge badge-pill bg-gray font-weight-bold text-gray px-3"
               >
-                Kelly 上線
+                {{ message.userName }} 上線
+              </div>
+            </div>
+            <div
+              v-if="
+                message.stasus === 'off' && message.userId !== currentUser.id
+              "
+              class="user-status-wrapper d-flex justify-content-center py-2"
+            >
+              <div
+                class="user-status badge badge-pill bg-gray font-weight-bold text-gray px-3"
+              >
+                {{ message.userName }} 下線
               </div>
             </div>
           </div>
@@ -147,6 +167,29 @@ export default {
       message.id = uuidv4()
       message.UserId = message.userId
       this.messages.push(message)
+    },
+    'user-on-off-line': function (userOnOff) {
+      if (userOnOff.id === this.currentUser.id) {
+        return
+      }
+
+      let userStasus = {
+        stasus: userOnOff.status,
+        userId: userOnOff.id,
+        id: uuidv4(),
+        userName: userOnOff.name
+      }
+      let nowOnlineUser = {
+        status: userOnOff.status,
+        account: userOnOff.account,
+        avatar: userOnOff.avatar,
+        id: userOnOff.id,
+        name: userOnOff.name
+      }
+      this.messages.push(userStasus)
+      if (nowOnlineUser.status === 'on') {
+        this.onlineUsers.push(nowOnlineUser)
+      }
     }
   },
   methods: {
@@ -353,9 +396,9 @@ a {
 }
 
 .to-bot-btn {
-  border: 1px solid #666666;
+  /* border: 1px solid #a79b9b; */
   font-size: 20px;
-  background: white;
+  background: #eeeeee;
   color: #666666;
   line-height: 30px;
   padding: 4px 10px;
