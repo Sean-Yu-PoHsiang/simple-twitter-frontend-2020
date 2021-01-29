@@ -166,10 +166,10 @@
 </template>
 
 <script>
-import ArrowIcon from "./../components/ArrowIcon.vue"
-import ReplyIcon from "./../components/ReplyIcon"
-import LikeIcon from "./../components/LikeIcon"
-import IconLikeFill from "./../components/IconLikeFill"
+import ArrowIcon from "./../components/icons/ArrowIcon.vue"
+import ReplyIcon from "./../components/icons/ReplyIcon"
+import LikeIcon from "./../components/icons/LikeIcon"
+import IconLikeFill from "./../components/icons/IconLikeFill"
 import moment from "moment"
 import { Toast } from "./../utils/helpers"
 import userAPI from "./../apis/user"

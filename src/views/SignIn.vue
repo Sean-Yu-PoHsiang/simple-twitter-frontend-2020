@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import Logo from "./../components/Logo"
+import Logo from "./../components/icons/Logo"
 import authorizationAPI from './../apis/authorization'
 import { Toast } from './../utils/helpers'
 

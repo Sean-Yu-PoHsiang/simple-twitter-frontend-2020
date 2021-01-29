@@ -173,12 +173,12 @@
 
 
 <script>
-import ReplyIcon from "./../components/ReplyIcon"
-import LikeIcon from "./../components/LikeIcon"
+import ReplyIcon from "./../components/icons/ReplyIcon"
+import LikeIcon from "./../components/icons/LikeIcon"
 import moment from "moment"
 import tweetAPI from "../apis/tweet"
 import userAPI from "./../apis/user"
-import IconLikeFill from "./../components/IconLikeFill"
+import IconLikeFill from "./../components/icons/IconLikeFill"
 
 
 import { Toast } from "./../utils/helpers"

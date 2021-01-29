@@ -19,7 +19,7 @@
 
 <script>
 import NavTabs from "./../components/NavTabs"
-import ArrowIcon from "./../components/ArrowIcon.vue"
+import ArrowIcon from "./../components/icons/ArrowIcon.vue"
 import UsersFollowingsList from "./../components/UsersFollowingsList"
 
 import userAPI from "./../apis/user"

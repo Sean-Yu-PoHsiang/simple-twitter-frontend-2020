@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import Logo from './Logo'
-import IconHome from './IconHome'
-import IconUserProfile from './IconUserProfile'
-import IconSignOut from './IconSignOut'
+import Logo from './icons/Logo'
+import IconHome from './icons/IconHome'
+import IconUserProfile from './icons/IconUserProfile'
+import IconSignOut from './icons/IconSignOut'
 
 export default {
   components: {
