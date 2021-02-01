@@ -21,9 +21,12 @@
       :to="{ name: 'public-chat-room' }"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
-      <div class="d-flex">
+      <div class="d-flex navbar-item">
         <i class="far fa-envelope text-larger mr-3"></i>
         <p>公開聊天室</p>
+        <div v-show="unread !== 0" class="public-chat-unread">
+          {{ unread | unreadOver }}
+        </div>
       </div>
     </router-link>
     <router-link
@@ -127,12 +130,11 @@ import IconSetting from "./icons/IconSetting"
 import IconUserProfile from "./icons/IconUserProfile"
 import IconSignOut from "./icons/IconSignOut"
 import { emptyImageFilter } from "../utils/mixins"
-
-import userAPI from "./../apis/user"
 import { v4 as uuidv4 } from "uuid"
 import { Toast } from "./../utils/helpers"
-
 import { mapState } from "vuex"
+import chatRoomAPI from "./../apis/chatRoom"
+import userAPI from "./../apis/user"
 
 export default {
   components: {
@@ -142,20 +144,46 @@ export default {
     IconUserProfile,
     IconSignOut,
   },
+  props: {
+    isPublicChatRoomRead: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
       avatar: "",
       id: -1,
       description: "",
       createdAt: "",
+      unread: 0,
+      isRead: false
+    }
+  },
+  watch: {
+    isPublicChatRoomRead(newValue) {
+      console.log(newValue)
+      this.isRead = newValue
+      if (this.isRead === true) {
+        this.unread = 0
+      }
     }
   },
   created() {
     console.log('>>>>>>>>> navbar created')
+    this.isRead = this.isPublicChatRoomRead
   },
   mounted() {
     this.$socket.auth.token = localStorage.getItem('token')
     this.$socket.open()
+    this.fetchUnreads()
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log('navbarRRRR route update!!!!!!!!!!!')
+    next()
+  },
+  updated() {
+    // console.log('navbar update////////', this.$route)
   },
   destroyed() {
     this.$socket.auth.token = ''
@@ -168,7 +196,13 @@ export default {
       return this.description.length > 140 ? true : false
     },
   },
-
+  sockets: {
+    'public-message': function () {
+      if (this.$route.path !== '/public-chatroom') {
+        this.unread++
+      }
+    },
+  },
   methods: {
     signOut() {
       this.$store.commit("revokeAuthentication")
@@ -225,12 +259,54 @@ export default {
         })
       }
     },
+    async fetchUnreads() {
+      try {
+        const response = await chatRoomAPI.getPublicChatRoomUnread({ userId: this.currentUser.id })
+        this.unread = response.data.count
+
+        if (response.status !== 200) {
+          throw new Error(response)
+        }
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法取得公開聊天室未讀數量，請稍後再試",
+        })
+      }
+    }
   },
   mixins: [emptyImageFilter],
+  filters: {
+    unreadOver(unread) {
+      return unread > 99 ? '99+' : unread
+    }
+  }
 }
 </script>
 
 <style scoped>
+.fa-envelope {
+  font-size: 24px;
+}
+.public-chat-unread {
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  background-color: #ff2d00;
+  color: white;
+  font-size: 10px;
+  padding: 4px;
+  border-radius: 12px;
+  height: 24px;
+  width: 24px;
+  line-height: 16px;
+  text-align: center;
+}
+.navbar-item {
+  position: relative;
+}
 .fontRed {
   color: red;
 }

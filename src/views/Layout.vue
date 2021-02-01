@@ -2,13 +2,18 @@
   <div class="container">
     <div class="row">
       <div class="col-auto left-container left-area-rwd component-navbar">
-        <Navbar @after-create-tweet="afterCreateTweet" />
+        <Navbar
+          @after-create-tweet="afterCreateTweet"
+          :isPublicChatRoomRead="isPublicChatRoomRead"
+        />
       </div>
 
       <router-view
         :newTweetsPayload="newTweetsPayload"
         :addFollowingPayload="addFollowingPayload"
         :deleteFollowingPayload="deleteFollowingPayload"
+        @after-messages-read="afterMessagesRead"
+        @after-leave-public-chat-room="afterLeavePublicChatRoom"
       />
 
       <div class="col-auto right-container right-area-rwd">
@@ -35,7 +40,8 @@ export default {
     return {
       newTweetsPayload: {},
       addFollowingPayload: {},
-      deleteFollowingPayload: {}
+      deleteFollowingPayload: {},
+      isPublicChatRoomRead: false
     }
   },
   created() { },
@@ -49,6 +55,14 @@ export default {
     },
     afterClickDeleteFollowingPayload(payload) {
       this.deleteFollowingPayload = payload
+    },
+    afterMessagesRead() {
+      console.log("message read")
+      this.isPublicChatRoomRead = true
+    },
+    afterLeavePublicChatRoom() {
+      console.log("leave chat room ?>>>>>>>")
+      this.isPublicChatRoomRead = false
     }
   }
 }
