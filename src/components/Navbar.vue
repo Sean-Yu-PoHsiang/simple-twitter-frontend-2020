@@ -121,11 +121,11 @@
 </template>
 
 <script>
-import Logo from "./Logo"
-import IconHome from "./IconHome"
-import IconSetting from "./IconSetting"
-import IconUserProfile from "./IconUserProfile"
-import IconSignOut from "./IconSignOut"
+import Logo from "./icons/Logo"
+import IconHome from "./icons/IconHome"
+import IconSetting from "./icons/IconSetting"
+import IconUserProfile from "./icons/IconUserProfile"
+import IconSignOut from "./icons/IconSignOut"
 import { emptyImageFilter } from "../utils/mixins"
 
 import userAPI from "./../apis/user"

@@ -7,7 +7,6 @@
 
 <script>
 import TweetsAndReplies from "./../components/TweetsAndReplies.vue"
-
 import userAPI from "./../apis/user"
 import { Toast } from "./../utils/helpers"
 import { mapState } from "vuex"

@@ -209,11 +209,11 @@
 </template>
 
 <script>
-import ArrowIcon from "./../components/ArrowIcon"
-import IconMessage from "./../components/IconMessage"
-import IconRing from "./../components/IconRing"
-import IconRingActive from "./../components/IconRingActive"
-import IconEditPhoto from "./../components/IconEditPhoto"
+import ArrowIcon from "./../components/icons/ArrowIcon"
+import IconMessage from "./../components/icons/IconMessage"
+import IconRing from "./../components/icons/IconRing"
+import IconRingActive from "./../components/icons/IconRingActive"
+import IconEditPhoto from "./../components/icons/IconEditPhoto"
 import { emptyImageFilter } from "../utils/mixins"
 import { emptyCoverFilter } from "../utils/mixins"
 

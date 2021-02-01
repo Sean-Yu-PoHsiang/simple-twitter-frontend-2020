@@ -54,8 +54,8 @@
 
 <script>
 import AdminNav from './../components/AdminNav'
-import IconReplyLg from './../components/IconReplyLg'
-import IconLike from './../components/IconLike'
+import IconReplyLg from './../components/icons/IconReplyLg'
+import IconLike from './../components/icons/IconLike'
 import { emptyImageFilter } from '../utils/mixins'
 import { emptyCoverFilter } from '../utils/mixins'
 import adminAPI from './../apis/admin'
