@@ -15,7 +15,8 @@ export default new Vuex.Store({
       role: ''
     },
     isAuthenticated: false,
-    token: ''
+    token: '',
+    isInPublicChatRoom: false
   },
   mutations: {
     setCurrentUser(state, currentUser) {
@@ -33,10 +34,17 @@ export default new Vuex.Store({
       state.token = ''
       localStorage.removeItem('token')
       localStorage.removeItem('currentUserId')
-    }
+    },
+    enterPublicChatRoom(state) {
+      state.isInPublicChatRoom = true
+    },
+    leavePublicChatRoom(state) {
+      state.isInPublicChatRoom = false
+    },
   },
   actions: {
     async fetchCurrentUser({ commit }) {
+      console.log('vuex action start<<<<<<<<<')
       try {
         const response = await userAPI.getCurrentUserProfile()
 

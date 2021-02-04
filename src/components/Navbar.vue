@@ -144,12 +144,6 @@ export default {
     IconUserProfile,
     IconSignOut,
   },
-  props: {
-    isPublicChatRoomRead: {
-      type: Boolean,
-      required: true
-    }
-  },
   data() {
     return {
       avatar: "",
@@ -157,21 +151,17 @@ export default {
       description: "",
       createdAt: "",
       unread: 0,
-      isRead: false
     }
   },
   watch: {
-    isPublicChatRoomRead(newValue) {
-      console.log(newValue)
-      this.isRead = newValue
-      if (this.isRead === true) {
+    isInPublicChatRoom(newValue) {
+      if (newValue === true) {
         this.unread = 0
       }
     }
   },
   created() {
-    console.log('>>>>>>>>> navbar created')
-    this.isRead = this.isPublicChatRoomRead
+    // console.log('>>>>>>>>> navbar created')
   },
   mounted() {
     this.$socket.auth.token = localStorage.getItem('token')
@@ -179,7 +169,7 @@ export default {
     this.fetchUnreads()
   },
   beforeRouteEnter(to, from, next) {
-    console.log('navbarRRRR route update!!!!!!!!!!!')
+    // console.log('navbarRRRR route update!!!!!!!!!!!')
     next()
   },
   updated() {
@@ -188,10 +178,10 @@ export default {
   destroyed() {
     this.$socket.auth.token = ''
     this.$socket.close()
-    console.log('>>>>>>>>> navbar destroyed')
+    // console.log('>>>>>>>>> navbar destroyed')
   },
   computed: {
-    ...mapState(["currentUser", "isAuthenticated"]),
+    ...mapState(["currentUser", "isAuthenticated", "isInPublicChatRoom"]),
     isDescriptionOverSize() {
       return this.description.length > 140 ? true : false
     },
