@@ -148,21 +148,19 @@ export default {
     this.fetchPublicChatRoomHistory()
   },
   mounted() {
-    console.log('mounted process>>>>>>>.')
     this.fetchOnlineUsers()
     this.scrollModel = document.getElementById("message-board")
   },
   updated() {
-    console.log('updated process>>>>>>>.')
     if (this.scrollToBottom === true) {
       this.scrollModel.scrollTop = this.scrollModel.scrollHeight
     }
   },
   destroyed() {
-    this.$emit('after-leave-public-chat-room')
+    this.$store.commit("leavePublicChatRoom")
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(["currentUser", "isInPublicChatRoom"])
   },
   sockets: {
     'init-public': function (onlineUsers) {
@@ -205,7 +203,6 @@ export default {
     async fetchPublicChatRoomHistory() {
       try {
         const response = await chatRoomAPI.getPublicChatRoomHistory({ userId: this.currentUser.id })
-        console.log(response)
 
         if (response.status !== 200) {
           throw new Error(response.statusText)
@@ -213,7 +210,7 @@ export default {
 
         this.messages = response.data
         this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
-        this.$emit('after-messages-read')
+        this.$store.commit("enterPublicChatRoom")
 
       } catch (error) {
         console.log(error)
