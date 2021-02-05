@@ -40,7 +40,13 @@
         </button>
       </div>
     </div>
-    <button class="show-more-btn">顯示更多</button>
+    <button
+      v-show="topUsers.length === 4"
+      @click="fetchMoreTopUsers"
+      class="show-more-btn"
+    >
+      顯示更多
+    </button>
   </div>
 </template>
 
@@ -51,27 +57,17 @@ import { Toast } from "./../utils/helpers"
 import { mapState } from "vuex"
 
 export default {
-  props: {
-    // initialUserProfile: {
-    //   type: Object,
-    //   required: true,
-    // }
-  },
+  props: {},
   data() {
     return {
       topUsers: [],
-      // userProfile: {}
     }
   },
   created() {
     this.fetchTopUsers()
   },
-  // beforeUpdate(to, from, next) {
-  //   console.log(this.$route)
-  //   next()
-  // },
   destroyed() {
-    console.log('>>>>>>topUser component destroyed')
+    // console.log('>>>>>>topUser component destroyed')
   },
   computed: {
     isShow() {
@@ -83,13 +79,33 @@ export default {
   methods: {
     async fetchTopUsers() {
       try {
-        const { data } = await topUsersAPI.getTopFollowersUser()
-        this.topUsers = data
+        const response = await topUsersAPI.getTopFollowersUser(0, 4)
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+        this.topUsers = response.data
+
       } catch (error) {
         console.log(error)
         Toast.fire({
           icon: "error",
-          title: "無法取得追蹤用戶資料，請稍後再試",
+          title: "無法取得推薦用戶資料，請稍後再試",
+        })
+      }
+    },
+    async fetchMoreTopUsers() {
+      try {
+        const response = await topUsersAPI.getTopFollowersUser(this.topUsers.length, 4)
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+        this.topUsers = this.topUsers.concat(response.data)
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法增加推薦用戶資料，請稍後再試",
         })
       }
     },
