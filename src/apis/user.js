@@ -58,8 +58,8 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  getTopFollowersUser() {
-    return apiHelper.get(`/users`, {
+  getTopFollowersUser(startIndex, accumulatedNum) {
+    return apiHelper.get(`/users?startIndex=${startIndex}&accumulatedNum=${accumulatedNum}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
