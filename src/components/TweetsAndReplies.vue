@@ -7,7 +7,7 @@
       }"
       v-for="tweetAndReply in tweetsAndReplies"
       :key="tweetAndReply.id"
-      class="avator-and-tweet d-flex flex-column"
+      class="avator-and-tweet d-flex flex-column hover-background"
     >
       <div class="d-flex first-box">
         <router-link
@@ -23,9 +23,10 @@
           />
         </router-link>
 
-        <div>
+        <div class="w-100">
           <div class="tweet-detail">
             <router-link
+              class="hover-underline"
               :to="{
                 name: 'user',
                 params: { userId: tweetAndReply.Tweet.UserId },
@@ -58,9 +59,10 @@
             alt=""
           />
         </router-link>
-        <div>
+        <div class="w-100">
           <div class="tweet-detail">
             <router-link
+              class="hover-underline"
               :to="{
                 name: 'user',
                 params: { userId: userProfile.id },
@@ -140,6 +142,12 @@ export default {
 </script>
 
 <style scoped>
+.hover-background:hover {
+  background-color: #f7f7f7;
+}
+.hover-underline:hover {
+  text-decoration: underline #1c1c1c;
+}
 .orange {
   color: salmon;
 }

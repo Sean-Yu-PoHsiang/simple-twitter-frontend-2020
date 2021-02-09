@@ -7,7 +7,7 @@
       }"
       v-for="tweet in tweets"
       :key="tweet.id"
-      class="avator-and-tweet"
+      class="avator-and-tweet hover-background"
     >
       <router-link :to="{ name: 'user', params: { userId: tweet.User.id } }">
         <img
@@ -17,9 +17,10 @@
         />
       </router-link>
 
-      <div>
+      <div class="w-100">
         <div class="tweet-detail">
           <router-link
+            class="hover-underline"
             :to="{ name: 'user', params: { userId: tweet.User.id } }"
           >
             <div class="user-name">{{ tweet.User.name }}</div>
@@ -43,6 +44,7 @@
               data-toggle="modal"
               data-target="#reply-modal"
               @click.prevent="getTweetForModel(tweet.id)"
+              @click="updateRepliesInModal(tweet.id)"
             >
               <div class="btn-container">
                 <!-- 點回文可以跳轉到回文頁面 -->
@@ -106,6 +108,8 @@
           <div class="modal-body">
             <!-- 推文內容 -->
             <div class="tweet-container">
+              <div class="flow-bar"></div>
+
               <img
                 class="avator"
                 :src="
@@ -114,7 +118,7 @@
                 "
                 alt=""
               />
-              <div class="detail">
+              <div class="detail w-100">
                 <div class="info">
                   <div class="name">{{ tweetDataForModel.User.name }}</div>
                   <div class="at-detail">
@@ -127,19 +131,20 @@
                     }}</span>
                   </div>
                 </div>
+                <div class="tweet-text">
+                  {{ tweetDataForModel.description }}
+                </div>
                 <div>
                   <span class="reply">回覆給</span>
                   <span class="reply-to-user-at"
                     >@{{ tweetDataForModel.User.account }}</span
                   >
                 </div>
-                <div class="tweet-text">
-                  {{ tweetDataForModel.description }}
-                </div>
               </div>
             </div>
             <!-- 回文區 -->
-            <div class="d-flex">
+            <div class="d-flex reply-tweet-form">
+              <div class="flow-bar"></div>
               <img
                 :src="currentUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
                 alt="no photo"
@@ -150,7 +155,7 @@
                   class="form-textarea w-100"
                   name="text"
                   id="replyTweet"
-                  rows="6"
+                  rows="3"
                   placeholder="回覆貼文"
                   autofocus
                 ></textarea>
@@ -163,6 +168,56 @@
                   回覆
                 </button>
               </form>
+            </div>
+
+            <!-- tweet replies box -->
+            <div class="tweet-replies-box">
+              <div
+                v-for="reply in tweetRepliesForModal"
+                :key="reply.id"
+                class="replyer"
+              >
+                <div class="flow-bar"></div>
+                <router-link
+                  :to="{ name: 'user', params: { userId: reply.UserId } }"
+                  data-dismiss="modal"
+                >
+                  <img
+                    class="replyer-avator"
+                    :src="
+                      reply.User.avatar || 'https://i.imgur.com/S4PE66O.png'
+                    "
+                    alt=""
+                  />
+                </router-link>
+                <div class="reply-detail w-100">
+                  <div class="replyer-info d-flex">
+                    <router-link
+                      class="hover-underline"
+                      :to="{ name: 'user', params: { userId: reply.UserId } }"
+                      data-dismiss="modal"
+                    >
+                      <div class="replyer-name">{{ reply.User.name }}</div>
+                    </router-link>
+                    <div class="at-detail">
+                      <span class="replyer-at"> @{{ reply.User.account }}</span>
+                      <span>・</span>
+                      <span class="reply-time">{{
+                        reply.createdAt | fromNow
+                      }}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="reply">回覆給</span>
+                    <span class="reply-to-user-at"
+                      >@{{ tweetDataForModel.User.account }}</span
+                    >
+                  </div>
+                  <div class="reply-text">
+                    {{ reply.comment }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -179,10 +234,7 @@ import moment from "moment"
 import tweetAPI from "../apis/tweet"
 import userAPI from "./../apis/user"
 import IconLikeFill from "./../components/icons/IconLikeFill"
-
-
 import { Toast } from "./../utils/helpers"
-
 import { mapState } from "vuex"
 
 export default {
@@ -213,8 +265,9 @@ export default {
         UserId: -1,
         createdAt: '',
         description: "",
-        id: -1
+        id: -1,
       },
+      tweetRepliesForModal: []
     }
   },
   methods: {
@@ -223,7 +276,6 @@ export default {
         const { data } = await tweetAPI.getUserTweet({ tweetId })
         this.tweetId = tweetId
         this.tweetDataForModel = data
-        console.log('this.tweetDataForModel ', this.tweetDataForModel)
 
       } catch (error) {
         console.log(error)
@@ -288,7 +340,6 @@ export default {
       try {
         const response = await tweetAPI.addTweetLike({ tweetId })
 
-        console.log(">>>>>>>>>", response)
         if (response.data.status !== 'success') {
           throw new Error(response.data.message)
         }
@@ -320,7 +371,6 @@ export default {
       try {
         const response = await tweetAPI.deleteTweetLike({ tweetId })
 
-        console.log(response)
         if (response.data.status !== 'success') {
           throw new Error(response.data.message)
         }
@@ -355,7 +405,25 @@ export default {
         })
       }
     },
+    async updateRepliesInModal(tweetId) {
+      try {
+        this.tweetRepliesForModal = []
+        const response = await tweetAPI.getTweetReplies({ tweetId })
+        // console.log(response)
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+        this.tweetRepliesForModal = response.data
+        console.log(this.tweetRepliesForModal)
 
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法取得該文回覆資料，請稍後再試",
+        })
+      }
+    }
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
@@ -379,6 +447,37 @@ export default {
 </script>
 
 <style scoped>
+.hover-background:hover {
+  background-color: #f7f7f7;
+}
+.hover-underline:hover {
+  text-decoration: underline #1c1c1c;
+}
+.reply-text {
+  margin-bottom: 24px;
+}
+.flow-bar::after {
+  content: "";
+  width: 2px;
+  background-color: #cccccc;
+  position: absolute;
+  top: 55px;
+  left: 24px;
+  bottom: 5px;
+}
+.replyer-name {
+  line-height: 21px;
+  margin-right: 8px;
+}
+.replyer {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+.reply-tweet-form {
+  position: relative;
+  padding-bottom: 8px;
+}
 .all-users-newest-tweets {
   /* width: 600px; */
   border: 1px solid #e6ecf0;
@@ -417,12 +516,12 @@ export default {
 }
 
 .tweet-text {
-  font-family: Noto Sans TC;
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
   line-height: 22px;
   color: #1c1c1c;
+  margin-bottom: 8px;
 }
 
 .reply-and-like-btn,
@@ -462,7 +561,7 @@ button {
 
 .unlike-icon:hover,
 button:hover {
-  background: #f0f0f0;
+  background: #eeeeee;
   border-radius: 30px;
 }
 
@@ -529,7 +628,6 @@ textarea:focus {
   background: #ff6600;
   z-index: 99;
   left: 42%;
-  /* transform: translate(-50%, -50%); */
 }
 .btn-cancel::before {
   transform: rotate(45deg);
@@ -560,8 +658,12 @@ img {
   display: flex;
   position: relative;
 }
+.info {
+  margin-bottom: 6px;
+}
 .tweet-container {
-  padding-bottom: 20px;
+  padding-bottom: 14px;
+  position: relative;
 }
 
 .name,
@@ -578,6 +680,7 @@ img {
   font-size: 15px;
   line-height: 22px;
   color: #1c1c1c;
+  margin-right: 8px;
 }
 .at-detail {
   font-weight: 500;
