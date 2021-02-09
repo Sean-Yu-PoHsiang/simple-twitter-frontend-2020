@@ -73,6 +73,14 @@ export default {
     },
     deleteFollowingPayload(newValue) {
       this.afterClickDeleteFollowing(newValue)
+    },
+    userProfile(newValue) {
+      this.tweets = this.tweets.map((tweet) => {
+        return {
+          ...tweet,
+          User: { ...newValue },
+        }
+      })
     }
   },
   computed: {
@@ -94,14 +102,15 @@ export default {
       try {
         const response = await userAPI.getUserProfile({ userId })
 
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+
         this.userProfile = {
           ...this.userProfile,
           ...response.data,
         }
 
-        if (response.status !== 200) {
-          throw new Error(response)
-        }
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -114,6 +123,10 @@ export default {
       try {
         const response = await userAPI.getUserTweets({ userId })
 
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+
         this.tweets = response.data
         this.tweets = this.tweets.map((tweet) => {
           return {
@@ -122,9 +135,6 @@ export default {
           }
         })
 
-        if (response.status !== 200) {
-          throw new Error(response)
-        }
       } catch (error) {
         console.log(error)
         Toast.fire({
