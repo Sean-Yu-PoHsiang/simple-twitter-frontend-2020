@@ -67,7 +67,7 @@
               name: 'user-followings',
               params: { userId: userProfile.id },
             }"
-            class="user-follow following"
+            class="user-follow following hover-underline"
             >{{ userProfile.FollowingsCount }}個</router-link
           >
           <router-link
@@ -75,7 +75,7 @@
               name: 'user-followers',
               params: { userId: userProfile.id },
             }"
-            class="user-follow follower ml-2"
+            class="user-follow follower ml-2 hover-underline"
             >{{ userProfile.FollowersCount }}位</router-link
           >
         </div>
@@ -414,6 +414,9 @@ export default {
 </script>
 
 <style scoped>
+.hover-underline:hover {
+  text-decoration: underline #1c1c1c;
+}
 .fontRed {
   color: red;
 }
