@@ -155,8 +155,7 @@ textarea::placeholder {
 }
 .container {
   padding: 0;
-  /* width: 600px; */
-  border: 1px solid #e6ecf0;
+  /* border: 1px solid #e6ecf0; */
   border-bottom: 10px solid #e6ecf0;
 }
 

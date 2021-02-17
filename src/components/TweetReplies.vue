@@ -1,5 +1,8 @@
 <template>
   <div class="replies-box">
+    <div v-if="tweetReplies.length === 0" class="d-flex justify-content-center">
+      <p class="p-3 text-black-50">No replies</p>
+    </div>
     <div v-for="reply in tweetReplies" :key="reply.id" class="replyer">
       <router-link :to="{ name: 'user', params: { userId: reply.User.id } }">
         <img
@@ -75,8 +78,8 @@ export default {
 <style scoped>
 .replies-box {
   width: 100%;
-  border-right: 1px solid #e6ecf0;
-  border-left: 1px solid #e6ecf0;
+  /* border-right: 1px solid #e6ecf0;
+  border-left: 1px solid #e6ecf0; */
 }
 .replyer-avator {
   width: 50px;

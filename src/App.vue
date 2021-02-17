@@ -44,6 +44,11 @@ button:focus {
 .vh100scroll {
   height: 100vh;
   overflow: scroll;
+  margin: 0 15px 0 15px;
+  padding: 0;
+  border-width: 0px 1px 0px 1px;
+  border-style: solid;
+  border-color: #e6ecf0;
 }
 
 @media screem and (max-width: 576px) {

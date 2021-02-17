@@ -540,8 +540,8 @@ export default {
 }
 .title-box {
   height: 55px;
-  border-right: 1px solid #e6ecf0;
-  border-left: 1px solid #e6ecf0;
+  /* border-right: 1px solid #e6ecf0;
+  border-left: 1px solid #e6ecf0; */
 }
 .user-name {
   font-size: 19px;
@@ -572,7 +572,8 @@ export default {
 }
 .user-card {
   position: relative;
-  border: 1px solid #e6ecf0;
+  border-style: solid #e6ecf0;
+  border: 1px 0 1px 0;
   border-bottom: 0;
   width: 100%;
 }

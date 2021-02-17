@@ -1,5 +1,17 @@
 <template>
   <div class="all-users-newest-tweets">
+    <div
+      v-if="tweets.length === 0 && $route.name === 'user'"
+      class="d-flex justify-content-center"
+    >
+      <p class="p-3 text-black-50">No tweets</p>
+    </div>
+    <div
+      v-if="tweets.length === 0 && $route.name === 'user-likes'"
+      class="d-flex justify-content-center"
+    >
+      <p class="p-3 text-black-50">No liked tweets</p>
+    </div>
     <router-link
       :to="{
         name: 'tweet',
@@ -478,11 +490,10 @@ export default {
   position: relative;
   padding-bottom: 8px;
 }
-.all-users-newest-tweets {
-  /* width: 600px; */
-  border: 1px solid #e6ecf0;
+/* .all-users-newest-tweets {
+  border-bottom: 1px solid #e6ecf0;
   border-right: 1px solid #e6ecf0;
-}
+} */
 
 .avator-and-tweet {
   border-bottom: 1px solid #e6ecf0;
