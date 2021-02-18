@@ -1,22 +1,31 @@
 <template>
-  <div class="col">
+  <div class="col chat-room-wrapper">
     <div class="row">
-      <div class="col-auto no-gutters center-column p-0">
-        <div class="title-wrapper px-3 d-flex align-items-center">
+      <input
+        class="folding-online-user d-none"
+        id="folding-online-user"
+        type="checkbox"
+      />
+      <div class="col-auto no-gutters center-column p-0 online-user-box">
+        <div
+          class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center"
+        >
           <h1 class="title">上線使用者({{ onlineUsers.length || 0 }})</h1>
         </div>
-        <div
-          v-for="onlineUser in onlineUsers"
-          :key="onlineUser.id"
-          class="user-panel"
-        >
-          <!-- 上線使用者 -->
-          <div class="d-flex align-items-center connected-user p-2">
-            <img class="user-avatar mr-2" :src="onlineUser.avatar" alt="" />
-            <span>
-              <strong class="mr-2">{{ onlineUser.name }}</strong>
-              <span class="text-gray">@{{ onlineUser.account }}</span>
-            </span>
+        <div class="online-user-list">
+          <div
+            v-for="onlineUser in onlineUsers"
+            :key="onlineUser.id"
+            class="user-panel"
+          >
+            <!-- 上線使用者 -->
+            <div class="d-flex align-items-center connected-user p-2">
+              <img class="user-avatar mr-2" :src="onlineUser.avatar" alt="" />
+              <span>
+                <strong class="mr-2">{{ onlineUser.name }}</strong>
+                <span class="text-gray">@{{ onlineUser.account }}</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -24,6 +33,9 @@
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
           <h1 class="title">公開聊天室</h1>
+          <label for="folding-online-user"
+            ><i class="fas fa-list-ul"></i
+          ></label>
         </div>
         <div @scroll="isToBelow" class="message-board" id="message-board">
           <div
@@ -245,7 +257,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+label {
+  display: none;
+}
 .main-panel {
   position: relative;
 }
@@ -275,66 +290,53 @@ export default {
 .bg-gray {
   background: #e6ecf0;
 }
-
 .text-gray {
   color: #666;
 }
 .text-larger {
   font-size: larger;
 }
-
-/* public - center */
 .center-column {
   border-left: 1px solid #e6ecf0;
   border-right: 1px solid #e6ecf0;
   width: 300px;
   height: 100vh;
 }
-
 .title-wrapper {
   border-bottom: 1px solid #e6ecf0;
   height: 55px;
 }
-
 .title {
   color: #1c1c1c;
   font-size: 18px;
   font-weight: 700;
   margin: 0;
 }
-
 .connected-user {
   border-bottom: 1px solid #e6ecf0;
 }
-/* message-board */
 
+/* message-board */
+.row {
+  height: 100%;
+}
 .message-board {
   height: calc(100vh - 55px - 61px);
   overflow-y: auto;
-  /* transform: rotate(180deg);
-  direction: rtl; */
 }
-
-/* .message-box {
-  transform: rotate(180deg);
-  direction: ltr;
-} */
-
 .message-board .badge-pill {
   font-size: 0.8rem;
   font-weight: normal;
   line-height: 20px;
 }
-
 .message-text {
   border-radius: 1.5em 1.5em 1.5em 0;
   max-width: 60%;
-  word-break: break-all;
   width: fit-content;
   background: #eeeeee;
   color: #333333;
+  word-break: break-word;
 }
-
 .message-avatar {
   width: 40px;
   height: 40px;
@@ -342,11 +344,9 @@ export default {
   bottom: 4px;
   border-radius: 20px;
 }
-
 .my-message-wrapper .message {
   width: calc(100% - 40px - 16px);
 }
-
 .my-message-text {
   border-radius: 1.5em 1.5em 0 1.5em;
   background: #ff6600;
@@ -365,11 +365,9 @@ export default {
   width: 100%;
   display: flex;
 }
-
 .send-message-btn {
   flex-basis: auto;
 }
-
 .fa-location-arrow {
   transform: rotate(45deg);
   font-size: 24px;
@@ -394,21 +392,16 @@ export default {
   justify-content: flex-end;
   margin-top: 40px;
 }
-
 .link {
   text-decoration: underline;
 }
-
 .sign-in-wrapper span {
   color: #0099ff;
 }
-
 a {
   color: inherit;
 }
-
 .to-bot-btn {
-  /* border: 1px solid #a79b9b; */
   font-size: 20px;
   background: #eeeeee;
   color: #666666;
@@ -417,5 +410,53 @@ a {
   position: absolute;
   bottom: 74px;
   right: 24px;
+}
+.chat-room-wrapper {
+  margin: 0 15px;
+}
+@media screen and (max-width: 992px) {
+  .online-user-box {
+    transform: scale(0, 1);
+    transition: transform 0.2s ease-in;
+    transform-origin: right;
+  }
+  .center-column {
+    height: calc(100vh - 55px - 61px);
+  }
+  .online-user-box {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    z-index: 99;
+    background: white;
+    box-shadow: -10px 0px 10px -10px #666666;
+  }
+  #main-panel {
+    border-left: 1px solid #e6ecf0;
+  }
+  .online-user-title-wrapper {
+    justify-content: flex-end;
+  }
+  label {
+    font-size: 21px;
+    display: block;
+    margin: 0;
+    margin-left: 10px;
+    padding: 0 6px;
+  }
+  label:hover {
+    background: #ff6600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .folding-online-user:checked ~ .online-user-box {
+    transform: scale(1, 1);
+    transition: transform 0.2s ease-out;
+  }
+}
+@media screen and (max-width: 768px) {
+  .chat-room-wrapper {
+    margin: 0;
+  }
 }
 </style>

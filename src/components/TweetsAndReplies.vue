@@ -1,5 +1,11 @@
 <template>
   <div class="all-users-newest-tweets">
+    <div
+      v-if="tweetsAndReplies.length === 0"
+      class="d-flex justify-content-center"
+    >
+      <p class="p-3 text-black-50">No replies</p>
+    </div>
     <router-link
       :to="{
         name: 'tweet',
@@ -163,11 +169,11 @@ export default {
   left: 33px;
   bottom: -20px;
 }
-.all-users-newest-tweets {
-  /* width: 600px; */
+/* .all-users-newest-tweets {
+  width: 600px;
   border: 1px solid #e6ecf0;
   border-right: 1px solid #e6ecf0;
-}
+} */
 
 .avator-and-tweet {
   border-bottom: 1px solid #e6ecf0;

@@ -332,8 +332,7 @@ export default {
   transform: scale(1.25, 1.25);
 }
 .main-user-container {
-  /* width: 600px; */
-  border: 1px solid #e6ecf0;
+  border-bottom: 1px solid #e6ecf0;
 }
 
 .previous-page {

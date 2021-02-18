@@ -3,8 +3,8 @@
     <Logo class="mt-3 mb-5" />
     <router-link to="/home" class="nav-btn d-flex fonSize18 align-items-center">
       <div class="d-flex">
-        <IconHome class="mr-3" />
-        <p>首頁</p>
+        <IconHome class="nav-link-icon" />
+        <p class="nav-link-title">首頁</p>
       </div>
     </router-link>
 
@@ -13,8 +13,8 @@
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <div class="d-flex">
-        <IconUserProfile class="mr-3" />
-        <p>個人資料</p>
+        <IconUserProfile class="nav-link-icon" />
+        <p class="nav-link-title">個人資料</p>
       </div>
     </router-link>
     <router-link
@@ -22,8 +22,8 @@
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <div class="d-flex navbar-item">
-        <i class="far fa-envelope text-larger mr-3"></i>
-        <p>公開聊天室</p>
+        <i class="far fa-envelope text-larger nav-link-icon"></i>
+        <p class="nav-link-title">公開聊天室</p>
         <div v-show="unread !== 0" class="public-chat-unread">
           {{ unread | unreadOver }}
         </div>
@@ -34,8 +34,8 @@
       class="nav-btn d-flex fonSize18 align-items-center"
     >
       <div class="d-flex">
-        <IconSetting class="mr-3" />
-        <p>設定</p>
+        <IconSetting class="nav-link-icon" />
+        <p class="nav-link-title">設定</p>
       </div>
     </router-link>
 
@@ -53,9 +53,9 @@
       class="btn sign-out-btn d-flex fonSize18 align-items-center"
       @click="signOut"
     >
-      <div class="d-flex">
-        <IconSignOut class="mr-3" />
-        <p>登出</p>
+      <div class="d-flex nav-btn">
+        <IconSignOut class="nav-link-icon" />
+        <p class="nav-link-title">登出</p>
       </div>
     </button>
 
@@ -277,6 +277,9 @@ export default {
 </script>
 
 <style scoped>
+.nav-link-icon {
+  margin-right: 16px;
+}
 .fa-envelope {
   font-size: 24px;
 }
@@ -413,7 +416,6 @@ textarea:focus {
   background: #ff6600;
   z-index: 99;
   left: 42%;
-  /* transform: translate(-50%, -50%); */
 }
 .btn-cancel::before {
   transform: rotate(45deg);
@@ -436,34 +438,30 @@ img {
   align-content: center;
 }
 
-@media (max-width: 800px) {
-  p {
+@media screen and (max-width: 1200px) {
+  .nav-link-icon {
+    margin-right: 0px;
+  }
+  .nav-link-title {
     display: none;
   }
-  .modal-dialog,
-  .nav-btn,
-  .btn-tweet,
-  .sign-out-btn {
-    max-width: unset;
-    width: unset;
-  }
   .btn-tweet {
-    border-radius: 50%;
+    color: white;
+    background: #ff6600;
+    border-color: transparent;
+    height: 50px;
+    border-radius: 25px;
+    width: 50px;
+  }
+  .nav-btn {
+    width: 50px;
+    justify-content: center;
+  }
+  .sign-out-btn {
+    width: 50px;
   }
   .nav-wrapper {
-    justify-content: center;
+    align-items: center;
   }
-  /* 還沒找到小圖示對齊方法  */
-  /* .mr-3 {
-    border: 1px solid red;
-    width: auto;
-  }
-  .nav-btn,
-  #nav-btn {
-    border: 1px solid red;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-  } */
 }
 </style>

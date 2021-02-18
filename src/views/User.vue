@@ -225,8 +225,7 @@ export default {
   color: #ff6600;
 }
 .userNavbar {
-  border: 1px solid #e6ecf0;
-  border-top: 0;
+  border-bottom: 1px solid #e6ecf0;
 }
 .active {
   border-bottom: 2px solid #ff6600;
