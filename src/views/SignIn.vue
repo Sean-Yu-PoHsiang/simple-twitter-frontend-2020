@@ -1,54 +1,56 @@
 <template>
-  <div class="sign-in-wrapper">
-    <div class="ac-logo">
-      <Logo class="logo-image" />
-      <div class="title">登入 Alphitter</div>
-    </div>
-    <form @submit.stop.prevent>
-      <div class="input-container">
-        <div class="input-title">Email</div>
-        <label for="Email" class="form-label"></label>
-        <input
-          v-model="email"
-          type="email"
-          class="form-control"
-          required
-          autofocus
-          aria-describedby="emailHelp"
-        />
-        <div id="emailHelp" class="form-text"></div>
+  <div class="container">
+    <div class="sign-in-wrapper">
+      <div class="ac-logo">
+        <Logo class="logo-image" />
+        <div class="title">登入 Alphitter</div>
       </div>
-      <div class="input-container">
-        <div class="input-title">密碼</div>
+      <form @submit.stop.prevent>
+        <div class="input-container">
+          <div class="input-title">Email</div>
+          <label for="Email" class="form-label"></label>
+          <input
+            v-model="email"
+            type="email"
+            class="form-control"
+            required
+            autofocus
+            aria-describedby="emailHelp"
+          />
+          <div id="emailHelp" class="form-text"></div>
+        </div>
+        <div class="input-container">
+          <div class="input-title">密碼</div>
 
-        <label
-          for="password"
-          class="form-label"
-          aria-placeholder="密碼"
-        ></label>
-        <input
-          v-model="password"
-          type="password"
-          class="form-control"
-          id="exampleInputPassword1"
-          @keyup.enter="handleSubmit"
-        />
+          <label
+            for="password"
+            class="form-label"
+            aria-placeholder="密碼"
+          ></label>
+          <input
+            v-model="password"
+            type="password"
+            class="form-control"
+            id="exampleInputPassword1"
+            @keyup.enter="handleSubmit"
+          />
+        </div>
+      </form>
+      <button
+        type="submit"
+        class="btn btn btn-submit"
+        id="btn-submit"
+        :disabled="isProcessing"
+        @click="handleSubmit"
+      >
+        {{ isProcessing ? "登入中..." : "登入" }}
+      </button>
+
+      <div class="pages-link">
+        <router-link class="link" to="/signup"> 註冊 Alphitter </router-link>
+        <span>·</span>
+        <router-link class="link" to="/admin/signin"> 後台登入 </router-link>
       </div>
-    </form>
-    <button
-      type="submit"
-      class="btn btn btn-submit"
-      id="btn-submit"
-      :disabled="isProcessing"
-      @click="handleSubmit"
-    >
-      {{ isProcessing ? "登入中..." : "登入" }}
-    </button>
-
-    <div class="pages-link">
-      <router-link class="link" to="/signup"> 註冊 Alphitter </router-link>
-      <span>·</span>
-      <router-link class="link" to="/admin/signin"> 後台登入 </router-link>
     </div>
   </div>
 </template>
@@ -116,7 +118,7 @@ export default {
 
 <style scoped>
 .sign-in-wrapper {
-  width: 540px;
+  max-width: 540px;
   margin: 0 auto;
 }
 .ac-logo {

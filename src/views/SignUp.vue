@@ -1,91 +1,93 @@
 <template>
-  <div class="sign-in-wrapper">
-    <div class="ac-logo">
-      <Logo class="logo-image" />
-      <div class="page-title">建立你的帳號</div>
-    </div>
-    <form method="post" @submit.stop.prevent="handleSubmit">
-      <div class="input-container">
-        <div class="input-account title">帳號</div>
-        <label class="form-label"></label>
-        <input
-          v-model="account"
-          name="account"
-          type="text"
-          class="form-control"
-          required
-        />
+  <div class="container">
+    <div class="sign-in-wrapper">
+      <div class="ac-logo">
+        <Logo class="logo-image" />
+        <div class="page-title">建立你的帳號</div>
       </div>
-      <div class="input-container">
-        <div class="input-name title">名稱</div>
-        <label class="form-label"></label>
-        <input
-          v-model="name"
-          name="name"
-          type="text"
-          class="form-control"
-          required
-        />
-      </div>
-      <div class="input-container">
-        <div class="input-email title">email</div>
-        <label for="inputEmail" class="form-label"></label>
-        <input
-          v-model="email"
-          name="email"
-          type="email"
-          class="form-control"
-          id="inputEmail"
-          aria-describedby="emailHelp"
-          required
-        />
-        <div id="emailHelp" class="form-text"></div>
-      </div>
-      <div class="input-container">
-        <div class="input-password title">密碼</div>
-        <label
-          for="password"
-          class="form-label"
-          aria-placeholder="密碼"
-        ></label>
-        <input
-          v-model="password"
-          name="password"
-          type="password"
-          class="form-control"
-          id="password"
-          required
-        />
-      </div>
-      <div class="input-container">
-        <div class="input-password-check title">密碼確認</div>
+      <form method="post" @submit.stop.prevent="handleSubmit">
+        <div class="input-container">
+          <div class="input-account title">帳號</div>
+          <label class="form-label"></label>
+          <input
+            v-model="account"
+            name="account"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="input-container">
+          <div class="input-name title">名稱</div>
+          <label class="form-label"></label>
+          <input
+            v-model="name"
+            name="name"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="input-container">
+          <div class="input-email title">email</div>
+          <label for="inputEmail" class="form-label"></label>
+          <input
+            v-model="email"
+            name="email"
+            type="email"
+            class="form-control"
+            id="inputEmail"
+            aria-describedby="emailHelp"
+            required
+          />
+          <div id="emailHelp" class="form-text"></div>
+        </div>
+        <div class="input-container">
+          <div class="input-password title">密碼</div>
+          <label
+            for="password"
+            class="form-label"
+            aria-placeholder="密碼"
+          ></label>
+          <input
+            v-model="password"
+            name="password"
+            type="password"
+            class="form-control"
+            id="password"
+            required
+          />
+        </div>
+        <div class="input-container">
+          <div class="input-password-check title">密碼確認</div>
 
-        <label
-          for="password-check"
-          class="form-label"
-          aria-placeholder="密碼確認"
-        ></label>
-        <input
-          v-model="checkPassword"
-          name="checkPassword"
-          type="password"
-          class="form-control"
-          id="password-check"
-          required
-        />
-      </div>
+          <label
+            for="password-check"
+            class="form-label"
+            aria-placeholder="密碼確認"
+          ></label>
+          <input
+            v-model="checkPassword"
+            name="checkPassword"
+            type="password"
+            class="form-control"
+            id="password-check"
+            required
+          />
+        </div>
 
-      <button
-        type="submit"
-        class="btn btn-submit"
-        id="btn-submit"
-        :disabled="isProcessing"
-      >
-        {{ isProcessing ? "建立中..." : "建立" }}
-      </button>
-    </form>
-    <div class="pages-link">
-      <router-link class="link" to="/signin"> 取消 </router-link>
+        <button
+          type="submit"
+          class="btn btn-submit"
+          id="btn-submit"
+          :disabled="isProcessing"
+        >
+          {{ isProcessing ? "建立中..." : "建立" }}
+        </button>
+      </form>
+      <div class="pages-link">
+        <router-link class="link" to="/signin"> 取消 </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -186,7 +188,7 @@ export default {
 
 <style scoped>
 .sign-in-wrapper {
-  width: 540px;
+  max-width: 540px;
   margin: 0 auto;
 }
 .ac-logo {
@@ -251,7 +253,7 @@ input {
 .pages-link {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin: 40px 0;
 }
 
 .link {
