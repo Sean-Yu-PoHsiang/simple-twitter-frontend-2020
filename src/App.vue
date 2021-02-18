@@ -51,44 +51,15 @@ button:focus {
   border-color: #e6ecf0;
 }
 
-@media screem and (max-width: 576px) {
-  .component-top-followers-user {
-    display: none;
-  }
-  .col {
-    min-width: 300px;
+@media screen and (max-width: 1200px) {
+  .vh100scroll {
+    margin: 0;
   }
 }
-
-@media screem and (max-width: 768px) {
-  /* .component-top-followers-user {
-    display: unset;
-  } */
-  .main-area-rwd {
-    min-width: 500px;
-  }
+@media screen and (max-width: 992px) {
 }
-
-@media screem and (max-width: 992px) {
-  /* .component-top-followers-user {
-    display: unset;
-  } */
-  .main-area-rwd {
-    width: 600px;
-  }
+@media screen and (max-width: 768px) {
 }
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media screem and (max-width: 1200px) {
-  /* .container {
-    min-width: 1200px;
-  } */
-  /* 
-  .component-top-followers-user {
-    display: unset;
-  } */
-  .main-area-rwd {
-    width: 700px;
-  }
+@media screen and (max-width: 576px) {
 }
 </style>
