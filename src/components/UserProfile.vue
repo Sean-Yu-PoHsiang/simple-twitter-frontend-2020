@@ -443,9 +443,8 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 600px;
+  right: 0;
   height: 200px;
-  /* background: #666666; */
 }
 .btn-box-cover {
   position: absolute;
@@ -540,8 +539,6 @@ export default {
 }
 .title-box {
   height: 55px;
-  border-right: 1px solid #e6ecf0;
-  border-left: 1px solid #e6ecf0;
 }
 .user-name {
   font-size: 19px;
@@ -572,7 +569,8 @@ export default {
 }
 .user-card {
   position: relative;
-  border: 1px solid #e6ecf0;
+  border-style: solid #e6ecf0;
+  border: 1px 0 1px 0;
   border-bottom: 0;
   width: 100%;
 }
@@ -635,7 +633,6 @@ textarea:focus {
   background: #ff6600;
   z-index: 99;
   left: 42%;
-  /* transform: translate(-50%, -50%); */
 }
 .white::after,
 .white::before {
@@ -678,5 +675,13 @@ input {
 }
 .pointer {
   cursor: pointer;
+}
+@media (max-width: 450px) {
+  .user-avatar {
+    width: 100px;
+    height: 100px;
+    top: 170px;
+    left: 55px;
+  }
 }
 </style>

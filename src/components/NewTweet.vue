@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="new-tweet-container">
     <div class="title">首頁</div>
     <div class="user-area">
       <div class="avator-and-tweet">
@@ -153,10 +153,9 @@ textarea::placeholder {
 .contentAlert {
   line-height: 60px;
 }
-.container {
+.new-tweet-container {
   padding: 0;
-  /* width: 600px; */
-  border: 1px solid #e6ecf0;
+  /* border: 1px solid #e6ecf0; */
   border-bottom: 10px solid #e6ecf0;
 }
 

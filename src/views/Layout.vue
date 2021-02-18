@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-md">
     <div class="row">
       <div class="col-auto left-container left-area-rwd component-navbar">
         <Navbar @after-create-tweet="afterCreateTweet" />
@@ -55,4 +55,12 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (max-width: 992px) {
+  .left-container {
+    padding: 0 8px 0 8px;
+  }
+  .right-container {
+    display: none;
+  }
+}
 </style>
