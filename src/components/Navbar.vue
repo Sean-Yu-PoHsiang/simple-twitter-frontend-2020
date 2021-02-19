@@ -394,6 +394,7 @@ hr {
   height: 50px;
   border-radius: 25px;
   width: 200px;
+  padding: 0;
 }
 .btn-tweet-submit {
   color: white;
@@ -402,6 +403,7 @@ hr {
   height: 40px;
   border-radius: 20px;
   width: 64px;
+  padding: 0;
 }
 .btn-tweet:focus {
   border-color: transparent;

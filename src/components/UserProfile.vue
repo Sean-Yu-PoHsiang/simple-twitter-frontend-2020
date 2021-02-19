@@ -487,7 +487,7 @@ export default {
 .btn-tweet-submit {
   position: relative;
   top: -8px;
-
+  padding: 0;
   color: white;
   background: #ff6600;
   border-color: transparent;

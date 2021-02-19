@@ -654,6 +654,7 @@ textarea:focus {
   height: 40px;
   border-radius: 20px;
   width: 64px;
+  padding: 0;
 }
 img {
   width: 50px;
