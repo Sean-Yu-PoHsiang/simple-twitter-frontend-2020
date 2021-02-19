@@ -400,8 +400,7 @@ export default {
 
 /* 貼文內容 */
 .tweet-text {
-  margin: 0 75px 0 15px;
-
+  padding: 0 16px;
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: 500;
@@ -514,7 +513,6 @@ textarea:focus {
   background: #ff6600;
   z-index: 99;
   left: 42%;
-  /* transform: translate(-50%, -50%); */
 }
 .btn-cancel::before {
   transform: rotate(45deg);
@@ -571,7 +569,6 @@ img {
   color: #657786;
 }
 .tweet-text {
-  width: 95%;
   font-weight: normal;
   font-size: 15px;
   line-height: 22px;

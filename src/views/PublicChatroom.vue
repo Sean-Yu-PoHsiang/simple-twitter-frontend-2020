@@ -459,4 +459,9 @@ a {
     margin: 0;
   }
 }
+@media screen and (max-width: 576px) {
+  .message-input {
+    margin-left: 60px;
+  }
+}
 </style>
