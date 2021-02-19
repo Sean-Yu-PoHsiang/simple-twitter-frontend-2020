@@ -1,63 +1,90 @@
 <template>
-  <nav class="d-flex flex-column nav-wrapper">
-    <Logo class="mt-3 mb-5" />
-    <router-link to="/home" class="nav-btn d-flex fonSize18 align-items-center">
-      <div class="d-flex">
-        <IconHome class="nav-link-icon" />
-        <p class="nav-link-title">首頁</p>
-      </div>
-    </router-link>
+  <div>
+    <label class="mobile-navbar-folding-icon" for="navbar-folding-checkbox">
+      <i class="fas fa-bars"></i>
+    </label>
+    <input
+      class="navbar-folding-checkbox d-none"
+      id="navbar-folding-checkbox"
+      type="checkbox"
+    />
 
-    <router-link
-      :to="{ name: 'user', params: { userId: currentUser.id } }"
-      class="nav-btn d-flex fonSize18 align-items-center"
-    >
-      <div class="d-flex">
-        <IconUserProfile class="nav-link-icon" />
-        <p class="nav-link-title">個人資料</p>
+    <nav class="d-flex flex-column nav-wrapper">
+      <Logo class="mt-3 mb-5" />
+
+      <div @click="foldNavbar">
+        <router-link
+          to="/home"
+          class="nav-btn d-flex fonSize18 align-items-center"
+        >
+          <div class="d-flex">
+            <IconHome class="nav-link-icon" />
+            <p class="nav-link-title">首頁</p>
+          </div>
+        </router-link>
       </div>
-    </router-link>
-    <router-link
-      :to="{ name: 'public-chat-room' }"
-      class="nav-btn d-flex fonSize18 align-items-center"
-    >
-      <div class="d-flex navbar-item">
-        <i class="far fa-envelope text-larger nav-link-icon"></i>
-        <p class="nav-link-title">公開聊天室</p>
-        <div v-show="unread !== 0" class="public-chat-unread">
-          {{ unread | unreadOver }}
+
+      <div @click="foldNavbar">
+        <router-link
+          :to="{ name: 'user', params: { userId: currentUser.id } }"
+          class="nav-btn d-flex fonSize18 align-items-center"
+        >
+          <div class="d-flex">
+            <IconUserProfile class="nav-link-icon" />
+            <p class="nav-link-title">個人資料</p>
+          </div>
+        </router-link>
+      </div>
+
+      <div @click="foldNavbar">
+        <router-link
+          :to="{ name: 'public-chat-room' }"
+          class="nav-btn d-flex fonSize18 align-items-center"
+        >
+          <div class="d-flex navbar-item">
+            <i class="far fa-envelope text-larger nav-link-icon"></i>
+            <p class="nav-link-title">公開聊天室</p>
+            <div v-show="unread !== 0" class="public-chat-unread">
+              {{ unread | unreadOver }}
+            </div>
+          </div>
+        </router-link>
+      </div>
+
+      <div @click="foldNavbar">
+        <router-link
+          to="/setting"
+          class="nav-btn d-flex fonSize18 align-items-center"
+        >
+          <div class="d-flex">
+            <IconSetting class="nav-link-icon" />
+            <p class="nav-link-title">設定</p>
+          </div>
+        </router-link>
+      </div>
+
+      <div @click="foldNavbar">
+        <button
+          type="button"
+          class="btn-tweet"
+          data-toggle="modal"
+          data-target="#exampleModal"
+        >
+          <div>推文</div>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="btn sign-out-btn d-flex fonSize18 align-items-center"
+        @click="signOut"
+      >
+        <div class="d-flex nav-btn">
+          <IconSignOut class="nav-link-icon" />
+          <p class="nav-link-title">登出</p>
         </div>
-      </div>
-    </router-link>
-    <router-link
-      to="/setting"
-      class="nav-btn d-flex fonSize18 align-items-center"
-    >
-      <div class="d-flex">
-        <IconSetting class="nav-link-icon" />
-        <p class="nav-link-title">設定</p>
-      </div>
-    </router-link>
-
-    <button
-      type="button"
-      class="btn-tweet"
-      data-toggle="modal"
-      data-target="#exampleModal"
-    >
-      推文
-    </button>
-
-    <button
-      type="button"
-      class="btn sign-out-btn d-flex fonSize18 align-items-center"
-      @click="signOut"
-    >
-      <div class="d-flex nav-btn">
-        <IconSignOut class="nav-link-icon" />
-        <p class="nav-link-title">登出</p>
-      </div>
-    </button>
+      </button>
+    </nav>
 
     <!-- Modal -->
     <div
@@ -120,7 +147,7 @@
         </div>
       </div>
     </div>
-  </nav>
+  </div>
 </template>
 
 <script>
@@ -265,6 +292,10 @@ export default {
           title: "無法取得公開聊天室未讀數量，請稍後再試",
         })
       }
+    },
+    foldNavbar() {
+      const navbarFolder = document.getElementById('navbar-folding-checkbox')
+      navbarFolder.checked = false
     }
   },
   mixins: [emptyImageFilter],
@@ -277,6 +308,9 @@ export default {
 </script>
 
 <style scoped>
+.mobile-navbar-folding-icon {
+  display: none;
+}
 .nav-link-icon {
   margin-right: 16px;
 }
@@ -414,7 +448,7 @@ textarea:focus {
   width: 4px;
   border-radius: 2px;
   background: #ff6600;
-  z-index: 99;
+  z-index: 10;
   left: 42%;
 }
 .btn-cancel::before {
@@ -462,6 +496,45 @@ img {
   }
   .nav-wrapper {
     align-items: center;
+  }
+}
+@media screen and (max-width: 576px) {
+  .mobile-navbar-folding-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 99;
+    bottom: 6px;
+    left: 6px;
+    font-size: 30px;
+    color: white;
+    background: #ff6600;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+  }
+  label {
+    margin: 0;
+  }
+  .nav-wrapper {
+    padding: 0 8px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    background: white;
+    box-shadow: 0px 0px 10px 0px #333333;
+    transform: scale(0, 1);
+    transform-origin: left;
+    transition: transform 0.2s ease-in-out;
+  }
+  .navbar-folding-checkbox:checked ~ .nav-wrapper {
+    transform: scale(1, 1);
+    transition: transform 0.2s ease-in-out;
+  }
+  .sign-out-btn {
+    margin: 50px 0 17px 0;
   }
 }
 </style>

@@ -55,12 +55,31 @@ export default {
 </script>
 
 <style scoped>
+.container-md {
+  height: 100vh;
+}
+.row {
+  height: 100%;
+}
 @media screen and (max-width: 992px) {
   .left-container {
     padding: 0 8px 0 8px;
   }
   .right-container {
     display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+  .main-area-rwd {
+    border-right: 0;
+  }
+}
+@media screen and (max-width: 576px) {
+  .left-container {
+    padding: 0;
+  }
+  .main-area-rwd {
+    border: 0;
   }
 }
 </style>
