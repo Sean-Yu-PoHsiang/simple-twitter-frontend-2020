@@ -35,7 +35,6 @@
           </div>
         </router-link>
       </div>
-
       <div @click="foldNavbar">
         <router-link
           :to="{ name: 'public-chat-room' }"
@@ -49,6 +48,26 @@
             </div>
           </div>
         </router-link>
+    </router-link>
+    <router-link
+      :to="{ name: 'private-chat-room' }"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
+      <div class="d-flex navbar-item">
+        <i class="far fa-envelope text-larger nav-link-icon"></i>
+        <p class="nav-link-title">私人聊天室</p>
+        <div v-show="unread !== 0" class="private-chat-unread">
+          {{ unread | unreadOver }}
+        </div>
+      </div>
+    </router-link>
+    <router-link
+      to="/setting"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
+      <div class="d-flex">
+        <IconSetting class="nav-link-icon" />
+        <p class="nav-link-title">設定</p>
       </div>
 
       <div @click="foldNavbar">
