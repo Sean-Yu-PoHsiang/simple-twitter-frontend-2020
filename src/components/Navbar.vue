@@ -30,6 +30,18 @@
       </div>
     </router-link>
     <router-link
+      :to="{ name: 'private-chat-room' }"
+      class="nav-btn d-flex fonSize18 align-items-center"
+    >
+      <div class="d-flex navbar-item">
+        <i class="far fa-envelope text-larger nav-link-icon"></i>
+        <p class="nav-link-title">私人聊天室</p>
+        <div v-show="unread !== 0" class="private-chat-unread">
+          {{ unread | unreadOver }}
+        </div>
+      </div>
+    </router-link>
+    <router-link
       to="/setting"
       class="nav-btn d-flex fonSize18 align-items-center"
     >
