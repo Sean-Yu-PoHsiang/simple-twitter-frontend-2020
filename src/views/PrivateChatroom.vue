@@ -10,20 +10,20 @@
         <div
           class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center"
         >
-          <h1 class="title">上線使用者({{ onlineUsers.length || 0 }})</h1>
+          <h1 class="title">訊息</h1>
         </div>
         <div class="online-user-list">
           <div
-            v-for="onlineUser in onlineUsers"
-            :key="onlineUser.id"
+            v-for="privateChatRoom in privateChatRooms"
+            :key="privateChatRoom.channelId"
             class="user-panel"
           >
             <!-- 上線使用者 -->
             <div class="d-flex align-items-center connected-user p-2">
-              <img class="user-avatar mr-2" :src="onlineUser.avatar" alt="" />
+              <img class="user-avatar mr-2" :src="privateChatRoom.chatTo.avatar" alt="" />
               <span>
-                <strong class="mr-2">{{ onlineUser.name }}</strong>
-                <span class="text-gray">@{{ onlineUser.account }}</span>
+                <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
+                <span class="text-gray">@{{ privateChatRoom.chatTo.account }}</span>
               </span>
             </div>
           </div>
@@ -32,7 +32,7 @@
 
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
-          <h1 class="title">公開聊天室</h1>
+          <h1 class="title">私人聊天室</h1>
           <label for="folding-online-user"
             ><i class="fas fa-list-ul"></i
           ></label>
@@ -153,11 +153,13 @@ export default {
       newMessage: '',
       scrollModel: '',
       scrollPosition: 0,
-      scrollToBottom: true
+      scrollToBottom: true,
+
+      privateChatRooms:[]
     }
   },
   created() {
-    this.fetchPublicChatRoomHistory()
+    this.fetchAllPrivateChatRooms()
   },
   mounted() {
     this.fetchOnlineUsers()
@@ -212,17 +214,17 @@ export default {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
     },
-    async fetchPublicChatRoomHistory() {
+    async fetchAllPrivateChatRooms() {
       try {
-        const response = await chatRoomAPI.getPublicChatRoomHistory({ userId: this.currentUser.id })
+        const response = await chatRoomAPI.getAllPrivateChatRooms()
 
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
 
-        this.messages = response.data
-        this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
-        this.$store.commit("enterPublicChatRoom")
+        this.privateChatRooms = response.data
+        // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
+        // this.$store.commit("enterPublicChatRoom")
 
       } catch (error) {
         console.log(error)

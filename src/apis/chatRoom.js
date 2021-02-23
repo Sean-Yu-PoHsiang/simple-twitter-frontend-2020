@@ -17,4 +17,9 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getAllPrivateChatRooms() {
+    return apiHelper.get('/chat/all_private_rooms', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  }
 }
