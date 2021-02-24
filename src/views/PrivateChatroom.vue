@@ -8,9 +8,11 @@
       />
       <div class="col-auto no-gutters center-column p-0 online-user-box">
         <div
-          class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center"
-        >
-          <h1 class="title">訊息</h1>
+          class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center justify-content-between">
+          <h1 class="title">私人聊天室 ({{privateChatRooms.length}}) </h1>
+          <div class="envelope-icon-set">
+            <i class="far fa-envelope text-larger nav-link-icon"></i>
+          </div>
         </div>
         <div class="online-user-list">
           <div
@@ -32,7 +34,7 @@
 
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
-          <h1 class="title">私人聊天室</h1>
+          <h1 class="title message-receiver">User2</h1>
           <label for="folding-online-user"
             ><i class="fas fa-list-ul"></i
           ></label>
@@ -260,6 +262,35 @@ export default {
 </script>
 
 <style scoped>
+.fa-envelope{
+ font-size: 24px;
+ position:relative;
+}
+.fa-envelope:after {
+  content:'+';
+  width:12px;
+  height:12px;
+  padding:0px;
+  margin:0px;
+  position:absolute;
+  top: -12px;
+  right: -9px;
+}
+.envelope-icon-set{
+ width:40px;
+ height:40px;
+ border-radius:50px;
+ text-align:center;
+ line-height:50px;
+}
+.envelope-icon-set:hover{
+ background: #eeeeee;
+ width:40px;
+ height:40px;
+ text-align:center;
+ line-height:45px;
+}
+
 label {
   display: none;
 }
@@ -304,11 +335,12 @@ label {
   width: 300px;
   height: 100vh;
 }
-.title-wrapper {
+.title-wrapper{
   border-bottom: 1px solid #e6ecf0;
   height: 55px;
 }
-.title {
+.title,
+.message-receiver {
   color: #1c1c1c;
   font-size: 18px;
   font-weight: 700;

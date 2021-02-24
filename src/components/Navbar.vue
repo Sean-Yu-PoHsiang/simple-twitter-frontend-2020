@@ -40,7 +40,7 @@
           :to="{ name: 'public-chat-room' }"
           class="nav-btn d-flex fonSize18 align-items-center">
           <div class="d-flex navbar-item">
-            <i class="far fa-envelope text-larger nav-link-icon"></i>
+            <i class="far fa-comments nav-link-icon"></i>
             <p class="nav-link-title">公開聊天室</p>
             <div v-show="unread !== 0" class="public-chat-unread">
               {{ unread | unreadOver }}
@@ -325,7 +325,8 @@ export default {
 .nav-link-icon {
   margin-right: 16px;
 }
-.fa-envelope {
+.fa-envelope,
+.fa-comments {
   font-size: 24px;
 }
 .public-chat-unread {
