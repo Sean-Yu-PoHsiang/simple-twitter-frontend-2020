@@ -21,5 +21,13 @@ export default {
     return apiHelper.get('/chat/all_private_rooms', {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  }
+  },
+  getPrivateChatRoomHistory({ channelId, userId }) {
+    return apiHelper.post('/chat/messages', {
+      channelId,
+      userId
+    }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
 }

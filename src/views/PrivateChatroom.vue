@@ -18,6 +18,7 @@
           <div
             v-for="privateChatRoom in privateChatRooms"
             :key="privateChatRoom.channelId"
+            @click="privateChatRoomOnClick(privateChatRoom)"
             class="user-panel"
           >
             <!-- 上線使用者 -->
@@ -34,7 +35,7 @@
 
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
-          <h1 class="title message-receiver">User2</h1>
+          <h1 class="title message-receiver">{{chatToUser.name}}</h1>
           <label for="folding-online-user"
             ><i class="fas fa-list-ul"></i
           ></label>
@@ -151,13 +152,15 @@ export default {
   data() {
     return {
       onlineUsers: [],
-      messages: [],
       newMessage: '',
       scrollModel: '',
       scrollPosition: 0,
       scrollToBottom: true,
 
-      privateChatRooms:[]
+      privateChatRooms: [],
+      currentChatRoom: [],
+      chatToUser: [],
+      messages: [],
     }
   },
   created() {
@@ -212,6 +215,7 @@ export default {
       }
     }
   },
+
   methods: {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
@@ -223,8 +227,35 @@ export default {
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
-
         this.privateChatRooms = response.data
+        this.currentChatRoom = response.data[0]
+        this.chatToUser =  response.data[0].chatTo
+
+        // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
+        // this.$store.commit("enterPublicChatRoom")
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法取得上線使用者資訊，請稍後再試",
+        })
+      }
+      this.fetchPrivateChatRoomHistory()
+    },
+    async fetchPrivateChatRoomHistory() {
+      try {
+        const response = await chatRoomAPI.getPrivateChatRoomHistory({ 
+          channelId:this.currentChatRoom.channelId,
+          userId: this.currentUser.id 
+        })
+
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+
+        this.messages = response.data
+
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
 
@@ -237,17 +268,22 @@ export default {
       }
     },
     async sendMessage() {
-      if (this.newMessage.trim().length === 0) { return }
-      await this.$socket.emit('public-message', {
-        account: this.currentUser.account,
-        avatar: this.currentUser.avatar,
-        UserId: this.currentUser.id,
-        name: this.currentUser.name,
-        message: this.newMessage,
-        time: Date.now()
-      })
-      this.newMessage = ''
-      this.scrollToBottom = true
+        if (this.newMessage.trim().length === 0) { return }
+        await this.$socket.emit('public-message', {
+          account: this.currentUser.account,
+          avatar: this.currentUser.avatar,
+          UserId: this.currentUser.id,
+          name: this.currentUser.name,
+          message: this.newMessage,
+          time: Date.now()
+        })
+        this.newMessage = ''
+        this.scrollToBottom = true
+    },
+    privateChatRoomOnClick(target){
+      this.currentChatRoom = target
+      this.chatToUser = target.chatTo
+      this.fetchPrivateChatRoomHistory()
     },
     isToBelow() {
       this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
