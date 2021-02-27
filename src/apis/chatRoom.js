@@ -30,4 +30,9 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getAllUsers() {
+    return apiHelper.get(`/users?accumulatedNum=all`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  }
 }

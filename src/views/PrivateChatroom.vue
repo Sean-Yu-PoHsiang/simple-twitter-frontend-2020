@@ -1,19 +1,57 @@
 <template>
   <div class="col chat-room-wrapper">
     <div class="row">
+      <!-- 聊天室/用戶列表區 -->
       <input
-        class="folding-online-user d-none"
-        id="folding-online-user"
+        class="folding-chat-users d-none"
+        id="folding-chat-users"
         type="checkbox"
       />
       <div class="col-auto no-gutters center-column p-0 online-user-box">
         <div
           class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center justify-content-between">
           <h1 class="title">私人聊天室 ({{privateChatRooms.length}}) </h1>
-          <div class="envelope-icon-set">
-            <i class="far fa-envelope text-larger nav-link-icon"></i>
+          <!-- 信封按鈕，點擊顯示所有用戶清單 -->
+          <label for="chat-room-user-toggle">
+            <div class="envelope-icon-set">
+              <i class="far fa-envelope text-larger nav-link-icon"></i>
+            </div>
+          </label>
+          <input type="checkbox" id="chat-room-user-toggle" class="d-none">
+         <!-- 所有用戶清單 -->
+          <div class="chat-room-user-list-wrapper">
+            <div
+              class="title-wrapper px-3 d-flex align-items-center justify-content-between">
+              <h1 class="title">聊天室用戶 ({{allUsers.length}}) </h1>
+              <div>
+                <i class="fas fa-search search-icon"></i> 
+                <label for="chat-room-user-toggle" class="cancel-icon-set small-screen-use">
+                  <div class="cancel-icon">
+                    <i class="fas fa-times"></i>
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div class="chat-room-user-list">
+              <div
+                v-for="allUser in allUsers"
+                :key="allUser.id"
+                class="user-panel" 
+              >
+                <!-- 渲染所有用戶 -->
+                <div class="d-flex align-items-center connected-user p-2">
+                  <img class="user-avatar mr-2" :src="allUser.avatar" alt="" />
+                  <span>
+                    <strong class="mr-2">{{ allUser.name }}</strong>
+                    <span class="text-gray">@{{ allUser.account }}</span>
+                    <div class="text-gray followedStatus">{{ allUser.isFollowed | followedStatus }}</div>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        <!-- 使用者已開的私人聊天室 -->
         <div class="online-user-list">
           <div
             v-for="privateChatRoom in privateChatRooms"
@@ -21,7 +59,7 @@
             @click="privateChatRoomOnClick(privateChatRoom)"
             class="user-panel"
           >
-            <!-- 上線使用者 -->
+            <!-- 渲染已開的私人聊天室 -->
             <div class="d-flex align-items-center connected-user p-2">
               <img class="user-avatar mr-2" :src="privateChatRoom.chatTo.avatar" alt="" />
               <span>
@@ -32,11 +70,11 @@
           </div>
         </div>
       </div>
-
+      <!-- 聊天室對話區 -->
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
           <h1 class="title message-receiver">{{chatToUser.name}}</h1>
-          <label for="folding-online-user"
+          <label for="folding-chat-users" class="chat-users-toggle"
             ><i class="fas fa-list-ul"></i
           ></label>
         </div>
@@ -161,10 +199,12 @@ export default {
       currentChatRoom: [],
       chatToUser: [],
       messages: [],
+      allUsers:[]
     }
   },
   created() {
     this.fetchAllPrivateChatRooms()
+    this.fetchAllUsers()
   },
   mounted() {
     this.fetchOnlineUsers()
@@ -215,7 +255,13 @@ export default {
       }
     }
   },
-
+  filters:{
+    followedStatus(isFollowed){
+      if (isFollowed === true) {
+        return "已追隨"
+      }
+    }
+  },
   methods: {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
@@ -242,6 +288,19 @@ export default {
         })
       }
       this.fetchPrivateChatRoomHistory()
+    },
+    async fetchAllUsers(){
+      try {
+        const response = await chatRoomAPI.getAllUsers()
+        this.allUsers = response.data
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon:"error",
+          title:"無法取得用戶資訊，請稍後再試"
+        })
+      }
     },
     async fetchPrivateChatRoomHistory() {
       try {
@@ -298,9 +357,10 @@ export default {
 </script>
 
 <style scoped>
+/* envelope-icon area */
 .fa-envelope{
- font-size: 24px;
- position:relative;
+  font-size: 24px;
+  position:relative;
 }
 .fa-envelope:after {
   content:'+';
@@ -312,24 +372,73 @@ export default {
   top: -12px;
   right: -9px;
 }
-.envelope-icon-set{
- width:40px;
- height:40px;
- border-radius:50px;
- text-align:center;
- line-height:50px;
+.envelope-icon-set,
+.cancel-icon-set{
+  width:40px;
+  height:40px;
+  border-radius:50px;
+  text-align:center;
+  line-height:40px;
+  margin-top:10px;
 }
-.envelope-icon-set:hover{
- background: #eeeeee;
- width:40px;
- height:40px;
- text-align:center;
- line-height:45px;
+.envelope-icon-set:hover,
+.cancel-icon-set:hover {
+  cursor:pointer;
+  background: #ff6600;
+  color:#ffffff;
+  width:40px;
+  height:40px;
+  text-align:center;
 }
-
-label {
+.cancel-icon-set{
+  font-size:20px;
+}
+#chat-room-user-toggle:checked ~ .chat-room-user-list-wrapper {
+  transform: scale(1, 1);
+  transition: transform 0.2s ease-out;
+  transform-origin:left;
+}
+.chat-users-toggle {
   display: none;
 }
+/* clicked envelope-icon-set will show this part */
+/* user list for new chat room */
+.chat-room-user-list-wrapper {
+  transform: scale(0, 1);
+  transition: transform 0.2s ease-out;
+  transform-origin:left;
+  width:290px;
+  position:absolute;
+  top:0px;
+  right:-290px;
+  background: #ffffff;
+  z-index:10;
+  border-right:1px solid #e6ecf0;
+  border-left:1px solid #e6ecf0;
+  box-shadow: 10px 10px 10px -10px #666666;
+}
+.chat-room-user-list {
+  height: calc(100vh - 100px - 61px);
+  overflow:scroll;
+}
+.followedStatus {
+  font-size:14px;
+}
+
+.search-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  text-align:center;
+  line-height:45px;
+}
+.search-icon:hover {
+  cursor:pointer;
+  background: #ff6600;
+  color:#ffffff;
+}
+
+/* main */
 .main-panel {
   position: relative;
 }
@@ -374,6 +483,9 @@ label {
 .title-wrapper{
   border-bottom: 1px solid #e6ecf0;
   height: 55px;
+}
+.user-panel {
+  cursor:pointer;
 }
 .title,
 .message-receiver {
@@ -484,6 +596,8 @@ a {
 .chat-room-wrapper {
   margin: 0 15px;
 }
+
+
 @media screen and (max-width: 992px) {
   .online-user-box {
     transform: scale(0, 1);
@@ -507,21 +621,34 @@ a {
   .online-user-title-wrapper {
     justify-content: flex-end;
   }
-  label {
+  .chat-users-toggle {
     font-size: 21px;
     display: block;
     margin: 0;
     margin-left: 10px;
     padding: 0 6px;
   }
-  label:hover {
+  .chat-users-toggle:hover {
     background: #ff6600;
     border-radius: 6px;
     cursor: pointer;
   }
-  .folding-online-user:checked ~ .online-user-box {
+  .folding-chat-users:checked ~ .online-user-box {
     transform: scale(1, 1);
     transition: transform 0.2s ease-out;
+  }
+  #chat-room-user-toggle:checked ~ .chat-room-user-list-wrapper {
+  transform: scale(1, 1);
+  transform-origin:right;
+  }
+  .chat-room-user-list-wrapper {
+    transform: scale(0, 1);
+    transform-origin:right;
+    top:0px;
+    right:0px;
+  }
+  .chat-room-user-list-wrapper{
+    box-shadow: -10px 10px 10px -10px #666666;
   }
 }
 @media screen and (max-width: 768px) {
