@@ -22,16 +22,16 @@
           <div class="chat-room-user-list-wrapper">
             <div
               class="title-wrapper px-3 d-flex align-items-center justify-content-between">
-              <h1 class="title" 
-              :class="{noshow: searching === true }"
-              >聊天室用戶 ({{allUsers.length}}) </h1>
-              <input type="text" 
-              :class="{noshow: searching === false }"
-              class="search-user-input border-0 rounded-pill bg-gray form-control"
-              id="search-user-input">
-              <label for="search-user-input"></label>
+              <form class="search-form" action="" @submit.prevent="searchUsersByLetter">
+                <input type="text" 
+                v-model="searchKeywords"
+                class="search-user-input border-0 rounded-pill bg-gray form-control"
+                placeholder="輸入用戶名..."
+                id="search-user-input">
+                <label for="search-user-input"></label>
+              </form>
               <div>
-                <i class="fas fa-search search-icon"></i> 
+                <i class="fas fa-search search-icon" @click="searchUsersByLetter"></i> 
                 <label for="chat-room-user-toggle" class="cancel-icon-set small-screen-use">
                   <div class="cancel-icon">
                     <i class="fas fa-times"></i>
@@ -41,17 +41,17 @@
             </div>
             <div class="chat-room-user-list">
               <div
-                v-for="allUser in allUsers"
-                :key="allUser.id"
+                v-for="renderUser in renderUsers"
+                :key="renderUser.id"
                 class="user-panel" 
               >
                 <!-- 渲染所有用戶 -->
                 <div class="d-flex align-items-center connected-user p-2">
-                  <img class="user-avatar mr-2" :src="allUser.avatar" alt="" />
+                  <img class="user-avatar mr-2" :src="renderUser.avatar" alt="" />
                   <span>
-                    <strong class="mr-2">{{ allUser.name }}</strong>
-                    <span class="text-gray">@{{ allUser.account }}</span>
-                    <div class="text-gray followedStatus">{{ allUser.isFollowed | followedStatus }}</div>
+                    <strong class="mr-2">{{ renderUser.name }}</strong>
+                    <span class="text-gray">@{{ renderUser.account }}</span>
+                    <div class="text-gray followedStatus">{{ renderUser.isFollowed | followedStatus }}</div>
                   </span>
                 </div>
               </div>
@@ -207,7 +207,9 @@ export default {
       chatToUser: [],
       messages: [],
       allUsers: [],
-      searching: true,
+      renderUsers:[],
+      fillterUsers:[],
+      searchKeywords:'',
     }
   },
   created() {
@@ -227,7 +229,7 @@ export default {
     this.$store.commit("leavePublicChatRoom")
   },
   computed: {
-    ...mapState(["currentUser", "isInPublicChatRoom"])
+    ...mapState(["currentUser", "isInPublicChatRoom"]),
   },
   sockets: {
     'init-public': function (onlineUsers) {
@@ -301,6 +303,7 @@ export default {
       try {
         const response = await chatRoomAPI.getAllUsers()
         this.allUsers = response.data
+        this.renderUsers = response.data
 
       } catch (error) {
         console.log(error)
@@ -351,6 +354,26 @@ export default {
       this.currentChatRoom = target
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
+    },
+    searchIconOnClick(){
+      if (this.searching === false){
+        return this.searching = true
+      } else {
+        return this.searching = false
+      }
+    },
+    searchUsersByLetter(){
+      if (this.searchKeywords.trim() === '' ){
+        this.renderUsers = this.allUsers
+        return
+      }else {
+        this.fillterUsers = this.allUsers.filter((user)=>{
+          return user.name.toLowerCase().includes(this.searchKeywords)
+        })
+        console.log('fillterUsers:',this.fillterUsers)
+        this.renderUsers =  this.fillterUsers
+      }
+
     },
     isToBelow() {
       this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
@@ -432,7 +455,11 @@ export default {
 .followedStatus {
   font-size:14px;
 }
-
+.search-form{
+  line-height:45px;
+  display:flex;
+  align-items:center;
+}
 .search-icon{
   width:40px;
   height:40px;
@@ -453,9 +480,7 @@ export default {
   outline: none;
   box-shadow: none;
 }
-.noshow {
-  display: none;
-}
+
 
 /* main */
 .main-panel {
