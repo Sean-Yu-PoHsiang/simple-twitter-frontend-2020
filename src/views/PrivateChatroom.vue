@@ -22,7 +22,14 @@
           <div class="chat-room-user-list-wrapper">
             <div
               class="title-wrapper px-3 d-flex align-items-center justify-content-between">
-              <h1 class="title">聊天室用戶 ({{allUsers.length}}) </h1>
+              <h1 class="title" 
+              :class="{noshow: searching === true }"
+              >聊天室用戶 ({{allUsers.length}}) </h1>
+              <input type="text" 
+              :class="{noshow: searching === false }"
+              class="search-user-input border-0 rounded-pill bg-gray form-control"
+              id="search-user-input">
+              <label for="search-user-input"></label>
               <div>
                 <i class="fas fa-search search-icon"></i> 
                 <label for="chat-room-user-toggle" class="cancel-icon-set small-screen-use">
@@ -199,7 +206,8 @@ export default {
       currentChatRoom: [],
       chatToUser: [],
       messages: [],
-      allUsers:[]
+      allUsers: [],
+      searching: true,
     }
   },
   created() {
@@ -436,6 +444,17 @@ export default {
   cursor:pointer;
   background: #ff6600;
   color:#ffffff;
+}
+.search-user-input{
+  width: 170px;
+}
+.search-user-input:focus{
+  background: #e6ecf0;
+  outline: none;
+  box-shadow: none;
+}
+.noshow {
+  display: none;
 }
 
 /* main */
