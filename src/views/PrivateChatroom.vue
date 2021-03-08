@@ -18,30 +18,27 @@
             </div>
           </label>
           <input type="checkbox" id="chat-room-user-toggle" class="d-none">
-         <!-- 所有用戶清單 -->
+         <!-- 搜尋用，所有用戶清單 -->
           <div class="chat-room-user-list-wrapper">
             <div
               class="title-wrapper px-3 d-flex align-items-center justify-content-between">
-              <form class="search-form" action="" @submit.prevent="searchUsersByLetter">
+              <form class="search-form" action="" @submit.prevent>
                 <input type="text" 
                 v-model="searchKeywords"
                 class="search-user-input border-0 rounded-pill bg-gray form-control"
-                placeholder="輸入用戶名..."
+                placeholder="輸入用戶名搜尋..."
                 id="search-user-input">
                 <label for="search-user-input"></label>
               </form>
-              <div>
-                <i class="fas fa-search search-icon" @click="searchUsersByLetter"></i> 
-                <label for="chat-room-user-toggle" class="cancel-icon-set small-screen-use">
-                  <div class="cancel-icon">
-                    <i class="fas fa-times"></i>
-                  </div>
-                </label>
-              </div>
+              <label for="chat-room-user-toggle">
+                <div class="cancel-icon">
+                  <i class="fas fa-times"></i>
+                </div>
+              </label>
             </div>
             <div class="chat-room-user-list">
               <div
-                v-for="renderUser in renderUsers"
+                v-for="renderUser in fillterUsers"
                 :key="renderUser.id"
                 class="user-panel" 
               >
@@ -207,8 +204,6 @@ export default {
       chatToUser: [],
       messages: [],
       allUsers: [],
-      renderUsers:[],
-      fillterUsers:[],
       searchKeywords:'',
     }
   },
@@ -229,6 +224,11 @@ export default {
     this.$store.commit("leavePublicChatRoom")
   },
   computed: {
+    fillterUsers(){
+      return this.searchKeywords.trim().length === 0 ? this.allUsers : this.allUsers.filter((user)=>{
+          return user.name.toLowerCase().includes(this.searchKeywords.toLowerCase().trim())
+      })
+    },
     ...mapState(["currentUser", "isInPublicChatRoom"]),
   },
   sockets: {
@@ -303,7 +303,6 @@ export default {
       try {
         const response = await chatRoomAPI.getAllUsers()
         this.allUsers = response.data
-        this.renderUsers = response.data
 
       } catch (error) {
         console.log(error)
@@ -355,26 +354,6 @@ export default {
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
     },
-    searchIconOnClick(){
-      if (this.searching === false){
-        return this.searching = true
-      } else {
-        return this.searching = false
-      }
-    },
-    searchUsersByLetter(){
-      if (this.searchKeywords.trim() === '' ){
-        this.renderUsers = this.allUsers
-        return
-      }else {
-        this.fillterUsers = this.allUsers.filter((user)=>{
-          return user.name.toLowerCase().includes(this.searchKeywords)
-        })
-        console.log('fillterUsers:',this.fillterUsers)
-        this.renderUsers =  this.fillterUsers
-      }
-
-    },
     isToBelow() {
       this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
       if (this.scrollPosition < this.scrollModel.scrollHeight) {
@@ -404,7 +383,7 @@ export default {
   right: -9px;
 }
 .envelope-icon-set,
-.cancel-icon-set{
+.cancel-icon{
   width:40px;
   height:40px;
   border-radius:50px;
@@ -413,15 +392,15 @@ export default {
   margin-top:10px;
 }
 .envelope-icon-set:hover,
-.cancel-icon-set:hover {
+.cancel-icon:hover {
   cursor:pointer;
   background: #ff6600;
   color:#ffffff;
   width:40px;
-  height:40px;
+  /* height:40px; */
   text-align:center;
 }
-.cancel-icon-set{
+.cancel-icon{
   font-size:20px;
 }
 #chat-room-user-toggle:checked ~ .chat-room-user-list-wrapper {
@@ -460,20 +439,8 @@ export default {
   display:flex;
   align-items:center;
 }
-.search-icon{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  text-align:center;
-  line-height:45px;
-}
-.search-icon:hover {
-  cursor:pointer;
-  background: #ff6600;
-  color:#ffffff;
-}
 .search-user-input{
-  width: 170px;
+  width: 210px;
 }
 .search-user-input:focus{
   background: #e6ecf0;
