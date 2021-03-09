@@ -41,6 +41,7 @@
                 v-for="renderUser in fillterUsers"
                 :key="renderUser.id"
                 class="user-panel" 
+                @click="addNewPrivateChatRoom(renderUser)"
               >
                 <!-- 渲染所有用戶 -->
                 <div class="d-flex align-items-center connected-user p-2">
@@ -289,7 +290,6 @@ export default {
 
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
-
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -353,6 +353,42 @@ export default {
       this.currentChatRoom = target
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
+    },
+    addNewPrivateChatRoom(user){
+      //確認user是否開過聊天室
+      const historyChatRoom = this.privateChatRooms.some((room)=>{
+        return user.id === room.chatTo.userId
+      })
+      //若被點user聊天室已存在，不做任何事
+      if(historyChatRoom === true){
+        return
+      }
+      //把user資料存成新聊天室資料
+      const data = {
+        channelId: -1,
+        chatTo: {
+          account: user.account,
+          avatar: user.avatar,
+          name: user.name,
+          userId: user.id
+        },
+      }
+      //整理渲染聊天室需要的資料
+      this.currentChatRoom = data
+      this.fetchPrivateChatRoomHistory()
+      this.privateChatRoomOnClick(data)
+
+      //若聊天室channelId為-1的存在，把舊的-1的聊天室去掉，用新的取代
+      //channelId:-1表示尚未對話的聊天室
+      //維持channelId:-1 只有一個，避免v-for渲染聊天室時，重複的id會報錯
+      if (this.privateChatRooms[0].channelId === -1){
+        this.privateChatRooms.shift()
+        this.privateChatRooms.unshift(data)
+        return
+      } else {
+        this.privateChatRooms.unshift(data)
+        return
+      }
     },
     isToBelow() {
       this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
