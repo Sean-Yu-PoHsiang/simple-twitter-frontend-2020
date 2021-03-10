@@ -86,7 +86,7 @@
         <div @scroll="isToBelow" class="message-board" id="message-board">
           <div
             class="message-box"
-            v-for="message in messages"
+            v-for="message in privateMessages"
             :key="message.id"
           >
             <!-- 自己發的訊息 -->
@@ -172,8 +172,8 @@
             autocomplete="off"
           />
           <button
-            @click="sendMessage"
-            @keyup.enter="sendMessage"
+            @click="sendPrivateMessage"
+            @keyup.enter="sendPrivateMessage"
             class="btn send-message-btn"
           >
             <i class="fas fa-location-arrow"></i>
@@ -203,7 +203,7 @@ export default {
       privateChatRooms: [],
       currentChatRoom: [],
       chatToUser: [],
-      messages: [],
+      privateMessages: [],
       allUsers: [],
       searchKeywords:'',
     }
@@ -230,18 +230,30 @@ export default {
           return user.name.toLowerCase().includes(this.searchKeywords.toLowerCase().trim())
       })
     },
-    ...mapState(["currentUser", "isInPublicChatRoom"]),
+    ...mapState(["currentUser", "isInPublicChatRoom","isInPrivateChatRoom"]),
   },
   sockets: {
     'init-public': function (onlineUsers) {
       this.onlineUsers = onlineUsers
     },
-    'public-message': function (message) {
-      message.id = uuidv4()
-      message.UserId = message.userId
-      this.messages.push(message)
-      this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
+    'private-message': function (privateMessage) {
+      console.log('message>>>>',privateMessage)
+      console.log('message>>>>',privateMessage)
+
+      // console.log('message.channelId[0].id',typeof message.channelId[0].id)
+      // console.log('message.channelId[0].id',message.channelId[0].id)
+      // console.log('currentChatRoom>>',this.currentChatRoom)
+      // message.channelId[0].id = 1
+      // this.currentChatRoom.channelId = message.channelId[0].id 
+      privateMessage.id = uuidv4()
+      privateMessage.UserId = privateMessage.userId
+      this.privateMessages.push(privateMessage)
+      // this.$socket.emit('message-read-timestamp', { channelId: 1, time: Date.now() })
     },
+    // 'private-update-channelId': function (backSend){
+    //   console.log(backSends)
+
+    // },
     'user-on-off-line': function (userOnOff) {
       if (userOnOff.id === this.currentUser.id) {
         return
@@ -260,7 +272,7 @@ export default {
         id: userOnOff.id,
         name: userOnOff.name
       }
-      this.messages.push(userStasus)
+      this.privateMessages.push(userStasus)
       if (nowOnlineUser.status === 'on') {
         this.onlineUsers.push(nowOnlineUser)
       }
@@ -275,7 +287,7 @@ export default {
   },
   methods: {
     fetchOnlineUsers() {
-      this.$socket.emit('init-public', Date.now())
+      // this.$socket.emit('init-public', Date.now())
     },
     async fetchAllPrivateChatRooms() {
       try {
@@ -323,7 +335,7 @@ export default {
           throw new Error(response.statusText)
         }
 
-        this.messages = response.data
+        this.privateMessages = response.data
 
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
@@ -336,16 +348,44 @@ export default {
         })
       }
     },
-    async sendMessage() {
+    async sendPrivateMessage() {
         if (this.newMessage.trim().length === 0) { return }
-        await this.$socket.emit('public-message', {
-          account: this.currentUser.account,
-          avatar: this.currentUser.avatar,
-          UserId: this.currentUser.id,
-          name: this.currentUser.name,
+
+        console.log('this.newMessage',this.newMessage)
+        console.log('this.currentChatRoom',this.currentChatRoom)
+
+        // console.log('fakeData>>>',{
+        //   message: this.newMessage,
+        //   time: Date.now(),
+        //   channelId: 1,
+        //   receiverId: this.currentChatRoom.chatTo.userId,
+        //   receiverName: this.currentChatRoom.chatTo.name,
+        // })
+
+        await this.$socket.emit('private-message', {
           message: this.newMessage,
-          time: Date.now()
+          time: Date.now(),
+          channelId: 1,
+          // receiverId: this.currentChatRoom.chatTo.userId,
+          // receiverName: this.currentChatRoom.chatTo.name,
         })
+
+        console.log('sendPrivateMessage finish')
+
+
+        // await this.$socket.emit('private-message', {
+        //   message: this.newMessage,
+        //   time: Date.now(),
+        //   channelId: 1,
+        //   receiverId: this.currentChatRoom.chatTo.userId,
+        //   receiverName: this.currentChatRoom.chatTo.name,
+
+        //   // account: this.currentUser.account,
+        //   // avatar: this.currentUser.avatar,
+        //   // UserId: this.currentUser.id,
+        //   // name: this.currentUser.name,
+        // })
+
         this.newMessage = ''
         this.scrollToBottom = true
     },

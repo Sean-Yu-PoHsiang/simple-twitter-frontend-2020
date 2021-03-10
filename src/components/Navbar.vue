@@ -219,7 +219,7 @@ export default {
     // console.log('>>>>>>>>> navbar destroyed')
   },
   computed: {
-    ...mapState(["currentUser", "isAuthenticated", "isInPublicChatRoom"]),
+    ...mapState(["currentUser", "isAuthenticated", "isInPublicChatRoom","isInPrivateChatRoom"]),
     isDescriptionOverSize() {
       return this.description.length > 140 ? true : false
     },
