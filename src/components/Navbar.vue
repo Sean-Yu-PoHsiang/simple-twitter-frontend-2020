@@ -12,6 +12,21 @@
     <nav class="d-flex flex-column nav-wrapper">
       <Logo class="mt-3 mb-5" />
 
+      <div>
+        <div class="nav-btn d-flex fonSize18 align-items-center">
+          <div class="d-flex align-items-center">
+            <div>
+              <img
+                class="navbar-avatar"
+                :src="currentUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
+                alt=""
+              />
+            </div>
+            <p class="nav-link-title m-0">Hi~ {{ currentUser.name }}</p>
+          </div>
+        </div>
+      </div>
+
       <div @click="foldNavbar">
         <router-link
           to="/home"
@@ -38,7 +53,8 @@
       <div @click="foldNavbar">
         <router-link
           :to="{ name: 'public-chat-room' }"
-          class="nav-btn d-flex fonSize18 align-items-center">
+          class="nav-btn d-flex fonSize18 align-items-center"
+        >
           <div class="d-flex navbar-item">
             <i class="far fa-envelope text-larger nav-link-icon"></i>
             <p class="nav-link-title">公開聊天室</p>
@@ -48,19 +64,20 @@
           </div>
         </router-link>
       </div>
-    <div @click="foldNavbar">
-      <router-link
-        :to="{ name: 'private-chat-room' }"
-        class="nav-btn d-flex fonSize18 align-items-center">
-        <div class="d-flex navbar-item">
-          <i class="far fa-envelope text-larger nav-link-icon"></i>
-          <p class="nav-link-title">私人聊天室</p>
-          <div v-show="unread !== 0" class="private-chat-unread">
-            {{ unread | unreadOver }}
+      <div @click="foldNavbar">
+        <router-link
+          :to="{ name: 'private-chat-room' }"
+          class="nav-btn d-flex fonSize18 align-items-center"
+        >
+          <div class="d-flex navbar-item">
+            <i class="far fa-envelope text-larger nav-link-icon"></i>
+            <p class="nav-link-title">私人聊天室</p>
+            <div v-show="unread !== 0" class="private-chat-unread">
+              {{ unread | unreadOver }}
+            </div>
           </div>
-        </div>
-      </router-link>
-    </div>
+        </router-link>
+      </div>
 
       <div @click="foldNavbar">
         <router-link
@@ -484,6 +501,10 @@ img {
   display: flex;
   align-content: center;
 }
+.navbar-avatar {
+  height: 40px;
+  width: 40px;
+}
 
 @media screen and (max-width: 1200px) {
   .nav-link-icon {
@@ -509,6 +530,9 @@ img {
   }
   .nav-wrapper {
     align-items: center;
+  }
+  .navbar-avatar {
+    margin: 0;
   }
 }
 @media screen and (max-width: 576px) {

@@ -20,7 +20,11 @@
           >
             <!-- 上線使用者 -->
             <div class="d-flex align-items-center connected-user p-2">
-              <img class="user-avatar mr-2" :src="onlineUser.avatar" alt="" />
+              <img
+                class="user-avatar mr-2"
+                :src="onlineUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
+                alt=""
+              />
               <span>
                 <strong class="mr-2">{{ onlineUser.name }}</strong>
                 <span class="text-gray">@{{ onlineUser.account }}</span>
@@ -70,7 +74,11 @@
               "
               class="message-wrapper d-flex align-items-end px-3 py-2"
             >
-              <img class="message-avatar mr-2" :src="message.avatar" alt="" />
+              <img
+                class="message-avatar mr-2"
+                :src="message.avatar || 'https://i.imgur.com/S4PE66O.png'"
+                alt=""
+              />
               <div class="message flex-grow-1">
                 <div class="message-text bg-gray py-2 px-3">
                   {{ message.message }}
