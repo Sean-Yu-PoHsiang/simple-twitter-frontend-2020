@@ -237,9 +237,15 @@ export default {
       this.onlineUsers = onlineUsers
     },
     'private-message': function (privateMessage) {
-      privateMessage.UserId = privateMessage.userId
-      this.privateMessages.push(privateMessage)
 
+      if (privateMessage.channelId === this.currentChatRoom.channelId){
+        privateMessage.id = uuidv4()
+        privateMessage.UserId = privateMessage.userId
+        this.privateMessages.push(privateMessage)
+      } else {
+        return
+      }
+      
       // this.$socket.emit('message-read-timestamp', { channelId: 1, time: Date.now() })
     },
     'private-update-channelId': function (updateChannelId){
