@@ -304,6 +304,23 @@ export default {
         })
       }
     },
+      async fetchPrivateUnreads() {
+      try {
+        const response = await chatRoomAPI.getPublicChatRoomUnread({ userId: this.currentUser.id })
+        this.unread = response.data.count
+
+        if (response.status !== 200) {
+          throw new Error(response)
+        }
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法取得私人聊天室未讀數量，請稍後再試",
+        })
+      }
+    },
     foldNavbar() {
       const navbarFolder = document.getElementById('navbar-folding-checkbox')
       navbarFolder.checked = false

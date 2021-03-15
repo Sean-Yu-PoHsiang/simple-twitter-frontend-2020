@@ -70,7 +70,9 @@
               <span>
                 <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
                 <span class="text-gray">@{{ privateChatRoom.chatTo.account }}</span>
+                <div class="last-message text-gray">{{privateChatRoom.lastMsg}}</div>
               </span>
+              
             </div>
           </div>
         </div>
@@ -241,6 +243,7 @@ export default {
       if (privateMessage.channelId === this.currentChatRoom.channelId){
         privateMessage.id = uuidv4()
         privateMessage.UserId = privateMessage.userId
+        this.currentChatRoom.lastMsg = privateMessage.message
         this.privateMessages.push(privateMessage)
       } else {
         return
@@ -363,6 +366,15 @@ export default {
 
         this.newMessage = ''
         this.scrollToBottom = true
+        this.currentChatRoom.lastMsg = this.newMessage 
+        this.updateChatRooms()
+    },
+    updateChatRooms(){
+      this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
+        return chatroom.channelId !== this.currentChatRoom.channelId
+      })
+
+      this.privateChatRooms.unshift(this.currentChatRoom)
     },
     privateChatRoomOnClick(target){
       this.currentChatRoom = target
@@ -523,6 +535,15 @@ export default {
   height: 50px;
   width: 50px;
   border-radius: 25px;
+}
+.last-message{
+  width:220px;
+  height:26px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 .right-column {
   border-right: 1px solid #e6ecf0;
