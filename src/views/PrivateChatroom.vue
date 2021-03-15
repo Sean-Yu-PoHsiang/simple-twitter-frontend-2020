@@ -237,23 +237,14 @@ export default {
       this.onlineUsers = onlineUsers
     },
     'private-message': function (privateMessage) {
-      console.log('message>>>>',privateMessage)
-      console.log('message>>>>',privateMessage)
-
-      // console.log('message.channelId[0].id',typeof message.channelId[0].id)
-      // console.log('message.channelId[0].id',message.channelId[0].id)
-      // console.log('currentChatRoom>>',this.currentChatRoom)
-      // message.channelId[0].id = 1
-      // this.currentChatRoom.channelId = message.channelId[0].id 
-      privateMessage.id = uuidv4()
       privateMessage.UserId = privateMessage.userId
       this.privateMessages.push(privateMessage)
+
       // this.$socket.emit('message-read-timestamp', { channelId: 1, time: Date.now() })
     },
-    // 'private-update-channelId': function (backSend){
-    //   console.log(backSends)
-
-    // },
+    'private-update-channelId': function (updateChannelId){
+      this.currentChatRoom.channelId = updateChannelId.channelId
+    },
     'user-on-off-line': function (userOnOff) {
       if (userOnOff.id === this.currentUser.id) {
         return
@@ -287,7 +278,7 @@ export default {
   },
   methods: {
     fetchOnlineUsers() {
-      // this.$socket.emit('init-public', Date.now())
+      this.$socket.emit('init-public', Date.now())
     },
     async fetchAllPrivateChatRooms() {
       try {
@@ -296,6 +287,7 @@ export default {
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
+
         this.privateChatRooms = response.data
         this.currentChatRoom = response.data[0]
         this.chatToUser =  response.data[0].chatTo
@@ -303,10 +295,14 @@ export default {
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
       } catch (error) {
-        console.log(error)
+         if ( error.message.indexOf('500') !== -1){
+           //沒有資料時，return
+           console.log('^^^錯誤提示 500: 因用戶後端尚未有聊天室資料，getAllPrivateChatRooms不請求')
+           return
+         }
         Toast.fire({
           icon: "error",
-          title: "無法取得上線使用者資訊，請稍後再試",
+          title: "無法取得私人聊天室資訊，請稍後再試",
         })
       }
       this.fetchPrivateChatRoomHistory()
@@ -344,47 +340,20 @@ export default {
         console.log(error)
         Toast.fire({
           icon: "error",
-          title: "無法取得上線使用者資訊，請稍後再試",
+          title: "無法取得聊天室訊息，請稍後再試",
         })
       }
     },
     async sendPrivateMessage() {
         if (this.newMessage.trim().length === 0) { return }
 
-        console.log('this.newMessage',this.newMessage)
-        console.log('this.currentChatRoom',this.currentChatRoom)
-
-        // console.log('fakeData>>>',{
-        //   message: this.newMessage,
-        //   time: Date.now(),
-        //   channelId: 1,
-        //   receiverId: this.currentChatRoom.chatTo.userId,
-        //   receiverName: this.currentChatRoom.chatTo.name,
-        // })
-
         await this.$socket.emit('private-message', {
           message: this.newMessage,
           time: Date.now(),
-          channelId: 1,
-          // receiverId: this.currentChatRoom.chatTo.userId,
-          // receiverName: this.currentChatRoom.chatTo.name,
+          channelId: this.currentChatRoom.channelId,
+          receiverId: this.currentChatRoom.chatTo.userId,
+          receiverName: this.currentChatRoom.chatTo.name,
         })
-
-        console.log('sendPrivateMessage finish')
-
-
-        // await this.$socket.emit('private-message', {
-        //   message: this.newMessage,
-        //   time: Date.now(),
-        //   channelId: 1,
-        //   receiverId: this.currentChatRoom.chatTo.userId,
-        //   receiverName: this.currentChatRoom.chatTo.name,
-
-        //   // account: this.currentUser.account,
-        //   // avatar: this.currentUser.avatar,
-        //   // UserId: this.currentUser.id,
-        //   // name: this.currentUser.name,
-        // })
 
         this.newMessage = ''
         this.scrollToBottom = true
@@ -394,7 +363,7 @@ export default {
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
     },
-    addNewPrivateChatRoom(user){
+    addNewPrivateChatRoom(user){     
       //確認user是否開過聊天室
       const historyChatRoom = this.privateChatRooms.some((room)=>{
         return user.id === room.chatTo.userId
@@ -403,6 +372,7 @@ export default {
       if(historyChatRoom === true){
         return
       }
+
       //把user資料存成新聊天室資料
       const data = {
         channelId: -1,
@@ -413,15 +383,18 @@ export default {
           userId: user.id
         },
       }
+
       //整理渲染聊天室需要的資料
       this.currentChatRoom = data
       this.fetchPrivateChatRoomHistory()
       this.privateChatRoomOnClick(data)
-
+      
       //若聊天室channelId為-1的存在，把舊的-1的聊天室去掉，用新的取代
       //channelId:-1表示尚未對話的聊天室
-      //維持channelId:-1 只有一個，避免v-for渲染聊天室時，重複的id會報錯
-      if (this.privateChatRooms[0].channelId === -1){
+      //維持channelId:-1 只有一個，避免v-for渲染聊天室時，重複的id會報錯      
+      if (this.privateChatRooms.length === 0){
+        this.privateChatRooms.unshift(data)
+      } else if (this.privateChatRooms[0].channelId === -1){
         this.privateChatRooms.shift()
         this.privateChatRooms.unshift(data)
         return
