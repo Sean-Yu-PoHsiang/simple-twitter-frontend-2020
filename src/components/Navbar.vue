@@ -55,8 +55,8 @@
         <div class="d-flex navbar-item">
           <i class="far fa-envelope text-larger nav-link-icon"></i>
           <p class="nav-link-title">私人聊天室</p>
-          <div v-show="unread !== 0" class="private-chat-unread">
-            {{ unread | unreadOver }}
+          <div v-show="privateUnread !== 0" class="private-chat-unread">
+            {{ privateUnread | unreadOver }}
           </div>
         </div>
       </router-link>
@@ -189,12 +189,18 @@ export default {
       description: "",
       createdAt: "",
       unread: 0,
+      privateUnread: 0,
     }
   },
   watch: {
     isInPublicChatRoom(newValue) {
       if (newValue === true) {
         this.unread = 0
+      }
+    },
+    isInPrivateChatRoom(newValue) {
+      if (newValue === true) {
+        this.privateUnread = 0
       }
     }
   },
@@ -205,6 +211,7 @@ export default {
     this.$socket.auth.token = localStorage.getItem('token')
     this.$socket.open()
     this.fetchUnreads()
+    this.fetchPrivateUnreads()
   },
   beforeRouteEnter(to, from, next) {
     // console.log('navbarRRRR route update!!!!!!!!!!!')
@@ -304,10 +311,11 @@ export default {
         })
       }
     },
-      async fetchPrivateUnreads() {
+    async fetchPrivateUnreads() {
       try {
-        const response = await chatRoomAPI.getPublicChatRoomUnread({ userId: this.currentUser.id })
-        this.unread = response.data.count
+        const response = await chatRoomAPI.getPrivateChatRoomUnread()
+        console.log('unreadResponse>>>',response)
+        // this.unread = response.data.count
 
         if (response.status !== 200) {
           throw new Error(response)
@@ -346,6 +354,7 @@ export default {
 .fa-comments {
   font-size: 24px;
 }
+.private-chat-unread,
 .public-chat-unread {
   position: absolute;
   top: -10px;
