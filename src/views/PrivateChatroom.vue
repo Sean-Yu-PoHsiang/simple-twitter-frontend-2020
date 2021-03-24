@@ -68,7 +68,7 @@
             <div class="d-flex align-items-center connected-user p-2">
               <div class="avatar-and-status-wrapper mr-2">
                 <img  class="user-avatar" :src="privateChatRoom.chatTo.avatar" alt=""/>
-                <div class="status" :class="{dnone : !chatToUserIsOnline }"></div>
+                <div class="status" :class="{notShow: privateChatRoom.chatToUserIsOnline === false }"></div>
               </div>
               <span>
                 <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
@@ -83,10 +83,7 @@
       <!-- 聊天室對話區 -->
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
-          <div class="avatar-and-status-wrapper mr-2">
-            <img class="user-avatar" :src= chatToUser.avatar alt="" />
-            <div class="status"></div>
-          </div>
+          <img class="user-avatar mr-2" :src= chatToUser.avatar alt="" />
           <h1 class="title message-receiver">{{chatToUser.name}}</h1>
           <label for="folding-chat-users" class="chat-users-toggle"
             ><i class="fas fa-list-ul"></i
@@ -139,7 +136,7 @@
             <!-- 使用者上下線訊息 -->
             <div
               v-if="
-                message.stasus === 'on' && message.userId !== currentUser.id
+                message.stasus === 'on' && message.userId === currentChatRoom.chatTo.userId
               "
               class="user-status-wrapper d-flex justify-content-center py-2"
             >
@@ -151,7 +148,7 @@
             </div>
             <div
               v-if="
-                message.stasus === 'off' && message.userId !== currentUser.id
+                message.stasus === 'off' && message.userId === currentChatRoom.chatTo.userId
               "
               class="user-status-wrapper d-flex justify-content-center py-2"
             >
@@ -225,19 +222,14 @@ export default {
   },
   mounted() {
     this.scrollModel = document.getElementById("message-board")
-    // console.log('mounted>>>>onlineUser',this.onlineUsers)
-    // console.log('mounted>>>>Rooms',this.privateChatRooms)
   },  
   beforeUpdate(){
-    console.log('mounted>>>>onlineUser',this.onlineUsers)
-    console.log('mounted>>>>Rooms',this.privateChatRooms)
 
   },
   updated() {
     if (this.scrollToBottom === true) {
       this.scrollModel.scrollTop = this.scrollModel.scrollHeight
     }
-    this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
   },
   destroyed() {
     this.$store.commit("leavePublicChatRoom")
@@ -291,6 +283,7 @@ export default {
       this.privateMessages.push(userStasus)
       if (nowOnlineUser.status === 'on') {
         this.onlineUsers.push(nowOnlineUser)
+        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
       }
     }
   },
@@ -313,21 +306,15 @@ export default {
           throw new Error(response.statusText)
         }
 
-        const chatRooms = response.data
-        const newRoomList = []
-        chatRooms.forEach((room)=>{
-          let data = {
-            ...room,
-            chatToUserIsOnline: false
-          }
-          newRoomList.push(data)
-        })
-        this.privateChatRooms = newRoomList
+        this.privateChatRooms = response.data
         this.currentChatRoom = response.data[0]
         this.chatToUser =  response.data[0].chatTo
 
+
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
+
+
       } catch (error) {
          if ( error.message.indexOf('500') !== -1){
            //沒有資料時，return
@@ -345,9 +332,6 @@ export default {
       try {
         const response = await chatRoomAPI.getAllUsers()
         this.allUsers = [...response.data]
-
-        // console.log(this.onlineUsers)
-        // console.log(this.privateChatRooms)
 
       } catch (error) {
         console.log(error)
@@ -372,8 +356,8 @@ export default {
 
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
-
         
+        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -414,12 +398,16 @@ export default {
       chatRooms.forEach((room)=>{
         const index = userOnlineIdList.indexOf(room.chatTo.userId)
         if(index !== -1){
-          const newdata = {...room,chatToUserIsOnline:true}
+          const newdata = {
+            ...room,
+            chatToUserIsOnline: true
+          }
           newRooms.push(newdata)
         }else {
           newRooms.push(room)
         }
       })
+      this.privateChatRooms = newRooms
     },
     updateChatRooms(){
       this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
@@ -601,9 +589,10 @@ export default {
   border-radius: 50%;
   box-shadow: inset 0 0 1px 2px #ddd;
 }
-.dnone{
+.notShow{
   display: none;
 }
+
 .last-message{
   width:220px;
   height:26px;
