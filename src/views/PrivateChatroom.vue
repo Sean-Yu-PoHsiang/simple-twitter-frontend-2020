@@ -68,7 +68,7 @@
             <div class="d-flex align-items-center connected-user p-2">
               <div class="avatar-and-status-wrapper mr-2">
                 <img  class="user-avatar" :src="privateChatRoom.chatTo.avatar" alt=""/>
-                <div class="status"></div>
+                <div class="status" :class="{dnone : !chatToUserIsOnline }"></div>
               </div>
               <span>
                 <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
@@ -219,17 +219,25 @@ export default {
     }
   },
   created() {
-    this.fetchAllPrivateChatRooms()
     this.fetchAllUsers()
     this.fetchOnlineUsers()
+    this.fetchAllPrivateChatRooms()
   },
   mounted() {
     this.scrollModel = document.getElementById("message-board")
+    // console.log('mounted>>>>onlineUser',this.onlineUsers)
+    // console.log('mounted>>>>Rooms',this.privateChatRooms)
+  },  
+  beforeUpdate(){
+    console.log('mounted>>>>onlineUser',this.onlineUsers)
+    console.log('mounted>>>>Rooms',this.privateChatRooms)
+
   },
   updated() {
     if (this.scrollToBottom === true) {
       this.scrollModel.scrollTop = this.scrollModel.scrollHeight
     }
+    this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
   },
   destroyed() {
     this.$store.commit("leavePublicChatRoom")
@@ -338,6 +346,9 @@ export default {
         const response = await chatRoomAPI.getAllUsers()
         this.allUsers = [...response.data]
 
+        // console.log(this.onlineUsers)
+        // console.log(this.privateChatRooms)
+
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -362,6 +373,7 @@ export default {
         // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
         // this.$store.commit("enterPublicChatRoom")
 
+        
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -369,7 +381,7 @@ export default {
           title: "無法取得聊天室訊息，請稍後再試",
         })
       }
-      this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+      
     },
     async sendPrivateMessage() {
         if (this.newMessage.trim().length === 0) { return }
@@ -388,83 +400,26 @@ export default {
         this.updateChatRooms()
     },
     changeOnlineUserStatus(onlineUsers, chatRooms){
-      console.log('onlineUsers',onlineUsers)
-      console.log('chatRooms',chatRooms)
-      // const onlineUsersIdList = []
+      // console.log('onlineUsers',onlineUsers)
+      // console.log('chatRooms',chatRooms)
       
-      // onlineUsers.forEach(user => {
-        // return onlineUsersIdList.push(user.id)
-      // })
+      const userOnlineIdList=[]
+      let newRooms=[]
 
-      // console.log('onlineUsersIdList',onlineUsersIdList)
+      for (let user of onlineUsers) {
+        const userId = user.id
+        userOnlineIdList.push(userId)
+      }
 
-      // for (let room in chatRooms){
-        // console.log(room)
-        //chatRoom聊天對象的userId 要核對到onlineUsers裡的id
-        //改狀態
-        // === onlineUsers.indexOf('room.chatTo.userId')
-
-
-      // }
-
-
-
-      // const newChatRooms = chatRooms.forEach(room => {
-      //   console.log('room.chatTo.userId>>>>',room.chatTo.userId)
-
-      //   let chatToUserId = room.chatTo.userId
-
-      //   if (onlineUsersIdList.indexOf(chatToUserId) === -1 ){
-      //     return room
-      //   } else {
-         
-      //     return {...room,
-      //     chatToUserIsOnline : true}
-      //   }
-
-
-      // })
-      //  console.log('newChatRooms>>',newChatRooms)
-
-
-    
-      // for(let i = 0; i < onlineUsersIdList.length; i++){
-      //   console.log(`迴圈第${i}圈`)
-      //   // let onlineId = onlineUsers[i].id 
-      //   // console.log('onlineId',onlineId)
-
-      //   chatRooms.map((room)=>{
-      //     let chatToUserId = room.chatTo.userId
-      //     if (chatToUserId !== onlineUsersIdList[i]){
-      //       newChatRooms.push(room)
-      //       return
-      //     } else {
-      //       const data = {
-      //         ...room,
-      //         chatToUserIsOnline: true
-      //       }
-      //       newChatRooms.push(data)
-      //       return
-      //     }
-      //   })
-      // }
-
-      // console.log('onlineUsersIdList',onlineUsersIdList)
-      // this.privateChatRooms = newChatRooms
-
-      // console.log('this.privateChatRooms',this.privateChatRooms)
-
-
-
-      // const onLineUsersId = []
-
-      // this.onlineUser.forEach((user)=>{
-      //   let id = user.id
-      //   console.log('user.id',user.id)
-      //   onLineUsersId.push(id)
-      // })
-
-      // console.log('onLineUsersId',onLineUsersId)
+      chatRooms.forEach((room)=>{
+        const index = userOnlineIdList.indexOf(room.chatTo.userId)
+        if(index !== -1){
+          const newdata = {...room,chatToUserIsOnline:true}
+          newRooms.push(newdata)
+        }else {
+          newRooms.push(room)
+        }
+      })
     },
     updateChatRooms(){
       this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
@@ -645,6 +600,9 @@ export default {
   background: #ff6600;
   border-radius: 50%;
   box-shadow: inset 0 0 1px 2px #ddd;
+}
+.dnone{
+  display: none;
 }
 .last-message{
   width:220px;
