@@ -357,6 +357,8 @@ export default {
         this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
         this.$store.commit("enterPrivateChatRoom")
 
+        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+
       } catch (error) {
         console.log(error)
         Toast.fire({
