@@ -253,11 +253,14 @@ export default {
         privateMessage.UserId = privateMessage.userId
         this.currentChatRoom.lastMsg = privateMessage.message
         this.privateMessages.push(privateMessage)
+
+         console.log('this.currentChatRoom.channelId ',this.currentChatRoom.channelId ) 
+
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
+
       } else {
         return
       }
-      
-      // this.$socket.emit('message-read-timestamp', { channelId: 1, time: Date.now() })
     },
     'private-update-channelId': function (updateChannelId){
       this.currentChatRoom.channelId = updateChannelId.channelId
@@ -298,6 +301,9 @@ export default {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
     },
+    getPrivateUnread(){
+
+    },
     async fetchAllPrivateChatRooms() {
       try {
         const response = await chatRoomAPI.getAllPrivateChatRooms()
@@ -311,16 +317,10 @@ export default {
         this.chatToUser =  response.data[0].chatTo
 
 
-        // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
-        // this.$store.commit("enterPublicChatRoom")
-
-
-      } catch (error) {
-         if ( error.message.indexOf('500') !== -1){
-           //沒有資料時，return
-           console.log('^^^錯誤提示 500: 因用戶後端尚未有聊天室資料，getAllPrivateChatRooms不請求')
-           return
-         }
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
+        this.$store.commit("enterPrivateChatRoom")
+        // getPrivateUnread()
+      } catch (error) {    
         Toast.fire({
           icon: "error",
           title: "無法取得私人聊天室資訊，請稍後再試",
@@ -354,10 +354,9 @@ export default {
 
         this.privateMessages = response.data
 
-        // this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
-        // this.$store.commit("enterPublicChatRoom")
-        
-        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
+        this.$store.commit("enterPrivateChatRoom")
+
       } catch (error) {
         console.log(error)
         Toast.fire({

@@ -30,9 +30,9 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  getPrivateChatRoomUnread({ userId }) {
-    return apiHelper.post('/chat/private_unread', {
-      userId
+  getPrivateChatRoomUnread({ channelId }) {
+    return apiHelper.get('/chat/private_unread', {
+      channelId
     }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
