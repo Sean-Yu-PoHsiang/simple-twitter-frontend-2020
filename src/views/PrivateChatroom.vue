@@ -302,7 +302,8 @@ export default {
       this.$socket.emit('init-public', Date.now())
     },
     getPrivateUnread(){
-
+      console.log('getPrivateUnread RUN>>>')
+      //chatRoomAPI
     },
     async fetchAllPrivateChatRooms() {
       try {
@@ -319,7 +320,7 @@ export default {
 
         this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
         this.$store.commit("enterPrivateChatRoom")
-        // getPrivateUnread()
+        this.getPrivateUnread()
       } catch (error) {    
         Toast.fire({
           icon: "error",
@@ -384,10 +385,7 @@ export default {
         this.currentChatRoom.lastMsg = this.newMessage 
         this.updateChatRooms()
     },
-    changeOnlineUserStatus(onlineUsers, chatRooms){
-      // console.log('onlineUsers',onlineUsers)
-      // console.log('chatRooms',chatRooms)
-      
+    changeOnlineUserStatus(onlineUsers, chatRooms){      
       const userOnlineIdList=[]
       let newRooms=[]
 
