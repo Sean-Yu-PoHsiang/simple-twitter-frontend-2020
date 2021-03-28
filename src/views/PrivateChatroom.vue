@@ -75,7 +75,9 @@
                 <span class="text-gray">@{{ privateChatRoom.chatTo.account }}</span>
                 <div class="last-message text-gray">{{privateChatRoom.lastMsg}}</div>
               </span>
-              
+              <span>
+                <div v-if="privateChatRoom.unreadCount !== 0" class="private-unread">{{privateChatRoom.unreadCount}}</div>
+              </span>
             </div>
           </div>
         </div>
@@ -219,6 +221,7 @@ export default {
     this.fetchAllUsers()
     this.fetchOnlineUsers()
     this.fetchAllPrivateChatRooms()
+    this.getPrivateUnread()
   },
   mounted() {
     this.scrollModel = document.getElementById("message-board")
@@ -254,10 +257,8 @@ export default {
         this.currentChatRoom.lastMsg = privateMessage.message
         this.privateMessages.push(privateMessage)
 
-         console.log('this.currentChatRoom.channelId ',this.currentChatRoom.channelId ) 
-
-        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
-
+        console.log('this.currentUser.id',this.currentUser.id)
+        console.log('private-message.channelId',this.currentChatRoom.channelId)
       } else {
         return
       }
@@ -301,9 +302,52 @@ export default {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
     },
-    getPrivateUnread(){
-      console.log('getPrivateUnread RUN>>>')
-      //chatRoomAPI
+    async getPrivateUnread(){
+      try{
+        const response = await chatRoomAPI.getPrivateChatRoomUnread()
+        
+        if (response.status !== 200){
+          throw new Error(response.statusText)
+        }
+        
+        const unreadData = response.data
+        console.log('unreadData',unreadData)
+
+        const unreadChannelIdList = Object.keys(unreadData)//印出所有key值，型別是字串
+        // console.log('unreadChannelIdList',unreadChannelIdList)
+
+        //用所有key去找同channelId聊天室 記得字串轉為數字 Number()
+        //沒有符合的 channelId 的聊天室return
+        //有符合的 channelId 的聊天室顯示未讀數量
+
+        let newRoomList = []
+
+        this.privateChatRooms.forEach((room)=>{
+          // console.log(`forEach ${room.channelId}`)
+          const indexResult = unreadChannelIdList.indexOf(room.channelId.toString())
+
+          if (indexResult === -1){
+            newRoomList.push(room)
+            // console.log('push a room indexResult === -1')
+            return
+          } else {
+            console.log()
+            room.unreadCount = unreadData[room.channelId]
+            newRoomList.push(room)
+            // console.log('push a room else ')
+
+          }
+        })
+        this.privateChatRooms = newRoomList
+        console.log('this.privateChatRooms',this.privateChatRooms)
+        
+      
+      }catch (error){
+        Toast.fire({
+          icon:"error",
+          title:"無法取得私人聊天個別未讀數量，請稍後再試"
+        })
+      }
     },
     async fetchAllPrivateChatRooms() {
       try {
@@ -313,14 +357,21 @@ export default {
           throw new Error(response.statusText)
         }
 
-        this.privateChatRooms = response.data
+        console.log('fetchAllPrivateChatRooms response',response.data)
+
+        const roomList = [...response.data]
+        let newRoomList=[]
+
+        roomList.forEach(room => {
+          newRoomList.push({...room, unreadCount:0 })
+        })
+
+        console.log('NewRoomList',newRoomList)
+
+        this.privateChatRooms = newRoomList
         this.currentChatRoom = response.data[0]
         this.chatToUser =  response.data[0].chatTo
 
-
-        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
-        this.$store.commit("enterPrivateChatRoom")
-        this.getPrivateUnread()
       } catch (error) {    
         Toast.fire({
           icon: "error",
@@ -355,10 +406,10 @@ export default {
 
         this.privateMessages = response.data
 
-        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
-        this.$store.commit("enterPrivateChatRoom")
-
         this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+        console.log('this.currentChatRoom.channelId>>',this.currentChatRoom.channelId,)
+        
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
 
       } catch (error) {
         console.log(error)
@@ -384,6 +435,8 @@ export default {
         this.scrollToBottom = true
         this.currentChatRoom.lastMsg = this.newMessage 
         this.updateChatRooms()
+
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
     },
     changeOnlineUserStatus(onlineUsers, chatRooms){      
       const userOnlineIdList=[]
@@ -419,6 +472,7 @@ export default {
       this.currentChatRoom = target
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
+      // this.$store.commit("enterPrivateChatRoom")
     },
     addNewPrivateChatRoom(user){     
       //確認user是否開過聊天室
@@ -537,6 +591,20 @@ export default {
   height: calc(100vh - 100px - 61px);
   overflow:scroll;
 }
+.private-unread{
+  position: absolute;
+  top: 20px;
+  right: 8px;
+  background-color: #ff6600;
+  color: white;
+  font-size: 10px;
+  padding: 4px;
+  border-radius: 12px;
+  height: 24px;
+  width: 24px;
+  line-height: 16px;
+  text-align: center;
+}
 .followedStatus {
   font-size:14px;
 }
@@ -639,6 +707,7 @@ export default {
 }
 .connected-user {
   border-bottom: 1px solid #e6ecf0;
+  position:relative;
 }
 
 /* message-board */

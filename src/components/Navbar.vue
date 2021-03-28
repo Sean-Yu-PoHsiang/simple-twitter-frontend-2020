@@ -211,7 +211,7 @@ export default {
     this.$socket.auth.token = localStorage.getItem('token')
     this.$socket.open()
     this.fetchUnreads()
-    this.fetchPrivateUnreads()
+    this.fetchTotalPrivateUnreads()
   },
   beforeRouteEnter(to, from, next) {
     // console.log('navbarRRRR route update!!!!!!!!!!!')
@@ -298,7 +298,7 @@ export default {
       try {
         const response = await chatRoomAPI.getPublicChatRoomUnread({ userId: this.currentUser.id })
         this.unread = response.data.count
-
+        
         if (response.status !== 200) {
           throw new Error(response)
         }
@@ -311,11 +311,19 @@ export default {
         })
       }
     },
-    async fetchPrivateUnreads() {
+    async fetchTotalPrivateUnreads() {
       try {
         const response = await chatRoomAPI.getPrivateChatRoomUnread()
-        console.log('unreadResponse>>>',response)
-        // this.unread = response.data.count
+
+        const unreadData = response.data
+
+        if (Object.keys(unreadData).length === 0) {
+            return 
+        }
+        const allUnreadList = Object.values(unreadData)
+
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        this.privateUnread = allUnreadList.reduce(reducer)
 
         if (response.status !== 200) {
           throw new Error(response)
@@ -325,7 +333,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: "error",
-          title: "無法取得私人聊天室未讀數量，請稍後再試",
+          title: "無法取得私人聊天室總未讀數量，請稍後再試",
         })
       }
     },
