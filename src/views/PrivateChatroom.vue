@@ -257,10 +257,29 @@ export default {
         this.currentChatRoom.lastMsg = privateMessage.message
         this.privateMessages.push(privateMessage)
 
-        console.log('this.currentUser.id',this.currentUser.id)
-        console.log('private-message.channelId',this.currentChatRoom.channelId)
+        this.privateChatRooms = this.privateChatRooms.map(room => {
+          if (room.channelId === privateMessage.channelId) {
+            return { 
+              ...room,
+              lastMsg: this.currentChatRoom.lastMsg,
+              unreadCount: 0
+            }
+          } else {
+            return room
+          }
+        })
       } else {
-        return
+        this.privateChatRooms = this.privateChatRooms.map(room => {
+          if (room.channelId === privateMessage.channelId) {
+            return { 
+              ...room,
+              lastMsg: privateMessage.message,
+              unreadCount: room.unreadCount + 1
+            }
+          } else {
+            return room
+          }
+        })
       }
     },
     'private-update-channelId': function (updateChannelId){
@@ -311,10 +330,7 @@ export default {
         }
         
         const unreadData = response.data
-        console.log('unreadData',unreadData)
-
         const unreadChannelIdList = Object.keys(unreadData)//印出所有key值，型別是字串
-        // console.log('unreadChannelIdList',unreadChannelIdList)
 
         //用所有key去找同channelId聊天室 記得字串轉為數字 Number()
         //沒有符合的 channelId 的聊天室return
@@ -323,24 +339,17 @@ export default {
         let newRoomList = []
 
         this.privateChatRooms.forEach((room)=>{
-          // console.log(`forEach ${room.channelId}`)
           const indexResult = unreadChannelIdList.indexOf(room.channelId.toString())
 
           if (indexResult === -1){
             newRoomList.push(room)
-            // console.log('push a room indexResult === -1')
             return
           } else {
-            console.log()
             room.unreadCount = unreadData[room.channelId]
             newRoomList.push(room)
-            // console.log('push a room else ')
-
           }
         })
-        this.privateChatRooms = newRoomList
-        console.log('this.privateChatRooms',this.privateChatRooms)
-        
+        this.privateChatRooms = newRoomList        
       
       }catch (error){
         Toast.fire({
@@ -356,9 +365,6 @@ export default {
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
-
-        console.log('fetchAllPrivateChatRooms response',response.data)
-
         const roomList = [...response.data]
         let newRoomList=[]
 
@@ -366,11 +372,9 @@ export default {
           newRoomList.push({...room, unreadCount:0 })
         })
 
-        console.log('NewRoomList',newRoomList)
-
         this.privateChatRooms = newRoomList
-        this.currentChatRoom = response.data[0]
-        this.chatToUser =  response.data[0].chatTo
+        this.currentChatRoom = newRoomList[0]
+        this.chatToUser =  newRoomList[0].chatTo
 
       } catch (error) {    
         Toast.fire({
@@ -404,10 +408,9 @@ export default {
           throw new Error(response.statusText)
         }
 
-        this.privateMessages = response.data
+        this.privateMessages = [...response.data]
 
         this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
-        console.log('this.currentChatRoom.channelId>>',this.currentChatRoom.channelId,)
         
         this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
 
@@ -472,7 +475,17 @@ export default {
       this.currentChatRoom = target
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
-      // this.$store.commit("enterPrivateChatRoom")
+
+      if (target. v === 0){
+        return
+      }
+      this.privateChatRooms = this.privateChatRooms.map(room=>{
+        if (room.channelId === target.channelId) {
+          return { ...room, unreadCount: 0 }
+        } else {
+          return room
+        }
+      })
     },
     addNewPrivateChatRoom(user){     
       //確認user是否開過聊天室
@@ -483,10 +496,10 @@ export default {
       if(historyChatRoom === true){
         return
       }
-
       //把user資料存成新聊天室資料
       const data = {
         channelId: -1,
+        unreadCount: 0,
         chatTo: {
           account: user.account,
           avatar: user.avatar,
