@@ -2,10 +2,10 @@
   <div class="container-md">
     <div class="row">
       <div class="col-auto left-container left-area-rwd component-navbar">
-        <Navbar @after-create-tweet="afterCreateTweet" />
+        <Navbar @after-create-tweet="afterCreateTweet" :initialallUnreadData="allUnreadData"/>
       </div>
 
-      <router-view
+      <router-view @after-send-private-message="updatePrivateUnread" 
         :newTweetsPayload="newTweetsPayload"
         :addFollowingPayload="addFollowingPayload"
         :deleteFollowingPayload="deleteFollowingPayload"
@@ -36,6 +36,7 @@ export default {
       newTweetsPayload: {},
       addFollowingPayload: {},
       deleteFollowingPayload: {},
+      allUnreadData: {}
     }
   },
   created() { },
@@ -49,6 +50,11 @@ export default {
     },
     afterClickDeleteFollowingPayload(payload) {
       this.deleteFollowingPayload = payload
+    },
+    updatePrivateUnread(data) {
+      console.log('yoyoyoyoyo data',data)
+      this.allUnreadData = data
+      console.log('Layout this.allUnreadData',this.allUnreadData)
     },
   }
 }

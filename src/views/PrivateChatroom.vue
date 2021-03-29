@@ -215,6 +215,7 @@ export default {
       privateMessages: [],
       allUsers: [],
       searchKeywords:'',
+      allUnreadData:{}
     }
   },
   created() {
@@ -271,6 +272,7 @@ export default {
       } else {
         this.privateChatRooms = this.privateChatRooms.map(room => {
           if (room.channelId === privateMessage.channelId) {
+            this.$emit('after-send-private-message',this.allUnreadData)
             return { 
               ...room,
               lastMsg: privateMessage.message,
@@ -329,8 +331,8 @@ export default {
           throw new Error(response.statusText)
         }
         
-        const unreadData = response.data
-        const unreadChannelIdList = Object.keys(unreadData)//印出所有key值，型別是字串
+        this.allUnreadData = response.data
+        const unreadChannelIdList = Object.keys(this.allUnreadData)//印出所有key值，型別是字串
 
         //用所有key去找同channelId聊天室 記得字串轉為數字 Number()
         //沒有符合的 channelId 的聊天室return
@@ -345,11 +347,13 @@ export default {
             newRoomList.push(room)
             return
           } else {
-            room.unreadCount = unreadData[room.channelId]
+            room.unreadCount = this.allUnreadData[room.channelId]
             newRoomList.push(room)
           }
         })
-        this.privateChatRooms = newRoomList        
+        this.privateChatRooms = newRoomList  
+        
+        this.$emit('after-send-private-message',this.allUnreadData)
       
       }catch (error){
         Toast.fire({
@@ -413,6 +417,8 @@ export default {
         this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
         
         this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
+        this.getPrivateUnread()
+        // this.$emit('after-send-private-message',this.allUnreadData)
 
       } catch (error) {
         console.log(error)
@@ -472,9 +478,11 @@ export default {
       this.privateChatRooms.unshift(this.currentChatRoom)
     },
     privateChatRoomOnClick(target){
+      // this.getPrivateUnread()
       this.currentChatRoom = target
       this.chatToUser = target.chatTo
       this.fetchPrivateChatRoomHistory()
+
 
       if (target. v === 0){
         return

@@ -189,7 +189,15 @@ export default {
       description: "",
       createdAt: "",
       unread: 0,
+      newestUnreadData:{},
+      // addUnread: this.addPrivateUnread,
       privateUnread: 0,
+      allUnreadData: {}
+    }
+  },
+  props: {
+    initialallUnreadData: {
+      type: Object,
     }
   },
   watch: {
@@ -198,11 +206,18 @@ export default {
         this.unread = 0
       }
     },
-    isInPrivateChatRoom(newValue) {
-      if (newValue === true) {
-        this.privateUnread = 0
-      }
+    initialallUnreadData(){
+      console.log('his.fetchTotalPrivateUnreads()start')
+      this.fetchTotalPrivateUnreads()
+      console.log('his.fetchTotalPrivateUnreads()DONE')
     }
+    // initialallUnreadData:{
+    //   handler: function() {
+    //     // this.allUnreadData = this.initialallUnreadData
+    //     this.fetchTotalPrivateUnreads()
+    //   },
+    //   deep: true, 
+    // }
   },
   created() {
     // console.log('>>>>>>>>> navbar created')
@@ -237,13 +252,18 @@ export default {
         this.unread++
       }
     },
+    'private-message': function(){
+      this.fetchTotalPrivateUnreads()
+    },
+    'message-read-timestamp': function() {
+      console.log('導覽列 got message-read-timestamp')
+    }
   },
   methods: {
     signOut() {
       this.$store.commit("revokeAuthentication")
       this.$router.push("/signin")
     },
-
     async handleSubmit() {
       if (this.description.trim() === "") {
         Toast.fire({
@@ -315,15 +335,18 @@ export default {
       try {
         const response = await chatRoomAPI.getPrivateChatRoomUnread()
 
-        const unreadData = response.data
+        this.allUnreadData = response.data
 
-        if (Object.keys(unreadData).length === 0) {
+        if (Object.keys(this.allUnreadData).length === 0) {
             return 
         }
-        const allUnreadList = Object.values(unreadData)
+        // console.log('initialallUnreadData',this.initialallUnreadData)
+        const allUnreadList = Object.values(this.allUnreadData)
 
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        this.privateUnread = allUnreadList.reduce(reducer)
+        this.privateUnread = allUnreadList.reduce(reducer) 
+
+        // console.log('this.addUnread fetchTotalPrivateUnreads',this.addUnread)
 
         if (response.status !== 200) {
           throw new Error(response)
