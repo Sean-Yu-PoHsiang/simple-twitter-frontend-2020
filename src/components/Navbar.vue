@@ -237,6 +237,13 @@ export default {
         this.unread++
       }
     },
+    'private-message': function () {
+      this.fetchTotalPrivateUnreads()
+    },
+    'message-read-timestamp': function () {
+      console.log('收到 message-read-timestamp')
+      this.fetchTotalPrivateUnreads()
+    }
   },
   methods: {
     signOut() {
