@@ -71,7 +71,9 @@
                 <div class="status" :class="{notShow: privateChatRoom.chatToUserIsOnline === false }"></div>
               </div>
               <span>
-                <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
+                <router-link class="link-style" :to="'/users/' + privateChatRoom.chatTo.userId">
+                  <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
+                </router-link>
                 <span class="text-gray">@{{ privateChatRoom.chatTo.account }}</span>
                 <div class="last-message text-gray">{{privateChatRoom.lastMsg}}</div>
               </span>
@@ -257,7 +259,7 @@ export default {
 
       const channelIdIndex = chatRoomChannelIdList.indexOf(privateMessage.channelId)
 
-      if (channelIdIndex === -1 ){
+      if (channelIdIndex === -1 && privateMessage.userId !== this.currentUser.id){
         const roomData = {
           channelId: privateMessage.channelId,
           lastMsg: privateMessage.message,
@@ -271,6 +273,20 @@ export default {
           }
         }
         this.privateChatRooms.unshift(roomData)
+      } else if (channelIdIndex === -1 && privateMessage.userId === this.currentUser.id){
+          const roomData = {
+            channelId: privateMessage.channelId,
+            lastMsg: privateMessage.message,
+            unreadCount: 0,
+            chatToUserIsOnline: false,
+            chatTo: {
+              account: this.currentChatRoom.account,
+              avatar: this.currentChatRoom.avatar,
+              name: this.currentChatRoom.name,
+              userId: this.currentChatRoom.userId
+            }
+          }
+          this.privateChatRooms.unshift(roomData)
 
       } else if (privateMessage.channelId === this.currentChatRoom.channelId){
         privateMessage.id = uuidv4()
@@ -488,11 +504,18 @@ export default {
       this.getPrivateUnread()
     },
     updateChatRooms(){
-      this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
+      this.chatRoomsFromAPI = this.chatRoomsFromAPI.filter((chatroom)=>{
         return chatroom.channelId !== this.currentChatRoom.channelId
       })
 
-      this.privateChatRooms.unshift(this.currentChatRoom)
+      const data = {
+        ...this.currentChatRoom,
+      }
+      this.currentChatRoom = data
+      
+      this.chatRoomsFromAPI.unshift(data)
+      this.privateChatRooms = this.chatRoomsFromAPI
+
     },
     privateChatRoomOnClick(target){
       this.currentChatRoom = target
@@ -504,15 +527,16 @@ export default {
       }
       this.chatRoomsFromAPI = this.chatRoomsFromAPI.map(room => {
         if (room.channelId === target.channelId) {
-          return { ...room, unreadCount: 0 }
+          return { ...room, unreadCount: 0}
         } else {
           return room
         }
       })
+      this.privateChatRooms = this.chatRoomsFromAPI
     },
     addNewPrivateChatRoom(user){     
       //確認user是否開過聊天室
-      const historyChatRoom = this.privateChatRooms.some((room)=>{
+      const historyChatRoom = this.chatRoomsFromAPI.some((room)=>{
         return user.id === room.chatTo.userId
       })
       //若被點user聊天室已存在，不做任何事
@@ -523,6 +547,7 @@ export default {
       const data = {
         channelId: -1,
         unreadCount: 0,
+        chatToUserIsOnline: false,
         chatTo: {
           account: user.account,
           avatar: user.avatar,
@@ -533,7 +558,7 @@ export default {
 
       //整理渲染聊天室需要的資料
       this.currentChatRoom = data
-      this.fetchPrivateChatRoomHistory()
+
       this.privateChatRoomOnClick(data)
       
       //若聊天室channelId為-1的存在，把舊的-1的聊天室去掉，用新的取代
@@ -606,6 +631,10 @@ export default {
 }
 .chat-users-toggle {
   display: none;
+}
+.link-style:hover {
+  text-decoration:underline;
+  color:#ff6600;
 }
 /* clicked envelope-icon-set will show this part */
 /* user list for new chat room */
