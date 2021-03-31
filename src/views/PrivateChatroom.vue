@@ -57,7 +57,7 @@
           </div>
         </div>
         <!-- 使用者已開的私人聊天室 -->
-        <div class="chat-room-user-list">
+        <div class="chat-room-list">
           <div
             v-for="privateChatRoom in privateChatRooms"
             :key="privateChatRoom.channelId"
@@ -786,7 +786,7 @@ export default {
   position:relative;
 }
 /* chat room list */
-.chat-room-user-list{
+.chat-room-list{
   height: 90%;
   overflow: scroll;
 }
