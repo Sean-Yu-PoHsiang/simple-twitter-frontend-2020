@@ -26,7 +26,9 @@
                 alt=""
               />
               <span>
-                <strong class="mr-2">{{ onlineUser.name }}</strong>
+                <router-link class="link-style" :to="'/users/' + onlineUser.id">
+                  <strong class="mr-2">{{ onlineUser.name }}</strong>
+                </router-link>
                 <span class="text-gray">@{{ onlineUser.account }}</span>
               </span>
             </div>
@@ -322,6 +324,10 @@ label {
 }
 .connected-user {
   border-bottom: 1px solid #e6ecf0;
+}
+.link-style:hover {
+  text-decoration:underline;
+  color:#ff6600;
 }
 
 /* message-board */
