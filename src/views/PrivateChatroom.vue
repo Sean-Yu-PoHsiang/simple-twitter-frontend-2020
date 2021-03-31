@@ -209,6 +209,7 @@ export default {
       scrollToBottom: true,
 
       onlineUsers: [],
+      chatRoomsFromAPI:[],
       privateChatRooms: [],
       currentChatRoom: [],
       chatToUser: [],
@@ -221,7 +222,6 @@ export default {
     this.fetchAllUsers()
     this.fetchOnlineUsers()
     this.fetchAllPrivateChatRooms()
-    this.getPrivateUnread()
   },
   mounted() {
     this.scrollModel = document.getElementById("message-board")
@@ -359,7 +359,7 @@ export default {
 
         let newRoomList = []
 
-        this.privateChatRooms.forEach((room)=>{
+        this.chatRoomsFromAPI.forEach((room)=>{
           const indexResult = unreadChannelIdList.indexOf(room.channelId.toString())
 
           if (indexResult === -1){
@@ -370,8 +370,9 @@ export default {
             newRoomList.push(room)
           }
         })
-        this.privateChatRooms = newRoomList        
-      
+        this.chatRoomsFromAPI = newRoomList       
+        this.privateChatRooms = newRoomList
+
       }catch (error){
         Toast.fire({
           icon:"error",
@@ -393,7 +394,7 @@ export default {
           newRoomList.push({...room, unreadCount:0 })
         })
 
-        this.privateChatRooms = newRoomList
+        this.chatRoomsFromAPI = newRoomList
         this.currentChatRoom = newRoomList[0]
         this.chatToUser =  newRoomList[0].chatTo
 
@@ -431,7 +432,7 @@ export default {
 
         this.privateMessages = [...response.data]
 
-        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+        this.changeOnlineUserStatus(this.onlineUsers,this.chatRoomsFromAPI)
         
         this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
 
@@ -483,7 +484,8 @@ export default {
           newRooms.push(room)
         }
       })
-      this.privateChatRooms = newRooms
+      this.chatRoomsFromAPI = newRooms
+      this.getPrivateUnread()
     },
     updateChatRooms(){
       this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
@@ -500,7 +502,7 @@ export default {
       if (target. v === 0){
         return
       }
-      this.privateChatRooms = this.privateChatRooms.map(room=>{
+      this.chatRoomsFromAPI = this.chatRoomsFromAPI.map(room => {
         if (room.channelId === target.channelId) {
           return { ...room, unreadCount: 0 }
         } else {
