@@ -43,6 +43,11 @@ const routes = [
         component: () => import('../views/PublicChatroom.vue')
       },
       {
+        path: 'private-chatroom',
+        name: 'private-chat-room',
+        component: () => import('../views/PrivateChatroom.vue')
+      },
+      {
         path: 'tweets/:tweetId',
         name: 'tweet',
         component: () => import('../views/Tweet.vue')

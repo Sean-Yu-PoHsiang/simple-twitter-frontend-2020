@@ -17,4 +17,28 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getAllPrivateChatRooms() {
+    return apiHelper.get('/chat/all_private_rooms', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getPrivateChatRoomHistory({ channelId, userId }) {
+    return apiHelper.post('/chat/messages', {
+      channelId,
+      userId
+    }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getPrivateChatRoomUnread() {
+    return apiHelper.get('/chat/private_unread', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getAllUsers() {
+    return apiHelper.get(`/users?accumulatedNum=all`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  }
 }
+

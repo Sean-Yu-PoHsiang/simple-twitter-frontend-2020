@@ -12,6 +12,21 @@
     <nav class="d-flex flex-column nav-wrapper">
       <Logo class="mt-3 mb-5" />
 
+      <div>
+        <div class="nav-btn d-flex fonSize18 align-items-center">
+          <div class="d-flex align-items-center">
+            <div>
+              <img
+                class="navbar-avatar"
+                :src="currentUser.avatar || 'https://i.imgur.com/S4PE66O.png'"
+                alt=""
+              />
+            </div>
+            <p class="nav-link-title m-0">Hi~ {{ currentUser.name }}</p>
+          </div>
+        </div>
+      </div>
+
       <div @click="foldNavbar">
         <router-link
           to="/home"
@@ -35,14 +50,13 @@
           </div>
         </router-link>
       </div>
-
       <div @click="foldNavbar">
         <router-link
           :to="{ name: 'public-chat-room' }"
           class="nav-btn d-flex fonSize18 align-items-center"
         >
           <div class="d-flex navbar-item">
-            <i class="far fa-envelope text-larger nav-link-icon"></i>
+            <i class="far fa-comments nav-link-icon"></i>
             <p class="nav-link-title">公開聊天室</p>
             <div v-show="unread !== 0" class="public-chat-unread">
               {{ unread | unreadOver }}
@@ -50,7 +64,17 @@
           </div>
         </router-link>
       </div>
-
+      <div @click="foldNavbar">
+        <router-link :to="{ name: 'private-chat-room' }" class="nav-btn d-flex fonSize18 align-items-center">
+          <div class="d-flex navbar-item">
+            <i class="far fa-envelope text-larger nav-link-icon"></i>
+            <p class="nav-link-title">私人聊天室</p>
+            <div v-show="privateUnread !== 0" class="private-chat-unread">
+              {{ privateUnread | unreadOver }}
+            </div>
+          </div>
+        </router-link>
+      </div>
       <div @click="foldNavbar">
         <router-link
           to="/setting"
@@ -178,12 +202,18 @@ export default {
       description: "",
       createdAt: "",
       unread: 0,
+      privateUnread: 0,
     }
   },
   watch: {
     isInPublicChatRoom(newValue) {
       if (newValue === true) {
         this.unread = 0
+      }
+    },
+    isInPrivateChatRoom(newValue) {
+      if (newValue === true) {
+        this.privateUnread = 0
       }
     }
   },
@@ -194,6 +224,7 @@ export default {
     this.$socket.auth.token = localStorage.getItem('token')
     this.$socket.open()
     this.fetchUnreads()
+    this.fetchTotalPrivateUnreads()
   },
   beforeRouteEnter(to, from, next) {
     // console.log('navbarRRRR route update!!!!!!!!!!!')
@@ -208,7 +239,7 @@ export default {
     // console.log('>>>>>>>>> navbar destroyed')
   },
   computed: {
-    ...mapState(["currentUser", "isAuthenticated", "isInPublicChatRoom"]),
+    ...mapState(["currentUser", "isAuthenticated", "isInPublicChatRoom","isInPrivateChatRoom"]),
     isDescriptionOverSize() {
       return this.description.length > 140 ? true : false
     },
@@ -219,6 +250,12 @@ export default {
         this.unread++
       }
     },
+    'private-message': function () {
+      this.fetchTotalPrivateUnreads()
+    },
+    'message-read-timestamp': function () {
+      this.fetchTotalPrivateUnreads()
+    }
   },
   methods: {
     signOut() {
@@ -280,7 +317,7 @@ export default {
       try {
         const response = await chatRoomAPI.getPublicChatRoomUnread({ userId: this.currentUser.id })
         this.unread = response.data.count
-
+        
         if (response.status !== 200) {
           throw new Error(response)
         }
@@ -290,6 +327,33 @@ export default {
         Toast.fire({
           icon: "error",
           title: "無法取得公開聊天室未讀數量，請稍後再試",
+        })
+      }
+    },
+    async fetchTotalPrivateUnreads() {
+      try {
+        const response = await chatRoomAPI.getPrivateChatRoomUnread()
+
+        const unreadData = response.data
+
+        if (Object.keys(unreadData).length === 0) {
+          this.privateUnread = 0
+          return 
+        }
+        const allUnreadList = Object.values(unreadData)
+
+        const reducer = (accumulator, currentValue) => accumulator + currentValue
+        this.privateUnread = allUnreadList.reduce(reducer)
+
+        if (response.status !== 200) {
+          throw new Error(response)
+        }
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法取得私人聊天室總未讀數量，請稍後再試",
         })
       }
     },
@@ -314,9 +378,11 @@ export default {
 .nav-link-icon {
   margin-right: 16px;
 }
-.fa-envelope {
+.fa-envelope,
+.fa-comments {
   font-size: 24px;
 }
+.private-chat-unread,
 .public-chat-unread {
   position: absolute;
   top: -10px;
@@ -473,6 +539,10 @@ img {
   display: flex;
   align-content: center;
 }
+.navbar-avatar {
+  height: 40px;
+  width: 40px;
+}
 
 @media screen and (max-width: 1200px) {
   .nav-link-icon {
@@ -498,6 +568,9 @@ img {
   }
   .nav-wrapper {
     align-items: center;
+  }
+  .navbar-avatar {
+    margin: 0;
   }
 }
 @media screen and (max-width: 576px) {

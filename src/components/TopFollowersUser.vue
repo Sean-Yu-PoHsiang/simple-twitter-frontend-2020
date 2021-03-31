@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     isShow() {
-      const nonShowingPage = ['/setting', '/public-chatroom']
+      const nonShowingPage = ['/setting', '/public-chatroom','/private-chatroom']
       return !nonShowingPage.includes(this.$route.path)
     },
     ...mapState(["currentUser"])
