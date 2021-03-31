@@ -57,7 +57,7 @@
           </div>
         </div>
         <!-- 使用者已開的私人聊天室 -->
-        <div class="online-user-list">
+        <div class="chat-room-user-list">
           <div
             v-for="privateChatRoom in privateChatRooms"
             :key="privateChatRoom.channelId"
@@ -237,7 +237,7 @@ export default {
     }
   },
   destroyed() {
-    this.$store.commit("leavePublicChatRoom")
+    this.$store.commit("leavePrivateChatRoom")
   },
   computed: {
     fillterUsers(){
@@ -398,11 +398,22 @@ export default {
     },
     async fetchAllPrivateChatRooms() {
       try {
+        this.$store.commit("enterPrivateChatRoom")
+
         const response = await chatRoomAPI.getAllPrivateChatRooms()
 
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
+
+        if(response.data.length === 0){
+          Toast.fire({
+            icon: "info",
+            title: "您目前沒有任何聊天室",
+          })
+          return
+        }
+
         const roomList = [...response.data]
         let newRoomList=[]
 
@@ -413,14 +424,14 @@ export default {
         this.chatRoomsFromAPI = newRoomList
         this.currentChatRoom = newRoomList[0]
         this.chatToUser =  newRoomList[0].chatTo
+        this.fetchPrivateChatRoomHistory()
 
       } catch (error) {    
         Toast.fire({
           icon: "error",
-          title: "無法取得私人聊天室資訊，請稍後再試",
+          title: "無法取得私人聊天室清單，請稍後再試",
         })
       }
-      this.fetchPrivateChatRoomHistory()
     },
     async fetchAllUsers(){
       try {
@@ -456,7 +467,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: "error",
-          title: "無法取得聊天室訊息，請稍後再試",
+          title: "無法取得私人聊天室訊息，請稍後再試",
         })
       }
       
@@ -774,7 +785,11 @@ export default {
   border-bottom: 1px solid #e6ecf0;
   position:relative;
 }
-
+/* chat room list */
+.chat-room-user-list{
+  height: 90%;
+  overflow: scroll;
+}
 /* message-board */
 .row {
   height: 100%;
