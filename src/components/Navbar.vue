@@ -325,11 +325,12 @@ export default {
         const unreadData = response.data
 
         if (Object.keys(unreadData).length === 0) {
-            return 
+          this.privateUnread = 0
+          return 
         }
         const allUnreadList = Object.values(unreadData)
 
-        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        const reducer = (accumulator, currentValue) => accumulator + currentValue
         this.privateUnread = allUnreadList.reduce(reducer)
 
         if (response.status !== 200) {
