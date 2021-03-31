@@ -16,7 +16,8 @@ export default new Vuex.Store({
     },
     isAuthenticated: false,
     token: '',
-    isInPublicChatRoom: false
+    isInPublicChatRoom: false,
+    isInPrivateChatRoom: false,
   },
   mutations: {
     setCurrentUser(state, currentUser) {
@@ -40,6 +41,12 @@ export default new Vuex.Store({
     },
     leavePublicChatRoom(state) {
       state.isInPublicChatRoom = false
+    },
+    enterPrivateChatRoom(state) {
+      state.isInPrivateChatRoom = true
+    },
+    leavePrivateChatRoom(state) {
+      state.isInPrivateChatRoom = false
     },
   },
   actions: {

@@ -1,46 +1,100 @@
 <template>
   <div class="col chat-room-wrapper">
     <div class="row">
+      <!-- 聊天室/用戶列表區 -->
       <input
-        class="folding-online-user d-none"
-        id="folding-online-user"
+        class="folding-chat-users d-none"
+        id="folding-chat-users"
         type="checkbox"
       />
       <div class="col-auto no-gutters center-column p-0 online-user-box">
         <div
-          class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center"
-        >
-          <h1 class="title">上線使用者({{ onlineUsers.length || 0 }})</h1>
+          class="online-user-title-wrapper title-wrapper px-3 d-flex align-items-center justify-content-between">
+          <h1 class="title">私人聊天室 ({{privateChatRooms.length}}) </h1>
+          <!-- 信封按鈕，點擊顯示所有用戶清單 -->
+          <label for="chat-room-user-toggle">
+            <div class="envelope-icon-set">
+              <i class="far fa-envelope text-larger nav-link-icon"></i>
+            </div>
+          </label>
+          <input type="checkbox" id="chat-room-user-toggle" class="d-none">
+         <!-- 搜尋用，所有用戶清單 -->
+          <div class="chat-room-user-list-wrapper">
+            <div
+              class="title-wrapper px-3 d-flex align-items-center justify-content-between">
+              <form class="search-form" action="" @submit.prevent>
+                <input type="text" 
+                v-model="searchKeywords"
+                class="search-user-input border-0 rounded-pill bg-gray form-control"
+                placeholder="輸入用戶名搜尋..."
+                id="search-user-input">
+                <label for="search-user-input"></label>
+              </form>
+              <label for="chat-room-user-toggle">
+                <div class="cancel-icon">
+                  <i class="fas fa-times"></i>
+                </div>
+              </label>
+            </div>
+            <div class="chat-room-user-list">
+              <div
+                v-for="renderUser in fillterUsers"
+                :key="renderUser.id"
+                class="user-panel" 
+                @click="addNewPrivateChatRoom(renderUser)"
+              >
+                <!-- 渲染所有用戶 -->
+                <div class="d-flex align-items-center connected-user p-2">
+                  <img class="user-avatar mr-2" :src="renderUser.avatar" alt="" />
+                  <span>
+                    <strong class="mr-2">{{ renderUser.name }}</strong>
+                    <span class="text-gray">@{{ renderUser.account }}</span>
+                    <div class="text-gray followedStatus">{{ renderUser.isFollowed | followedStatus }}</div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <!-- 使用者已開的私人聊天室 -->
         <div class="online-user-list">
           <div
-            v-for="onlineUser in onlineUsers"
-            :key="onlineUser.id"
+            v-for="privateChatRoom in privateChatRooms"
+            :key="privateChatRoom.channelId"
+            @click="privateChatRoomOnClick(privateChatRoom)"
             class="user-panel"
           >
-            <!-- 上線使用者 -->
+            <!-- 渲染已開的私人聊天室 -->
             <div class="d-flex align-items-center connected-user p-2">
-              <img class="user-avatar mr-2" :src="onlineUser.avatar" alt="" />
+              <div class="avatar-and-status-wrapper mr-2">
+                <img  class="user-avatar" :src="privateChatRoom.chatTo.avatar" alt=""/>
+                <div class="status" :class="{notShow: privateChatRoom.chatToUserIsOnline === false }"></div>
+              </div>
               <span>
-                <strong class="mr-2">{{ onlineUser.name }}</strong>
-                <span class="text-gray">@{{ onlineUser.account }}</span>
+                <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
+                <span class="text-gray">@{{ privateChatRoom.chatTo.account }}</span>
+                <div class="last-message text-gray">{{privateChatRoom.lastMsg}}</div>
+              </span>
+              <span>
+                <div v-if="privateChatRoom.unreadCount !== 0" class="private-unread">{{privateChatRoom.unreadCount}}</div>
               </span>
             </div>
           </div>
         </div>
       </div>
-
+      <!-- 聊天室對話區 -->
       <div class="col right-column no-gutters p-0" id="main-panel">
         <div class="title-wrapper px-3 d-flex align-items-center">
-          <h1 class="title">公開聊天室</h1>
-          <label for="folding-online-user"
+          <img class="user-avatar mr-2" :src= chatToUser.avatar alt="" />
+          <h1 class="title message-receiver">{{chatToUser.name}}</h1>
+          <label for="folding-chat-users" class="chat-users-toggle"
             ><i class="fas fa-list-ul"></i
           ></label>
         </div>
         <div @scroll="isToBelow" class="message-board" id="message-board">
           <div
             class="message-box"
-            v-for="message in messages"
+            v-for="message in privateMessages"
             :key="message.id"
           >
             <!-- 自己發的訊息 -->
@@ -84,7 +138,7 @@
             <!-- 使用者上下線訊息 -->
             <div
               v-if="
-                message.stasus === 'on' && message.userId !== currentUser.id
+                message.stasus === 'on' && message.userId === currentChatRoom.chatTo.userId
               "
               class="user-status-wrapper d-flex justify-content-center py-2"
             >
@@ -96,7 +150,7 @@
             </div>
             <div
               v-if="
-                message.stasus === 'off' && message.userId !== currentUser.id
+                message.stasus === 'off' && message.userId === currentChatRoom.chatTo.userId
               "
               class="user-status-wrapper d-flex justify-content-center py-2"
             >
@@ -126,8 +180,8 @@
             autocomplete="off"
           />
           <button
-            @click="sendMessage"
-            @keyup.enter="sendMessage"
+            @click="sendPrivateMessage"
+            @keyup.enter="sendPrivateMessage"
             class="btn send-message-btn"
           >
             <i class="fas fa-location-arrow"></i>
@@ -148,20 +202,32 @@ export default {
   components: {},
   data() {
     return {
-      onlineUsers: [],
-      messages: [],
+      
       newMessage: '',
       scrollModel: '',
       scrollPosition: 0,
-      scrollToBottom: true
+      scrollToBottom: true,
+
+      onlineUsers: [],
+      privateChatRooms: [],
+      currentChatRoom: [],
+      chatToUser: [],
+      privateMessages: [],
+      allUsers: [],
+      searchKeywords:'',
     }
   },
   created() {
-    this.fetchPublicChatRoomHistory()
+    this.fetchAllUsers()
+    this.fetchOnlineUsers()
+    this.fetchAllPrivateChatRooms()
+    this.getPrivateUnread()
   },
   mounted() {
-    this.fetchOnlineUsers()
     this.scrollModel = document.getElementById("message-board")
+  },  
+  beforeUpdate(){
+
   },
   updated() {
     if (this.scrollToBottom === true) {
@@ -172,17 +238,73 @@ export default {
     this.$store.commit("leavePublicChatRoom")
   },
   computed: {
-    ...mapState(["currentUser", "isInPublicChatRoom"])
+    fillterUsers(){
+      return this.searchKeywords.trim().length === 0 ? this.allUsers : this.allUsers.filter((user)=>{
+          return user.name.toLowerCase().includes(this.searchKeywords.toLowerCase().trim())
+      })
+    },
+    ...mapState(["currentUser", "isInPublicChatRoom","isInPrivateChatRoom"]),
   },
   sockets: {
     'init-public': function (onlineUsers) {
       this.onlineUsers = onlineUsers
     },
-    'public-message': function (message) {
-      message.id = uuidv4()
-      message.UserId = message.userId
-      this.messages.push(message)
-      this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
+    'private-message': function (privateMessage) {
+      const chatRoomChannelIdList = []
+      this.privateChatRooms.forEach(room => {
+        chatRoomChannelIdList.push(room.channelId)
+      });
+
+      const channelIdIndex = chatRoomChannelIdList.indexOf(privateMessage.channelId)
+
+      if (channelIdIndex === -1 ){
+        const roomData = {
+          channelId: privateMessage.channelId,
+          lastMsg: privateMessage.message,
+          unreadCount: 1,
+          chatToUserIsOnline: true,
+          chatTo: {
+            account: privateMessage.account,
+            avatar: privateMessage.avatar,
+            name: privateMessage.name,
+            userId: privateMessage.userId
+          }
+        }
+        this.privateChatRooms.unshift(roomData)
+
+      } else if (privateMessage.channelId === this.currentChatRoom.channelId){
+        privateMessage.id = uuidv4()
+        privateMessage.UserId = privateMessage.userId
+        this.currentChatRoom.lastMsg = privateMessage.message
+        this.privateMessages.push(privateMessage)
+
+        this.privateChatRooms = this.privateChatRooms.map(room => {
+          if (room.channelId === privateMessage.channelId) {
+            return { 
+              ...room,
+              lastMsg: this.currentChatRoom.lastMsg,
+              unreadCount: 0
+            }
+          } else {
+            return room
+          }
+        })
+      } else {
+        this.privateChatRooms = this.privateChatRooms.map(room => {
+          if (room.channelId === privateMessage.channelId) {
+            return { 
+              ...room,
+              lastMsg: privateMessage.message,
+              unreadCount: room.unreadCount + 1
+            }
+          } else {
+            return room
+          }
+        })
+      }
+    },
+    'private-update-channelId': function (updateChannelId){
+      this.currentChatRoom.channelId = updateChannelId.channelId
     },
     'user-on-off-line': function (userOnOff) {
       if (userOnOff.id === this.currentUser.id) {
@@ -202,9 +324,17 @@ export default {
         id: userOnOff.id,
         name: userOnOff.name
       }
-      this.messages.push(userStasus)
+      this.privateMessages.push(userStasus)
       if (nowOnlineUser.status === 'on') {
         this.onlineUsers.push(nowOnlineUser)
+        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+      }
+    }
+  },
+  filters:{
+    followedStatus(isFollowed){
+      if (isFollowed === true) {
+        return "已追隨"
       }
     }
   },
@@ -212,38 +342,211 @@ export default {
     fetchOnlineUsers() {
       this.$socket.emit('init-public', Date.now())
     },
-    async fetchPublicChatRoomHistory() {
+    async getPrivateUnread(){
+      try{
+        const response = await chatRoomAPI.getPrivateChatRoomUnread()
+        
+        if (response.status !== 200){
+          throw new Error(response.statusText)
+        }
+        
+        const unreadData = response.data
+        const unreadChannelIdList = Object.keys(unreadData)//印出所有key值，型別是字串
+
+        //用所有key去找同channelId聊天室 記得字串轉為數字 Number()
+        //沒有符合的 channelId 的聊天室return
+        //有符合的 channelId 的聊天室顯示未讀數量
+
+        let newRoomList = []
+
+        this.privateChatRooms.forEach((room)=>{
+          const indexResult = unreadChannelIdList.indexOf(room.channelId.toString())
+
+          if (indexResult === -1){
+            newRoomList.push(room)
+            return
+          } else {
+            room.unreadCount = unreadData[room.channelId]
+            newRoomList.push(room)
+          }
+        })
+        this.privateChatRooms = newRoomList        
+      
+      }catch (error){
+        Toast.fire({
+          icon:"error",
+          title:"無法取得私人聊天個別未讀數量，請稍後再試"
+        })
+      }
+    },
+    async fetchAllPrivateChatRooms() {
       try {
-        const response = await chatRoomAPI.getPublicChatRoomHistory({ userId: this.currentUser.id })
+        const response = await chatRoomAPI.getAllPrivateChatRooms()
+
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+        const roomList = [...response.data]
+        let newRoomList=[]
+
+        roomList.forEach(room => {
+          newRoomList.push({...room, unreadCount:0 })
+        })
+
+        this.privateChatRooms = newRoomList
+        this.currentChatRoom = newRoomList[0]
+        this.chatToUser =  newRoomList[0].chatTo
+
+      } catch (error) {    
+        Toast.fire({
+          icon: "error",
+          title: "無法取得私人聊天室資訊，請稍後再試",
+        })
+      }
+      this.fetchPrivateChatRoomHistory()
+    },
+    async fetchAllUsers(){
+      try {
+        const response = await chatRoomAPI.getAllUsers()
+        this.allUsers = [...response.data]
+
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon:"error",
+          title:"無法取得用戶資訊，請稍後再試"
+        })
+      }
+    },
+    async fetchPrivateChatRoomHistory() {
+      try {
+        const response = await chatRoomAPI.getPrivateChatRoomHistory({ 
+          channelId:this.currentChatRoom.channelId,
+          userId: this.currentUser.id 
+        })
 
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
 
-        this.messages = response.data
-        this.$socket.emit('message-read-timestamp', { channelId: 0, time: Date.now() })
-        this.$store.commit("enterPublicChatRoom")
+        this.privateMessages = [...response.data]
+
+        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+        
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
 
       } catch (error) {
         console.log(error)
         Toast.fire({
           icon: "error",
-          title: "無法取得上線使用者資訊，請稍後再試",
+          title: "無法取得聊天室訊息，請稍後再試",
         })
       }
+      
     },
-    async sendMessage() {
-      if (this.newMessage.trim().length === 0) { return }
-      await this.$socket.emit('public-message', {
-        account: this.currentUser.account,
-        avatar: this.currentUser.avatar,
-        UserId: this.currentUser.id,
-        name: this.currentUser.name,
-        message: this.newMessage,
-        time: Date.now()
+    async sendPrivateMessage() {
+        if (this.newMessage.trim().length === 0) { return }
+
+        await this.$socket.emit('private-message', {
+          message: this.newMessage,
+          time: Date.now(),
+          channelId: this.currentChatRoom.channelId,
+          receiverId: this.currentChatRoom.chatTo.userId,
+          receiverName: this.currentChatRoom.chatTo.name,
+        })
+
+        this.newMessage = ''
+        this.scrollToBottom = true
+        this.currentChatRoom.lastMsg = this.newMessage 
+        this.updateChatRooms()
+
+        this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
+    },
+    changeOnlineUserStatus(onlineUsers, chatRooms){      
+      const userOnlineIdList=[]
+      let newRooms=[]
+
+      for (let user of onlineUsers) {
+        const userId = user.id
+        userOnlineIdList.push(userId)
+      }
+
+      chatRooms.forEach((room)=>{
+        const index = userOnlineIdList.indexOf(room.chatTo.userId)
+        if(index !== -1){
+          const newdata = {
+            ...room,
+            chatToUserIsOnline: true
+          }
+          newRooms.push(newdata)
+        }else {
+          newRooms.push(room)
+        }
       })
-      this.newMessage = ''
-      this.scrollToBottom = true
+      this.privateChatRooms = newRooms
+    },
+    updateChatRooms(){
+      this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
+        return chatroom.channelId !== this.currentChatRoom.channelId
+      })
+
+      this.privateChatRooms.unshift(this.currentChatRoom)
+    },
+    privateChatRoomOnClick(target){
+      this.currentChatRoom = target
+      this.chatToUser = target.chatTo
+      this.fetchPrivateChatRoomHistory()
+
+      if (target. v === 0){
+        return
+      }
+      this.privateChatRooms = this.privateChatRooms.map(room=>{
+        if (room.channelId === target.channelId) {
+          return { ...room, unreadCount: 0 }
+        } else {
+          return room
+        }
+      })
+    },
+    addNewPrivateChatRoom(user){     
+      //確認user是否開過聊天室
+      const historyChatRoom = this.privateChatRooms.some((room)=>{
+        return user.id === room.chatTo.userId
+      })
+      //若被點user聊天室已存在，不做任何事
+      if(historyChatRoom === true){
+        return
+      }
+      //把user資料存成新聊天室資料
+      const data = {
+        channelId: -1,
+        unreadCount: 0,
+        chatTo: {
+          account: user.account,
+          avatar: user.avatar,
+          name: user.name,
+          userId: user.id
+        },
+      }
+
+      //整理渲染聊天室需要的資料
+      this.currentChatRoom = data
+      this.fetchPrivateChatRoomHistory()
+      this.privateChatRoomOnClick(data)
+      
+      //若聊天室channelId為-1的存在，把舊的-1的聊天室去掉，用新的取代
+      //channelId:-1表示尚未對話的聊天室
+      //維持channelId:-1 只有一個，避免v-for渲染聊天室時，重複的id會報錯      
+      if (this.privateChatRooms.length === 0){
+        this.privateChatRooms.unshift(data)
+      } else if (this.privateChatRooms[0].channelId === -1){
+        this.privateChatRooms.shift()
+        this.privateChatRooms.unshift(data)
+        return
+      } else {
+        this.privateChatRooms.unshift(data)
+        return
+      }
     },
     isToBelow() {
       this.scrollPosition = this.scrollModel.scrollTop + this.scrollModel.clientHeight
@@ -258,9 +561,103 @@ export default {
 </script>
 
 <style scoped>
-label {
+/* envelope-icon area */
+.fa-envelope{
+  font-size: 24px;
+  position:relative;
+}
+.fa-envelope:after {
+  content:'+';
+  width:12px;
+  height:12px;
+  padding:0px;
+  margin:0px;
+  position:absolute;
+  top: -12px;
+  right: -9px;
+}
+.envelope-icon-set,
+.cancel-icon{
+  width:40px;
+  height:40px;
+  border-radius:50px;
+  text-align:center;
+  line-height:40px;
+  margin-top:10px;
+}
+.envelope-icon-set:hover,
+.cancel-icon:hover {
+  cursor:pointer;
+  background: #ff6600;
+  color:#ffffff;
+  width:40px;
+  /* height:40px; */
+  text-align:center;
+}
+.cancel-icon{
+  font-size:20px;
+}
+#chat-room-user-toggle:checked ~ .chat-room-user-list-wrapper {
+  transform: scale(1, 1);
+  transition: transform 0.2s ease-out;
+  transform-origin:left;
+}
+.chat-users-toggle {
   display: none;
 }
+/* clicked envelope-icon-set will show this part */
+/* user list for new chat room */
+.chat-room-user-list-wrapper {
+  transform: scale(0, 1);
+  transition: transform 0.2s ease-out;
+  transform-origin:left;
+  width:290px;
+  position:absolute;
+  top:0px;
+  right:-290px;
+  background: #ffffff;
+  z-index:10;
+  border-right:1px solid #e6ecf0;
+  border-left:1px solid #e6ecf0;
+  box-shadow: 10px 10px 10px -10px #666666;
+}
+.chat-room-user-list {
+  height: calc(100vh - 100px - 61px);
+  overflow:scroll;
+}
+.private-unread{
+  position: absolute;
+  top: 20px;
+  right: 8px;
+  background-color: #ff6600;
+  color: white;
+  font-size: 10px;
+  padding: 4px;
+  border-radius: 12px;
+  height: 24px;
+  width: 24px;
+  line-height: 16px;
+  text-align: center;
+}
+.followedStatus {
+  font-size:14px;
+}
+.search-form{
+  line-height:45px;
+  display:flex;
+  align-items:center;
+}
+.search-user-input{
+  width: 210px;
+}
+.search-user-input:focus{
+  background: #e6ecf0;
+  outline: none;
+  box-shadow: none;
+}
+
+
+/* main */
 .main-panel {
   position: relative;
 }
@@ -279,6 +676,32 @@ label {
   height: 50px;
   width: 50px;
   border-radius: 25px;
+}
+.avatar-and-status-wrapper{
+  position: relative;
+}
+.status {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 12px;
+  height: 12px;
+  background: #ff6600;
+  border-radius: 50%;
+  box-shadow: inset 0 0 1px 2px #ddd;
+}
+.notShow{
+  display: none;
+}
+
+.last-message{
+  width:220px;
+  height:26px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 .right-column {
   border-right: 1px solid #e6ecf0;
@@ -302,11 +725,15 @@ label {
   width: 300px;
   height: 100vh;
 }
-.title-wrapper {
+.title-wrapper{
   border-bottom: 1px solid #e6ecf0;
   height: 55px;
 }
-.title {
+.user-panel {
+  cursor:pointer;
+}
+.title,
+.message-receiver {
   color: #1c1c1c;
   font-size: 18px;
   font-weight: 700;
@@ -314,6 +741,7 @@ label {
 }
 .connected-user {
   border-bottom: 1px solid #e6ecf0;
+  position:relative;
 }
 
 /* message-board */
@@ -414,6 +842,8 @@ a {
 .chat-room-wrapper {
   margin: 0 15px;
 }
+
+
 @media screen and (max-width: 992px) {
   .online-user-box {
     transform: scale(0, 1);
@@ -437,21 +867,34 @@ a {
   .online-user-title-wrapper {
     justify-content: flex-end;
   }
-  label {
+  .chat-users-toggle {
     font-size: 21px;
     display: block;
     margin: 0;
     margin-left: 10px;
     padding: 0 6px;
   }
-  label:hover {
+  .chat-users-toggle:hover {
     background: #ff6600;
     border-radius: 6px;
     cursor: pointer;
   }
-  .folding-online-user:checked ~ .online-user-box {
+  .folding-chat-users:checked ~ .online-user-box {
     transform: scale(1, 1);
     transition: transform 0.2s ease-out;
+  }
+  #chat-room-user-toggle:checked ~ .chat-room-user-list-wrapper {
+  transform: scale(1, 1);
+  transform-origin:right;
+  }
+  .chat-room-user-list-wrapper {
+    transform: scale(0, 1);
+    transform-origin:right;
+    top:0px;
+    right:0px;
+  }
+  .chat-room-user-list-wrapper{
+    box-shadow: -10px 10px 10px -10px #666666;
   }
 }
 @media screen and (max-width: 768px) {
