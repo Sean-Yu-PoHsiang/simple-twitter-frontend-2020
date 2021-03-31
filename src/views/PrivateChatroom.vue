@@ -250,8 +250,29 @@ export default {
       this.onlineUsers = onlineUsers
     },
     'private-message': function (privateMessage) {
+      const chatRoomChannelIdList = []
+      this.privateChatRooms.forEach(room => {
+        chatRoomChannelIdList.push(room.channelId)
+      });
 
-      if (privateMessage.channelId === this.currentChatRoom.channelId){
+      const channelIdIndex = chatRoomChannelIdList.indexOf(privateMessage.channelId)
+
+      if (channelIdIndex === -1 ){
+        const roomData = {
+          channelId: privateMessage.channelId,
+          lastMsg: privateMessage.message,
+          unreadCount: 1,
+          chatToUserIsOnline: true,
+          chatTo: {
+            account: privateMessage.account,
+            avatar: privateMessage.avatar,
+            name: privateMessage.name,
+            userId: privateMessage.userId
+          }
+        }
+        this.privateChatRooms.unshift(roomData)
+
+      } else if (privateMessage.channelId === this.currentChatRoom.channelId){
         privateMessage.id = uuidv4()
         privateMessage.UserId = privateMessage.userId
         this.currentChatRoom.lastMsg = privateMessage.message

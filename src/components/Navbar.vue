@@ -241,7 +241,6 @@ export default {
       this.fetchTotalPrivateUnreads()
     },
     'message-read-timestamp': function () {
-      console.log('收到 message-read-timestamp')
       this.fetchTotalPrivateUnreads()
     }
   },
