@@ -57,7 +57,7 @@
           </div>
         </div>
         <!-- 使用者已開的私人聊天室 -->
-        <div class="online-user-list">
+        <div class="chat-room-list">
           <div
             v-for="privateChatRoom in privateChatRooms"
             :key="privateChatRoom.channelId"
@@ -71,7 +71,9 @@
                 <div class="status" :class="{notShow: privateChatRoom.chatToUserIsOnline === false }"></div>
               </div>
               <span>
-                <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
+                <router-link class="link-style" :to="'/users/' + privateChatRoom.chatTo.userId">
+                  <strong class="mr-2">{{ privateChatRoom.chatTo.name }}</strong>
+                </router-link>
                 <span class="text-gray">@{{ privateChatRoom.chatTo.account }}</span>
                 <div class="last-message text-gray">{{privateChatRoom.lastMsg}}</div>
               </span>
@@ -209,6 +211,7 @@ export default {
       scrollToBottom: true,
 
       onlineUsers: [],
+      chatRoomsFromAPI:[],
       privateChatRooms: [],
       currentChatRoom: [],
       chatToUser: [],
@@ -221,7 +224,6 @@ export default {
     this.fetchAllUsers()
     this.fetchOnlineUsers()
     this.fetchAllPrivateChatRooms()
-    this.getPrivateUnread()
   },
   mounted() {
     this.scrollModel = document.getElementById("message-board")
@@ -235,7 +237,7 @@ export default {
     }
   },
   destroyed() {
-    this.$store.commit("leavePublicChatRoom")
+    this.$store.commit("leavePrivateChatRoom")
   },
   computed: {
     fillterUsers(){
@@ -257,7 +259,7 @@ export default {
 
       const channelIdIndex = chatRoomChannelIdList.indexOf(privateMessage.channelId)
 
-      if (channelIdIndex === -1 ){
+      if (channelIdIndex === -1 && privateMessage.userId !== this.currentUser.id){
         const roomData = {
           channelId: privateMessage.channelId,
           lastMsg: privateMessage.message,
@@ -271,6 +273,20 @@ export default {
           }
         }
         this.privateChatRooms.unshift(roomData)
+      } else if (channelIdIndex === -1 && privateMessage.userId === this.currentUser.id){
+          const roomData = {
+            channelId: privateMessage.channelId,
+            lastMsg: privateMessage.message,
+            unreadCount: 0,
+            chatToUserIsOnline: false,
+            chatTo: {
+              account: this.currentChatRoom.account,
+              avatar: this.currentChatRoom.avatar,
+              name: this.currentChatRoom.name,
+              userId: this.currentChatRoom.userId
+            }
+          }
+          this.privateChatRooms.unshift(roomData)
 
       } else if (privateMessage.channelId === this.currentChatRoom.channelId){
         privateMessage.id = uuidv4()
@@ -359,7 +375,7 @@ export default {
 
         let newRoomList = []
 
-        this.privateChatRooms.forEach((room)=>{
+        this.chatRoomsFromAPI.forEach((room)=>{
           const indexResult = unreadChannelIdList.indexOf(room.channelId.toString())
 
           if (indexResult === -1){
@@ -370,8 +386,9 @@ export default {
             newRoomList.push(room)
           }
         })
-        this.privateChatRooms = newRoomList        
-      
+        this.chatRoomsFromAPI = newRoomList       
+        this.privateChatRooms = newRoomList
+
       }catch (error){
         Toast.fire({
           icon:"error",
@@ -381,11 +398,22 @@ export default {
     },
     async fetchAllPrivateChatRooms() {
       try {
+        this.$store.commit("enterPrivateChatRoom")
+
         const response = await chatRoomAPI.getAllPrivateChatRooms()
 
         if (response.status !== 200) {
           throw new Error(response.statusText)
         }
+
+        if(response.data.length === 0){
+          Toast.fire({
+            icon: "info",
+            title: "您目前沒有任何聊天室",
+          })
+          return
+        }
+
         const roomList = [...response.data]
         let newRoomList=[]
 
@@ -393,17 +421,17 @@ export default {
           newRoomList.push({...room, unreadCount:0 })
         })
 
-        this.privateChatRooms = newRoomList
+        this.chatRoomsFromAPI = newRoomList
         this.currentChatRoom = newRoomList[0]
         this.chatToUser =  newRoomList[0].chatTo
+        this.fetchPrivateChatRoomHistory()
 
       } catch (error) {    
         Toast.fire({
           icon: "error",
-          title: "無法取得私人聊天室資訊，請稍後再試",
+          title: "無法取得私人聊天室清單，請稍後再試",
         })
       }
-      this.fetchPrivateChatRoomHistory()
     },
     async fetchAllUsers(){
       try {
@@ -431,7 +459,7 @@ export default {
 
         this.privateMessages = [...response.data]
 
-        this.changeOnlineUserStatus(this.onlineUsers,this.privateChatRooms)
+        this.changeOnlineUserStatus(this.onlineUsers,this.chatRoomsFromAPI)
         
         this.$socket.emit('message-read-timestamp', { channelId: this.currentChatRoom.channelId , time: Date.now() })
 
@@ -439,7 +467,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: "error",
-          title: "無法取得聊天室訊息，請稍後再試",
+          title: "無法取得私人聊天室訊息，請稍後再試",
         })
       }
       
@@ -483,14 +511,22 @@ export default {
           newRooms.push(room)
         }
       })
-      this.privateChatRooms = newRooms
+      this.chatRoomsFromAPI = newRooms
+      this.getPrivateUnread()
     },
     updateChatRooms(){
-      this.privateChatRooms = this.privateChatRooms.filter((chatroom)=>{
+      this.chatRoomsFromAPI = this.chatRoomsFromAPI.filter((chatroom)=>{
         return chatroom.channelId !== this.currentChatRoom.channelId
       })
 
-      this.privateChatRooms.unshift(this.currentChatRoom)
+      const data = {
+        ...this.currentChatRoom,
+      }
+      this.currentChatRoom = data
+      
+      this.chatRoomsFromAPI.unshift(data)
+      this.privateChatRooms = this.chatRoomsFromAPI
+
     },
     privateChatRoomOnClick(target){
       this.currentChatRoom = target
@@ -500,17 +536,18 @@ export default {
       if (target. v === 0){
         return
       }
-      this.privateChatRooms = this.privateChatRooms.map(room=>{
+      this.chatRoomsFromAPI = this.chatRoomsFromAPI.map(room => {
         if (room.channelId === target.channelId) {
-          return { ...room, unreadCount: 0 }
+          return { ...room, unreadCount: 0}
         } else {
           return room
         }
       })
+      this.privateChatRooms = this.chatRoomsFromAPI
     },
     addNewPrivateChatRoom(user){     
       //確認user是否開過聊天室
-      const historyChatRoom = this.privateChatRooms.some((room)=>{
+      const historyChatRoom = this.chatRoomsFromAPI.some((room)=>{
         return user.id === room.chatTo.userId
       })
       //若被點user聊天室已存在，不做任何事
@@ -521,6 +558,7 @@ export default {
       const data = {
         channelId: -1,
         unreadCount: 0,
+        chatToUserIsOnline: false,
         chatTo: {
           account: user.account,
           avatar: user.avatar,
@@ -531,7 +569,7 @@ export default {
 
       //整理渲染聊天室需要的資料
       this.currentChatRoom = data
-      this.fetchPrivateChatRoomHistory()
+
       this.privateChatRoomOnClick(data)
       
       //若聊天室channelId為-1的存在，把舊的-1的聊天室去掉，用新的取代
@@ -604,6 +642,10 @@ export default {
 }
 .chat-users-toggle {
   display: none;
+}
+.link-style:hover {
+  text-decoration:underline;
+  color:#ff6600;
 }
 /* clicked envelope-icon-set will show this part */
 /* user list for new chat room */
@@ -743,7 +785,11 @@ export default {
   border-bottom: 1px solid #e6ecf0;
   position:relative;
 }
-
+/* chat room list */
+.chat-room-list{
+  height: 90%;
+  overflow: scroll;
+}
 /* message-board */
 .row {
   height: 100%;

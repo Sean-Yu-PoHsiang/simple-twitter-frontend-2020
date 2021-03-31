@@ -32,7 +32,7 @@
         >
           {{ isProcessing ? "資料更新中..." : "編輯個人資料" }}
         </button>
-        <button v-if="userProfile.id !== currentUser.id" class="btn">
+        <button v-if="userProfile.id !== currentUser.id" class="btn d-none">
           <IconMessage />
         </button>
         <button v-if="userProfile.id !== currentUser.id" class="btn">
